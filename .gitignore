@@ -4,13 +4,16 @@
 [Tt]emp/
 [Oo]bj/
 [Bb]uild
+/[Bb]uilds/
 [Ll]ibrary/
+/[Ll]ibrary/
 [Tt]estOutput/
 KSEditorLogs/
 sysinfo.txt
 *.stackdump
-Assets/InitTestScene*
-Assets/Resources/PerformanceTestRunInfo*
+/Assets/AssetStoreTools*
+*.apk
+*.unitypackage
 
 # =============== #
 # Dependencies    #
