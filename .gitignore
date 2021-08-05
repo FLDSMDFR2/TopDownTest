@@ -1,0 +1,60 @@
+# =============== #
+# Unity generated #
+# =============== #
+[Tt]emp/
+[Oo]bj/
+[Bb]uild
+[Ll]ibrary/
+[Tt]estOutput/
+KSEditorLogs/
+sysinfo.txt
+*.stackdump
+Assets/InitTestScene*
+Assets/Resources/PerformanceTestRunInfo*
+
+# =============== #
+# Dependencies    #
+# =============== #
+.idea/*
+.mvn/*
+!.mvn/README.md
+target/
+Assets/Libraries/*
+!Assets/Libraries/README.md
+Assets/Editor/Libraries/*
+!Assets/Editor/Libraries/README.md
+
+# ============== #
+# Specific Files #
+# ============== #
+Assets/TestOutput.meta
+# ProjectSettings/TagManager.asset
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+[Ee]xported[Oo]bj/
+.vs/
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln
+*.user
+*.unityproj
+*.booproj
+*.TMP
+
+# ============ #
+# OS generated #
+# ============ #
+*.bak
+*.log
+.DS_Store*
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+Assets/Editor/ScriptInspector3.meta
+Assets/Editor/ScriptInspector3/
