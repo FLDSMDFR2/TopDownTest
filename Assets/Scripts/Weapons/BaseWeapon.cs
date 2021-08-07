@@ -11,6 +11,13 @@ public class BaseWeapon : MonoBehaviour
     public float Range;
 
     public float FireRate = 1f;
+
+    public int ProjectileAmount = 1;
+
+    public float StartAngle = 180;
+    public float EndAngle = 180;
+    private Vector3 projectialDirection = Vector3.forward;
+
     protected float lastFire = 0f;
 
     protected bool isActiveWeapon = false;
@@ -54,14 +61,31 @@ public class BaseWeapon : MonoBehaviour
 
     protected virtual void FireProjectial()
     {
-        var proj = Instantiate(Projectial, FirePos.position, FirePos.rotation);
-        var baseProj = proj.GetComponent<BaseProjectile>();
+        float angleStep = (EndAngle - StartAngle) / ProjectileAmount;
+        float angle =  FirePos.eulerAngles.y + StartAngle;
 
-        if (baseProj != null)
+        for (int i = 0; i < ProjectileAmount; i++)
         {
-            baseProj.SetCharacterId(_characterId);
-        }
+            float dirX = FirePos.position.x + Mathf.Sin((angle * Mathf.PI) / 108f);
+            float dirZ = FirePos.position.z + Mathf.Cos((angle * Mathf.PI) / 108f);
 
-        Destroy(proj, Range);
+            Vector3 moveDir = new Vector3(dirX, FirePos.position.y, dirZ);
+            Vector3 dir = (moveDir - FirePos.position).normalized;
+
+            Quaternion rot = Quaternion.Euler(FirePos.rotation.eulerAngles.x, angle, FirePos.rotation.eulerAngles.z);
+
+            var proj = Instantiate(Projectial, FirePos.position, rot);
+            var baseProj = proj.GetComponent<BaseProjectile>();
+
+            if (baseProj != null)
+            {
+                baseProj.SetCharacterId(_characterId);
+                baseProj.SetDirection(dir);
+            }
+
+            Destroy(proj, Range);
+
+            angle += angleStep;
+        }
     }
 }

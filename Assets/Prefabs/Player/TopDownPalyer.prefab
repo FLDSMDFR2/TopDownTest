@@ -234,7 +234,7 @@ GameObject:
   - component: {fileID: 3667357273929256564}
   - component: {fileID: 6337678404921798802}
   m_Layer: 0
-  m_Name: Palyer
+  m_Name: TopDownPalyer
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -379,6 +379,7 @@ MonoBehaviour:
   MaxJumps: 2
   jumpCount: 0
   GroundChecker: {fileID: 6337678404031490512}
+  dis: 1
 --- !u!114 &6337678404921798802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,6 +478,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2433412917224738113, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106089185397757870, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
+      propertyPath: FacingDirection
+      value: 
+      objectReference: {fileID: 6337678404921798804}
+    - target: {fileID: 6106089185397757870, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
+      propertyPath: StartAngle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106089185397757870, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
+      propertyPath: EndAngle
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6308384958842454710, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}

@@ -243,6 +243,9 @@ MonoBehaviour:
   Projectial: {fileID: 5115669572997833630, guid: f44812b68bca5234b9746904aae980bb, type: 3}
   Range: 2
   FireRate: 0.2
+  ProjectileAmount: 1
+  StartAngle: 180
+  EndAngle: 180
 --- !u!1 &8893062790523053183
 GameObject:
   m_ObjectHideFlags: 0

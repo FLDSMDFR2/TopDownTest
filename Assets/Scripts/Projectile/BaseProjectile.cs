@@ -10,6 +10,7 @@ public class BaseProjectile : MonoBehaviour
     public CollisionDetection ImpactCollider;
 
     private int _characterId;
+    private Vector3 Direction = Vector3.forward;
 
     private void Start()
     {
@@ -26,12 +27,17 @@ public class BaseProjectile : MonoBehaviour
         _characterId = CharacterId;
     }
 
+    public virtual void SetDirection(Vector3 dir)
+    {
+        Direction = dir;
+    }
+
     protected virtual void UpdateProjectile()
     {
 
         float distanceToTravel = Speed * Time.deltaTime;
 
-        transform.Translate(transform.forward * distanceToTravel, Space.World);
+        transform.Translate(Direction * distanceToTravel, Space.World);
     }
 
     protected virtual void PlayerHit(BaseCharacter player)

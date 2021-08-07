@@ -568,6 +568,22 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 6106089185397757870, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
+      propertyPath: FacingDirection
+      value: 
+      objectReference: {fileID: 3911316765985232657}
+    - target: {fileID: 6106089185397757870, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
+      propertyPath: ProjectileAmount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106089185397757870, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
+      propertyPath: StartAngle
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106089185397757870, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
+      propertyPath: EndAngle
+      value: 160
+      objectReference: {fileID: 0}
     - target: {fileID: 6308384958842454710, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
       propertyPath: m_Name
       value: Gun
