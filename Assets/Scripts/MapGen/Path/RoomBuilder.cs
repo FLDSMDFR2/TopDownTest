@@ -7,8 +7,6 @@ public class RoomBuilder : MonoBehaviour
 
     //TODO: REMOVE LATER
     public GameObject PlayerPrefab;
-
-    public EnemySpawnManager spawnManager;
     //TODO REMOVE LATER
 
 
@@ -32,7 +30,7 @@ public class RoomBuilder : MonoBehaviour
             // loop over the room locations
             foreach (var locationKey in rooms[key].RoomLocations.Keys)
             {
-                buildWalls(key, locationKey, rooms, room);
+                //buildWalls(key, locationKey, rooms, room);
 
                 buildEnemySpawn(key, locationKey, rooms, room);
 
@@ -61,14 +59,15 @@ public class RoomBuilder : MonoBehaviour
 
     protected virtual void buildEnemySpawn(Vector2Int key, Vector2Int locationKey, Dictionary<Vector2Int, Room> rooms, GameObject room)
     {
-        // spawn the player
+        // spawn Enemy
         if (rooms[key].RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.Floor &&
             rooms[key].RoomLocations[locationKey].LocationType == RoomLocationTypes.EnemySpawn)
         {
-
-            var spawn = spawnManager.GetEnemySpawnByDifficulty(rooms[key].Difficulty);
-
-            var p = Instantiate(spawn, new Vector3(locationKey.x, 1f, locationKey.y), Quaternion.identity, room.transform);
+            // add enemy spawn to this location
+            var spawn = room.AddComponent<EnemySpawn>();
+            spawn.Location = new Vector3(locationKey.x, 1f, locationKey.y); ;
+            spawn.MaxEnemysToSpawn = 5;
+            spawn.difficulty = rooms[key].Difficulty;
         }
     }
 

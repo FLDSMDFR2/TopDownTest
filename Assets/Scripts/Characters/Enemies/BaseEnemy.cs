@@ -5,16 +5,10 @@ using UnityEngine;
 public class BaseEnemy : BaseCharacter
 {
     protected Transform _target;
-    protected EnemySpawn _spwanManager;
 
     public void SetTarget(Transform target)
     {
         _target = target;
-    }
-
-    public void SetSpwanManager(EnemySpawn manager)
-    {
-        _spwanManager = manager;
     }
 
     public Transform GetTarget()
@@ -43,9 +37,6 @@ public class BaseEnemy : BaseCharacter
     protected override void Dead()
     {
         base.Dead();
-        if (_spwanManager == null)
-            Destroy(gameObject);
-        else
-            _spwanManager.DeSpawnEnemy(gameObject);
+        GOPoolManager.AddObject(this.GetType(), gameObject);
     }
 }

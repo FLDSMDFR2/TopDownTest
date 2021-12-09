@@ -5,33 +5,54 @@ using UnityEngine;
 public class EnemySpawnManager : MonoBehaviour
 {
     [SerializeField]
-    protected List<GameObject> SpwanPrefabsEasy;
+    protected List<GameObject> SpawnPrefabsEasy;
 
     [SerializeField]
-    protected List<GameObject> SpwanPrefabsMedium;
+    protected List<GameObject> SpawnPrefabsMedium;
 
     [SerializeField]
-    protected List<GameObject> SpwanPrefabsHard;
+    protected List<GameObject> SpawnPrefabsHard;
 
     [SerializeField]
-    protected List<GameObject> SpwanPrefabsInsane;
+    protected List<GameObject> SpawnPrefabsInsane;
 
-    public GameObject GetEnemySpawnByDifficulty(RoomDifficulty difficulty)
+
+
+    [SerializeField]
+    protected static List<GameObject> spawnPrefabsEasy;
+
+    [SerializeField]
+    protected static List<GameObject> spawnPrefabsMedium;
+
+    [SerializeField]
+    protected static List<GameObject> spawnPrefabsHard;
+
+    [SerializeField]
+    protected static List<GameObject> spawnPrefabsInsane;
+
+    private void Awake()
+    {
+        spawnPrefabsEasy = SpawnPrefabsEasy;
+        spawnPrefabsMedium = SpawnPrefabsMedium;
+        spawnPrefabsHard = SpawnPrefabsHard;
+        spawnPrefabsInsane = SpawnPrefabsInsane;
+    }
+
+    public static GameObject GetEnemySpawnByDifficulty(RoomDifficulty difficulty)
     {
         switch (difficulty)
         {
             case RoomDifficulty.Easy:
-                return SpwanPrefabsEasy[RandomGenerator.SeededRange(0, SpwanPrefabsEasy.Count-1)];
+                return spawnPrefabsEasy[RandomGenerator.SeededRange(0, spawnPrefabsEasy.Count-1)];
             case RoomDifficulty.Medium:
-                return SpwanPrefabsMedium[RandomGenerator.SeededRange(0, SpwanPrefabsMedium.Count - 1)];
+                return spawnPrefabsMedium[RandomGenerator.SeededRange(0, spawnPrefabsMedium.Count - 1)];
             case RoomDifficulty.Hard:
-                return SpwanPrefabsHard[RandomGenerator.SeededRange(0, SpwanPrefabsHard.Count - 1)];
+                return spawnPrefabsHard[RandomGenerator.SeededRange(0, spawnPrefabsHard.Count - 1)];
             case RoomDifficulty.Insane:
-                return SpwanPrefabsInsane[RandomGenerator.SeededRange(0, SpwanPrefabsInsane.Count - 1)];
+                return spawnPrefabsInsane[RandomGenerator.SeededRange(0, spawnPrefabsInsane.Count - 1)];
             default:
                 TraceManager.WriteTrace(TraceChannel.Main, TraceType.error, "difficulty Type not found " + difficulty.ToString());
-                return SpwanPrefabsEasy[0];
+                return spawnPrefabsEasy[0];
         }
     }
-
  }

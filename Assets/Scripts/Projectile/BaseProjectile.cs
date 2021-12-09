@@ -10,7 +10,8 @@ public class BaseProjectile : MonoBehaviour
     public CollisionDetection ImpactCollider;
 
     private int _characterId;
-    private Vector3 Direction = Vector3.forward;
+    private Vector3 direction = Vector3.forward;
+    private float range = 1;
 
     private void Start()
     {
@@ -29,15 +30,19 @@ public class BaseProjectile : MonoBehaviour
 
     public virtual void SetDirection(Vector3 dir)
     {
-        Direction = dir;
+        direction = dir;
+    }
+
+    public virtual void SetRange(float r)
+    {
+        range = r;
+        StartCoroutine(DestoryProjectialRange());
     }
 
     protected virtual void UpdateProjectile()
     {
-
         float distanceToTravel = Speed * Time.deltaTime;
-
-        transform.Translate(Direction * distanceToTravel, Space.World);
+        transform.Translate(direction * distanceToTravel, Space.World);
     }
 
     protected virtual void PlayerHit(BaseCharacter player)
@@ -58,7 +63,15 @@ public class BaseProjectile : MonoBehaviour
 
     protected virtual void DestoryProjectial()
     {
-        Destroy(gameObject);
+        StopCoroutine(DestoryProjectialRange());
+
+        GOPoolManager.AddObject(this.GetType(), gameObject);
+    }
+
+    protected virtual IEnumerator DestoryProjectialRange()
+    {
+        yield return new WaitForSeconds(range);
+        GOPoolManager.AddObject(this.GetType(), gameObject);
     }
 
     private void OnImpactCollider(Collider other)

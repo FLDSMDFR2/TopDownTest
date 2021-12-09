@@ -58,32 +58,33 @@ public class BaseWeapon : MonoBehaviour
             lastFire = Time.time;
         }
     }
+    protected virtual System.Type GetProjectile()
+    {
+        return typeof(BaseProjectile);
+    }
 
     protected virtual void FireProjectial()
     {
-        float angleStep = (EndAngle - StartAngle) / ProjectileAmount;
+        var pa = ProjectileAmount - 1;
+        if (pa <= 0) pa = 1;
+
+        float angleStep = (EndAngle - StartAngle) / pa;
         float angle =  FirePos.eulerAngles.y + StartAngle;
 
         for (int i = 0; i < ProjectileAmount; i++)
         {
-            float dirX = FirePos.position.x + Mathf.Sin((angle * Mathf.PI) / 108f);
-            float dirZ = FirePos.position.z + Mathf.Cos((angle * Mathf.PI) / 108f);
-
-            Vector3 moveDir = new Vector3(dirX, FirePos.position.y, dirZ);
-            Vector3 dir = (moveDir - FirePos.position).normalized;
-
+            Vector3 dir = new Vector3(Mathf.Sin(Mathf.Deg2Rad * angle), 0F, Mathf.Cos(Mathf.Deg2Rad * angle));
             Quaternion rot = Quaternion.Euler(FirePos.rotation.eulerAngles.x, angle, FirePos.rotation.eulerAngles.z);
 
-            var proj = Instantiate(Projectial, FirePos.position, rot);
+            var proj = GOPoolManager.GetObject(GetProjectile(), Projectial, FirePos.position, rot);
             var baseProj = proj.GetComponent<BaseProjectile>();
 
             if (baseProj != null)
             {
                 baseProj.SetCharacterId(_characterId);
                 baseProj.SetDirection(dir);
+                baseProj.SetRange(Range);
             }
-
-            Destroy(proj, Range);
 
             angle += angleStep;
         }

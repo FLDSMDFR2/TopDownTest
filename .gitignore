@@ -9,6 +9,7 @@
 /[Ll]ibrary/
 [Tt]estOutput/
 KSEditorLogs/
+[Ll]ogs/
 sysinfo.txt
 *.stackdump
 /Assets/AssetStoreTools*
