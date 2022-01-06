@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Floor: {fileID: 8090627154540690214, guid: 77d926c0b009aa54088e10566fe6b591, type: 3}
   Wall: {fileID: 4799307418199010769, guid: 3e983aa4d6c49f145bfdd01374c0c5f7, type: 3}
+  Void: {fileID: 8090627154540690214, guid: f0ee4ea90508245419cd6c1c3538bfda, type: 3}

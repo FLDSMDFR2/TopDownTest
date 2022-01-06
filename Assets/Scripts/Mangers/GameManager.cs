@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     protected GameDifficulty Difficulty;
 
     [SerializeField]
-    protected RoomGenerator roomGenerator;
+    protected MapGenerator roomGenerator;
     [SerializeField]
     protected Transform PathGenParentTransform;
 

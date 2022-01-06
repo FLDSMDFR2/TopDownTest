@@ -41,8 +41,8 @@ public class GOPoolManager : MonoBehaviour
 
         if (retVal == null)
         {
-            var parent = Instantiate(new GameObject(), myTransform);
-            parent.name = key.Name;
+            var parent = new GameObject(key.Name);
+            parent.transform.parent = myTransform;
 
             retVal = Instantiate(obj, pos, rot, parent.transform);
         }

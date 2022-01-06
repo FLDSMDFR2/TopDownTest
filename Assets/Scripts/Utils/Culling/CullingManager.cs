@@ -13,7 +13,7 @@ public class CullingManager : MonoBehaviour
     [SerializeField]
     protected float cullTime = 1f;
 
-[SerializeField]
+    [SerializeField]
     protected GameObject CullObject;
 
     void Start()
@@ -43,7 +43,6 @@ public class CullingManager : MonoBehaviour
             }
 
             yield return new WaitForSeconds(cullTime);
-            yield return null;
         }
     }
 

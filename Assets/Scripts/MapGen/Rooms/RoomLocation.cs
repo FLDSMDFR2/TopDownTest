@@ -2,20 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Environment for this location ie walls, floors
+/// </summary>
 public enum RoomLocationEnvironmentTypes
 {
+    None,
     Floor,
     Wall,
     Door
 }
 
+/// <summary>
+/// Location type, if there is an object at this location
+/// </summary>
 public enum RoomLocationTypes
 {
     Empty,
+    Filled,
     PlayerStartSpawn,
     EnemySpawn
 }
 
+/// <summary>
+/// Travel type / cost for this location
+/// </summary>
 public enum RoomLocationTraversalTypes
 {
     Clear,
@@ -23,9 +34,9 @@ public enum RoomLocationTraversalTypes
     Blocked
 }
 
-public class RoomLocation : MonoBehaviour
+// single location within a room
+public class RoomLocation
 {
-    [SerializeField]
     protected Vector2Int roomLocation;
     public Vector2Int Location
     {
@@ -33,19 +44,26 @@ public class RoomLocation : MonoBehaviour
         set { roomLocation = value; }
     }
 
-    [SerializeField]
     protected RoomLocationEnvironmentTypes environmentLocationType;
     public RoomLocationEnvironmentTypes EnvironmentLocationType
     {
         get { return environmentLocationType; }
-        set { environmentLocationType = value; }
+        set
+        {
+            environmentLocationType = value;
+            SetLocationTraversalType();
+        }
     }
 
     protected RoomLocationTypes locationType;
     public RoomLocationTypes LocationType
     {
         get { return locationType; }
-        set { locationType = value; }
+        set
+        {
+            locationType = value;
+            SetLocationTraversalType();
+        }
     }
 
     protected RoomLocationTraversalTypes locationTraversalType;
@@ -67,20 +85,20 @@ public class RoomLocation : MonoBehaviour
     {
         Location = location;
         EnvironmentLocationType = Envtype;
-        LocationType = type;
-
-        SetLocationTraversalType();
+        LocationType = type;      
     }
 
     protected virtual void SetLocationTraversalType()
     {
-        if (EnvironmentLocationType == RoomLocationEnvironmentTypes.Wall)
+        // if the location is a wall or None (outside the room) set as blocked
+        if (EnvironmentLocationType == RoomLocationEnvironmentTypes.Wall || EnvironmentLocationType == RoomLocationEnvironmentTypes.None)
         {
             LocationTraversalType = RoomLocationTraversalTypes.Blocked;
             locationTraversalCost = System.Int32.MaxValue;
         }
         else
         {
+            // default locatio to be clear
             LocationTraversalType = RoomLocationTraversalTypes.Clear;
             locationTraversalCost = 1;
         }

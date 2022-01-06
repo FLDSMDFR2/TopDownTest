@@ -75,7 +75,7 @@ public class CameraController : MonoBehaviour
         Vector2 retVal = cam.ScreenToViewportPoint(Input.mousePosition);
         retVal *= 2;
         retVal -= Vector2.one;
-        var max = 0.9f;
+        var max = 2f;
         if (Mathf.Abs(retVal.x) > max || Mathf.Abs(retVal.y) > max)
         {
             retVal = retVal.normalized;

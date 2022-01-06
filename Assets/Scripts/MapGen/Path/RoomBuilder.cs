@@ -13,7 +13,7 @@ public class RoomBuilder : MonoBehaviour
     /// <summary>
     /// Loop over all rooms that have been created and build them in the scene
     /// </summary>
-    public virtual void BuildRooms(Transform DestParentTransform, Dictionary<Vector2Int, Room> rooms, int roomSizeX, int roomSizeY)
+    public virtual void BuildRooms(Transform DestParentTransform, Dictionary<Vector2Int, Room> rooms)
     {
         int roomId = 1;
 
@@ -23,20 +23,72 @@ public class RoomBuilder : MonoBehaviour
             var room = new GameObject("Room " + roomId++);
             room.transform.parent = DestParentTransform;
 
-            // first place the floor for the room
-            var floor = Instantiate(rooms[key].Config.Floor, new Vector3((float)(rooms[key].RoomConvertedCenter().x - .5f), .1f, (float)(rooms[key].RoomConvertedCenter().y - .5f)), Quaternion.identity, room.transform);
-            floor.transform.localScale = new Vector3(roomSizeX, .1f, roomSizeY);
+            var floor = new GameObject("Floor " + room.name);
+            floor.transform.parent = room.transform;
+            floor.AddComponent<MeshFilter>();
+            var renderer = floor.AddComponent<MeshRenderer>();
+            renderer.material = rooms[key].Config.Floor.GetComponentInChildren<Renderer>().sharedMaterial;
+
+            var thevoid = new GameObject("Void " + room.name);
+            thevoid.transform.parent = room.transform;
+            thevoid.AddComponent<MeshFilter>();
+            renderer = thevoid.AddComponent<MeshRenderer>();
+            renderer.material = rooms[key].Config.Void.GetComponentInChildren<Renderer>().sharedMaterial;
+
+            var walls = new GameObject("Walls " + room.name);
+            walls.transform.parent = room.transform;
+            walls.AddComponent<MeshFilter>();
+            renderer = walls.AddComponent<MeshRenderer>();
+            renderer.material = rooms[key].Config.Wall.GetComponentInChildren<Renderer>().sharedMaterial;
 
             // loop over the room locations
             foreach (var locationKey in rooms[key].RoomLocations.Keys)
             {
-                //buildWalls(key, locationKey, rooms, room);
+                placeVoid(key, locationKey, rooms, thevoid);
+
+                placeFloor(key, locationKey, rooms, floor);
+
+                buildWalls(key, locationKey, rooms, walls);
 
                 buildEnemySpawn(key, locationKey, rooms, room);
 
                 //last thing  we should  do
                 PlayerSpawn(key, locationKey, rooms, room);
             }
+
+            var combiner = thevoid.AddComponent<MeshCombiner>();
+            combiner.AddCollider = false;
+            combiner.CombineMeshes();
+            combiner = floor.AddComponent<MeshCombiner>();
+            combiner.CombineMeshes();
+            combiner = walls.AddComponent<MeshCombiner>();
+            combiner.CombineMeshes();
+
+            room.isStatic = true;
+        }
+    }
+
+    protected virtual void placeVoid(Vector2Int key, Vector2Int locationKey, Dictionary<Vector2Int, Room> rooms, GameObject room)
+    {
+        if (rooms[key].RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.None)
+        {
+            var thevoid = Instantiate(rooms[key].Config.Void,
+                new Vector3(locationKey.x + ObjectSpawnLocation(rooms[key].Config.Void).x,
+                ObjectSpawnLocation(rooms[key].Config.Void).y,
+                locationKey.y + ObjectSpawnLocation(rooms[key].Config.Void).z), Quaternion.identity, room.transform);
+        }
+    }
+
+    protected virtual void placeFloor(Vector2Int key, Vector2Int locationKey, Dictionary<Vector2Int, Room> rooms, GameObject room)
+    {
+        // add wall if needed
+        if (rooms[key].RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.Floor ||
+            rooms[key].RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.Door)
+        {
+            var floor = Instantiate(rooms[key].Config.Floor,
+                new Vector3(locationKey.x + ObjectSpawnLocation(rooms[key].Config.Floor).x,
+                .1f,
+                locationKey.y + ObjectSpawnLocation(rooms[key].Config.Floor).z), Quaternion.identity, room.transform);
         }
     }
 
@@ -49,11 +101,6 @@ public class RoomBuilder : MonoBehaviour
                 new Vector3(locationKey.x + ObjectSpawnLocation(rooms[key].Config.Wall).x,
                 ObjectSpawnLocation(rooms[key].Config.Wall).y,
                 locationKey.y + ObjectSpawnLocation(rooms[key].Config.Wall).z), Quaternion.identity, room.transform);
-
-            var loc = wall.AddComponent<RoomLocation>();
-            loc.Location = rooms[key].RoomLocations[locationKey].Location;
-            loc.EnvironmentLocationType = rooms[key].RoomLocations[locationKey].EnvironmentLocationType;
-
         }
     }
 
@@ -77,8 +124,8 @@ public class RoomBuilder : MonoBehaviour
         if (rooms[key].RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.Floor &&
             rooms[key].RoomLocations[locationKey].LocationType == RoomLocationTypes.PlayerStartSpawn)
         {
-            var p = Instantiate(PlayerPrefab, new Vector3(locationKey.x + ObjectSpawnLocation(PlayerPrefab).x, ObjectSpawnLocation(PlayerPrefab).y, locationKey.y + ObjectSpawnLocation(PlayerPrefab).z), Quaternion.identity);
-            PlayerManager.AddPlayer(p.GetComponent<BasePlayer>());
+           var p = Instantiate(PlayerPrefab, new Vector3(locationKey.x + ObjectSpawnLocation(PlayerPrefab).x, ObjectSpawnLocation(PlayerPrefab).y, locationKey.y + ObjectSpawnLocation(PlayerPrefab).z), Quaternion.identity);
+           PlayerManager.AddPlayer(p.GetComponent<BasePlayer>());
         }
     }
 

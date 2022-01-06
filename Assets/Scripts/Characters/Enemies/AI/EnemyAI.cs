@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 public enum EnemyStates
@@ -11,21 +9,24 @@ public enum EnemyStates
     Attack
 }
 
-
 public class EnemyAI : MonoBehaviour
 {
+    public struct Data
+    {
 
-    protected EnemyStates CurrentState = EnemyStates.Wander;
-    protected IEnemyStates EnemyWander = new EnemyWanderState();
-    protected IEnemyStates EnemyChase = new EnemyChaseState();
+    }
 
-    public PathFinding pathFinding = new PathFinding();
+    public EnemyStates CurrentState = EnemyStates.Wander;
+    public IEnemyStates EnemyWander = new EnemyWanderState();
+    public IEnemyStates EnemyChase = new EnemyChaseState();
 
     [Header("Enemy AI")]
     public float SearchDetectRadius;
     public GameObject SearchSphere;
 
     public bool HasGravity = false;
+
+    public float PathCheckRate;
 
     public bool Disabled = false;
 
@@ -45,15 +46,15 @@ public class EnemyAI : MonoBehaviour
         SearchZone.SetSearchRadius(SearchDetectRadius);
     }
 
-    private void Update()
+    public void Update()
     {
-        if (Disabled  || Enemy == null)
+        if (Disabled || Enemy == null)
             return;
 
-        switch(CurrentState)
+        switch (CurrentState)
         {
             case EnemyStates.None:
-                
+
                 break;
             case EnemyStates.Wander:
                 CurrentState = EnemyWander.PerformState(this);
@@ -65,7 +66,7 @@ public class EnemyAI : MonoBehaviour
 
                 break;
             default:
-                break;           
+                break;
         }
     }
 }

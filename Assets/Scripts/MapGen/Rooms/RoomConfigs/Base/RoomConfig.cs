@@ -7,4 +7,5 @@ public class RoomConfig : ScriptableObject
 {
     public GameObject Floor;
     public GameObject Wall;
+    public GameObject Void;
 }

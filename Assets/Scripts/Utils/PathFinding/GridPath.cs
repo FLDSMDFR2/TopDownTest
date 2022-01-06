@@ -20,9 +20,9 @@ public class GridPath
         new Vector2Int(-1, -1) // diagonal bottom left
      };
 
-    protected RoomGenerator roomGenerator;
+    protected MapGenerator roomGenerator;
 
-    public virtual void SetRoomGenerator(RoomGenerator rg)
+    public virtual void SetRoomGenerator(MapGenerator rg)
     {
         roomGenerator = rg;
     }

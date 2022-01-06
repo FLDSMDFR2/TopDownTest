@@ -1,33 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public enum DoorSide
 {
+    None,
     Up,
     Down,
     Left,
     Right
 }
 
+/// <summary>
+/// Connection between rooms
+/// </summary>
 public class Door
 {
-    public List<Vector2Int> DoorLocations;
+    /// <summary>
+    /// center of the door
+    /// </summary>
+    public Vector2Int ConnectionPoint;
 
+    /// <summary>
+    ///  what side of the room the door is on
+    /// </summary>
     public DoorSide Side;
 
+    /// <summary>
+    /// Rooms connected by this door
+    /// </summary>
     public List<Room> ConnectedRooms = new List<Room>();
 
-    // if  the door belongs to this room
-    public bool IsMyDoor;
+    /// <summary>
+    /// Size of the door
+    /// </summary>
+    public int Size;
 
-
-    public  Door(List<Vector2Int> Locations, DoorSide side, List<Room> rooms, bool isForThisRoom = true)
+    public Door(Vector2Int connectionPoint, DoorSide side, List<Room> rooms, int size)
     {
-        DoorLocations = Locations;
+        ConnectionPoint = connectionPoint;
         Side = side;
         ConnectedRooms = rooms;
-        IsMyDoor = isForThisRoom;
+        Size = size;
     }
 }

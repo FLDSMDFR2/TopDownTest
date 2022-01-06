@@ -9,6 +9,7 @@ public class EnemyWanderState : IEnemyStates
 
     protected List<Vector2Int> path = null;
     protected int pathIndex = -1;
+    protected PathFinding pathFinder = new PathFinding();
 
     public EnemyStates PerformState(EnemyAI ai)
     {
@@ -65,13 +66,13 @@ public class EnemyWanderState : IEnemyStates
         Vector2Int tempNext = new Vector2Int(Int32.MinValue, Int32.MinValue);
         while (!GameManager.Instance.GetGridPath.Passable(tempNext))
         {
-            tempNext = AI.pathFinding.Round(new Vector3(UnityEngine.Random.Range(AI.transform.position.x - AI.SearchDetectRadius, AI.transform.position.x + AI.SearchDetectRadius),
+            tempNext = pathFinder.Round(new Vector3(UnityEngine.Random.Range(AI.transform.position.x - AI.SearchDetectRadius, AI.transform.position.x + AI.SearchDetectRadius),
                AI.transform.position.y,
                UnityEngine.Random.Range(AI.transform.position.z - AI.SearchDetectRadius, AI.transform.position.z + AI.SearchDetectRadius)));
         }
 
         // find a path to the location
-        path = AI.pathFinding.GetFindPath(GameManager.Instance.GetGridPath, AI.transform.position, new Vector3(tempNext.x, AI.transform.position.y, tempNext.y));
+        path = pathFinder.GetFindPath(GameManager.Instance.GetGridPath, AI.transform.position, new Vector3(tempNext.x, AI.transform.position.y, tempNext.y));
 
         if (path.Count > 0)
             pathIndex = 0;
