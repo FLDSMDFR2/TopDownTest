@@ -28,9 +28,9 @@ public class BaseEnemy : BaseCharacter
 
         transform.LookAt(_target);
 
-        if (PrimaryWeapon != null)
+        if (ActiveWeapon != null)
         {
-            FirePrimaryWeapon();
+            FireWeapon();
         }
     }
 

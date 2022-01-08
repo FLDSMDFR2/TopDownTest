@@ -317,10 +317,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CharacterID: 1
-  MaxHealth: 100
+  BaseHealth: 100
   CurentHealth: 0
-  HoldPos: {fileID: 6337678405704728276}
-  PrimaryWeaponSlot: {fileID: 6337678403697969877}
+  WeaponHoldPos: {fileID: 6337678405704728276}
+  WeaponSlot: {fileID: 6337678403697969877}
   ShieldSlot: {fileID: 6337678403852903360}
 --- !u!114 &8932784836195068663
 MonoBehaviour:

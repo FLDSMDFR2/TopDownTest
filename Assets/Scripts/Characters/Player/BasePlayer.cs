@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 public class BasePlayer : BaseCharacter
 {
     protected CharacterInputController inputController;
@@ -10,12 +7,11 @@ public class BasePlayer : BaseCharacter
     {
         base.Awake();
         inputController = GetComponent<CharacterInputController>();
-        inputController.OnFirePrimary += FirePrimaryWeapon;
+        inputController.OnFirePrimary += FireWeapon;
     }
-
 
     private void OnDestroy()
     {
-        inputController.OnFirePrimary -= FirePrimaryWeapon;
+        inputController.OnFirePrimary -= FireWeapon;
     }
 }

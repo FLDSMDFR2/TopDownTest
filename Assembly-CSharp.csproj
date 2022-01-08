@@ -55,18 +55,18 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Characters\BaseCharacter.cs" />
     <Compile Include="Assets\Scripts\Characters\Player\BasePlayer.cs" />
-    <Compile Include="Assets\Scripts\Controllers\EnemyInputController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\Character\EnemyInputController.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\Door.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Utils\Culling\CullingManager.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\BaseEnemy.cs" />
-    <Compile Include="Assets\Scripts\Controllers\CharacterInputController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\Character\CharacterInputController.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyChaseState.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyWanderState.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\RoomConfigs\Base\RoomConfig.cs" />
-    <Compile Include="Assets\Scripts\Controllers\BaseInputController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\Character\BaseInputController.cs" />
     <Compile Include="Assets\Scripts\Audio\Sound.cs" />
-    <Compile Include="Assets\Scripts\Projectile\BaseProjectile.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\Projectile\BaseProjectile.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\EnemySpawnManager.cs" />
     <Compile Include="Assets\Scripts\Mangers\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\PathFinding.cs" />
@@ -74,7 +74,7 @@
     <Compile Include="Assets\Scripts\MapGen\Rooms\Room.cs" />
     <Compile Include="Assets\Scripts\MapGen\Path\RoomBuilder.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\RoomLocation.cs" />
-    <Compile Include="Assets\Scripts\Sheilds\BaseShield.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\Sheilds\BaseShield.cs" />
     <Compile Include="Assets\Scripts\MapGen\Path\MapGenerator.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\IEnemyStates.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemySearchZone.cs" />
@@ -85,7 +85,7 @@
     <Compile Include="Assets\Scripts\Characters\Enemies\EnemySpawn.cs" />
     <Compile Include="Assets\Scripts\Utils\TraceManager.cs" />
     <Compile Include="Assets\Scripts\Mangers\GOPoolManager.cs" />
-    <Compile Include="Assets\Scripts\Weapons\BaseWeapon.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\Weapons\BaseWeapon.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAIUpdateManager.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\GridPath.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
