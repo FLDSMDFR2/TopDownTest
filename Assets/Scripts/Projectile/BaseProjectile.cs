@@ -2,25 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class BaseProjectile : MonoBehaviour
 {
-
     public float Speed = .5f;
     public float Damage = 5f;
-    public CollisionDetection ImpactCollider;
 
-    private int _characterId;
-    private Vector3 direction = Vector3.forward;
-    private float range = 1;
+    protected Rigidbody body;
+    protected int _characterId;
+    protected Vector3 direction = Vector3.forward;
+    protected float range = 1;
 
-    private void Start()
+    protected virtual void Awake()
     {
-        ImpactCollider.OnCollisionEvent += OnImpactCollider;
+        body = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    public virtual void Reset()
     {
-        UpdateProjectile();
+        body.velocity = Vector3.zero;
+        body.angularVelocity = Vector3.zero;
     }
 
     public virtual void SetCharacterId(int CharacterId)
@@ -39,10 +40,9 @@ public class BaseProjectile : MonoBehaviour
         StartCoroutine(DestoryProjectialRange());
     }
 
-    protected virtual void UpdateProjectile()
+    public virtual void Fire()
     {
-        float distanceToTravel = Speed * Time.deltaTime;
-        transform.Translate(direction * distanceToTravel, Space.World);
+        body.AddForce(direction * Speed, ForceMode.Impulse);
     }
 
     protected virtual void PlayerHit(BaseCharacter player)
@@ -74,10 +74,14 @@ public class BaseProjectile : MonoBehaviour
         GOPoolManager.AddObject(this.GetType(), gameObject);
     }
 
-    private void OnImpactCollider(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
+        HandleCollision(other);
+    }
 
-        if (other.gameObject.tag == "Triggers" || other.gameObject.tag == "Projectile")
+    protected virtual void HandleCollision(Collision other)
+    {
+        if (other.gameObject.tag == "Projectile")
         {
             return;
         }
@@ -96,10 +100,5 @@ public class BaseProjectile : MonoBehaviour
         {
             GroundHit();
         }
-    }
-
-    private void OnDestroy()
-    {
-        ImpactCollider.OnCollisionEvent -= OnImpactCollider;
     }
 }

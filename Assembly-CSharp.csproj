@@ -64,7 +64,6 @@
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyChaseState.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyWanderState.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\RoomConfigs\Base\RoomConfig.cs" />
-    <Compile Include="Assets\Scripts\Controllers\TopDown\TopDownCharacterInputController.cs" />
     <Compile Include="Assets\Scripts\Controllers\BaseInputController.cs" />
     <Compile Include="Assets\Scripts\Audio\Sound.cs" />
     <Compile Include="Assets\Scripts\Projectile\BaseProjectile.cs" />
@@ -81,7 +80,6 @@
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemySearchZone.cs" />
     <Compile Include="Assets\Scripts\Mangers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAI.cs" />
-    <Compile Include="Assets\Scripts\Projectile\CollisionDetection.cs" />
     <Compile Include="Assets\Scripts\Utils\UI\FPSCounterDisplay.cs" />
     <Compile Include="Assets\Scripts\Utils\RandomGenerator.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\EnemySpawn.cs" />
@@ -92,6 +90,7 @@
     <Compile Include="Assets\Scripts\Utils\PathFinding\GridPath.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\Utils\Rendering\MeshCombiner.cs" />
+    <Compile Include="Assets\Scripts\Utils\Helpers\Layers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

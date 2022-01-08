@@ -4,9 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class MeshCombiner : MonoBehaviour
 {
-    public bool AddCollider = true;
-
-    public virtual void CombineMeshes()
+    public virtual void CombineMeshes(bool isStatic = true, bool AddCollider = true)
     {
         //Get all mesh filters and combine
         MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
@@ -23,11 +21,12 @@ public class MeshCombiner : MonoBehaviour
         }
 
         // build and optimize new mesh
-        transform.GetComponent<MeshFilter>().mesh = new Mesh();
-        transform.GetComponent<MeshFilter>().mesh.CombineMeshes(combine, true, true);
-        transform.GetComponent<MeshFilter>().mesh.RecalculateNormals();
-        transform.GetComponent<MeshFilter>().mesh.RecalculateBounds();
-        transform.GetComponent<MeshFilter>().mesh.Optimize();
+        var mesh = transform.GetComponent<MeshFilter>().mesh = new Mesh();
+        mesh.CombineMeshes(combine, true, true);
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        mesh.Optimize();
+
         transform.gameObject.SetActive(true);
 
         // destroy all object we just made mesh from
@@ -38,5 +37,8 @@ public class MeshCombiner : MonoBehaviour
         
         //Add collider to mesh (if needed)
         if (AddCollider) gameObject.AddComponent<MeshCollider>();
+
+        // set go to static
+        gameObject.isStatic = isStatic;
     }
 }

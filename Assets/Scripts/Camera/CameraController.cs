@@ -43,7 +43,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         if (targets == null || targets.Count <= 0)
         {

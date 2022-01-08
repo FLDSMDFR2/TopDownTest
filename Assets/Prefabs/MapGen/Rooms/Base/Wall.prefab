@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8018337984813454788}
   - component: {fileID: 7904642773988380977}
   - component: {fileID: 3616282942546182233}
-  - component: {fileID: 6879509529529784752}
-  m_Layer: 0
+  - component: {fileID: 4771903211108835051}
+  m_Layer: 8
   m_Name: WallTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -82,7 +82,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6879509529529784752
+--- !u!65 &4771903211108835051
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,7 +93,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.1, y: 1, z: 1.1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4799307418199010769
 GameObject:
@@ -104,9 +104,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 493349164802373856}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

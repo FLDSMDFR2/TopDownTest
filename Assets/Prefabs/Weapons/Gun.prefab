@@ -239,13 +239,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fc17c1ac00758e4681b264b0efa4753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DebugEnabled: 1
   FirePos: {fileID: 6868498651272905785}
-  Projectial: {fileID: 5115669572997833630, guid: f44812b68bca5234b9746904aae980bb, type: 3}
-  Range: 2
+  Projectial: {fileID: 683715891614362776, guid: 197f8fbaba6f8bc4fa9f01f630ba4465, type: 3}
+  Range: 0.5
   FireRate: 0.2
-  ProjectileAmount: 1
-  StartAngle: 180
-  EndAngle: 180
+  ProjectileAmount: 5
+  BurstAmount: 1
+  BurstRate: 0.07
+  StartAngle: -30
+  EndAngle: 30
 --- !u!1 &8893062790523053183
 GameObject:
   m_ObjectHideFlags: 0

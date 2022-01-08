@@ -51,7 +51,7 @@ public class EnemyChaseState : IEnemyStates
             else
             {
                 var nextPos = new Vector3(path[0].x, AI.transform.position.y, (path[0].y));
-                AI.transform.transform.position = Vector3.MoveTowards(AI.transform.transform.position, nextPos, AI.Controller.CurrentSpeed * Time.deltaTime);
+                AI.transform.transform.position = Vector3.MoveTowards(AI.transform.transform.position, nextPos, AI.Controller.CurrentMoveSpeed * Time.deltaTime);
             }
         }
 

@@ -48,7 +48,7 @@ public class EnemyWanderState : IEnemyStates
             }
             else
             {
-                AI.transform.transform.position = Vector3.MoveTowards(AI.transform.transform.position, nextLoc, AI.Controller.CurrentSpeed * Time.deltaTime);
+                AI.transform.transform.position = Vector3.MoveTowards(AI.transform.transform.position, nextLoc, AI.Controller.CurrentMoveSpeed * Time.deltaTime);
             }
         }
         else

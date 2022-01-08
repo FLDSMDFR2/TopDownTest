@@ -13,11 +13,9 @@ public class BaseCharacter : MonoBehaviour
     public Transform HoldPos;
 
     public GameObject PrimaryWeaponSlot;
-    public GameObject SecondaryWeaponSlot;
     public GameObject ShieldSlot;
 
     protected BaseWeapon PrimaryWeapon;
-    protected BaseWeapon SecondaryWeapon;
     protected BaseShield Shield;
 
     protected Collider[] _myColliders;
@@ -32,7 +30,6 @@ public class BaseCharacter : MonoBehaviour
     protected void LoadInventoy()
     {
         PrimaryWeapon = PrimaryWeaponSlot.GetComponentInChildren<BaseWeapon>(true);
-        SecondaryWeapon = SecondaryWeaponSlot.GetComponentInChildren<BaseWeapon>(true);
         Shield = ShieldSlot.GetComponentInChildren<BaseShield>(true);
     }
 

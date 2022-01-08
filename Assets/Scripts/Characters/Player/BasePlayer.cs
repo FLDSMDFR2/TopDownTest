@@ -11,7 +11,6 @@ public class BasePlayer : BaseCharacter
         base.Awake();
         inputController = GetComponent<CharacterInputController>();
         inputController.OnFirePrimary += FirePrimaryWeapon;
-
     }
 
 

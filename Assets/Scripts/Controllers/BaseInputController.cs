@@ -2,85 +2,91 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class BaseInputController : MonoBehaviour
 {
-    public float DashSpeed = 10f;
-    public float BaseSpeed = 5f;
-    public float CurrentSpeed = 5f;
-    public float JumpHeight = 2f;
-    public float Gravity = -9.81f;
-    public float GroundDistance = 0.2f;
-    public LayerMask Ground;
-    public Vector3 Drag;
+    /// <summary>
+    /// Base speed to move
+    /// </summary>
+    public float BaseMoveSpeed = 5f;
+    /// <summary>
+    /// Current moving speed
+    /// </summary>
+    public float CurrentMoveSpeed;
+    /// <summary>
+    /// Rigidbody to control
+    /// </summary>
+    protected Rigidbody body;
+    /// <summary>
+    /// Movement vector
+    /// </summary>
+    protected Vector3 moveDirection;
 
-    public int MaxJumps = 2;
-    public int jumpCount = 0;
-    public Transform GroundChecker;
+    public float LookOffSet = 90;
+    /// <summary>
+    /// Position to look at
+    /// </summary>
+    protected Vector3 lookPosition;
+    /// <summary>
+    /// Direction vector to look at
+    /// </summary>
+    protected Vector3 lookDirection;
 
-    protected Collider[] _myColliders;
-
-    protected CharacterController _controller;
-    protected Vector3 _velocity;
-    protected bool _isGrounded = false;
-
-    void Start()
+    public void Awake()
     {
-        _controller = GetComponent<CharacterController>();
-
-        _myColliders = GetComponents<Collider>();
-
-        CurrentSpeed = BaseSpeed;
-    }
-    protected virtual void HandleMovement()
-    {
-
-    }
-
-    protected virtual void HandleLook()
-    {
-
+        //default current move speed to base speed on start
+        CurrentMoveSpeed = BaseMoveSpeed;
+        // get rigidbody we want to control
+        body = GetComponent<Rigidbody>();
     }
 
-    protected virtual void ApplyGravityAndForce()
+    protected virtual void Update()
     {
-        // add gravity 
-        _velocity.y = _velocity.y + (Gravity * Time.deltaTime);
-        if (_isGrounded && _velocity.y < 0)
-            _velocity.y = 0f;
+        //handle all movment input
+        HandleMovementInput();
 
-        _velocity.x /= 1 + Drag.x * Time.deltaTime;
-        _velocity.y /= 1 + Drag.y * Time.deltaTime;
-        _velocity.z /= 1 + Drag.z * Time.deltaTime;
-
-        _controller.Move(_velocity * Time.deltaTime);
+        //handle all looking input
+        HandleLookInput();
     }
 
-    #region OnCollision
-
-    void OnCollisionEnter(Collision collision)
+    protected virtual void FixedUpdate()
     {
-        if (collision.gameObject.tag == "Floor")
-        {
-            Landed(true);
-        }
+        //perform the movement 
+        PerformMovement();
+        //perform the look
+        PerformLook();
     }
 
-    void OnCollisionExit(Collision collision)
+    /// <summary>
+    /// Handle input for movement
+    /// </summary>
+    protected virtual void HandleMovementInput()
     {
-        if (collision.gameObject.tag == "Floor")
-        {
-            Landed(false);
-        }
+        moveDirection.x = Input.GetAxisRaw("Horizontal");
+        moveDirection.z = Input.GetAxisRaw("Vertical");
+        moveDirection.Normalize();
     }
-    #endregion
-
-    protected virtual void Landed(bool landed)
+    /// <summary>
+    /// Perform movment
+    /// </summary>
+    protected virtual void PerformMovement()
     {
-        _isGrounded = landed;
+        //body.MovePosition(body.position + moveDirection * CurrentMoveSpeed * Time.fixedDeltaTime);
+        body.AddForce(moveDirection * CurrentMoveSpeed, ForceMode.Impulse);
+    }
+    /// <summary>
+    /// Handle input to look
+    /// </summary>
+    protected virtual void HandleLookInput(){}
 
-        if (landed)
-        {
-            jumpCount = 0;
-        }
+    /// <summary>
+    /// Perform Look
+    /// </summary>
+    protected virtual void PerformLook()
+    {
+        lookDirection = lookPosition - body.position;
+        var angle = Mathf.Atan2(lookDirection.z, lookDirection.x) * Mathf.Rad2Deg - LookOffSet;
+        //body.rotation = Quaternion.Euler(0f,-angle,0f);
+        body.MoveRotation(Quaternion.Euler(0f, -angle, 0f));
     }
 }

@@ -6,8 +6,8 @@ TagManager:
   tags:
   - PlatForm
   - Floor
-  - Triggers
   - Projectile
+  - Triggers
   layers:
   - Default
   - TransparentFX
@@ -17,7 +17,7 @@ TagManager:
   - UI
   - 
   - 
-  - Ground
+  - Environment
   - Player
   - Projectile
   - 

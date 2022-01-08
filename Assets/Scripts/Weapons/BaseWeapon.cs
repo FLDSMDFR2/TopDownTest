@@ -4,32 +4,46 @@ using UnityEngine;
 
 public class BaseWeapon : MonoBehaviour
 {
+    [Header("Base Weapon")]
+    [SerializeField]
+    protected bool DebugEnabled = false;
+
     public Transform FirePos;
     //public Transform HoldPos;
 
     public GameObject Projectial;
     public float Range;
 
+    [Header("Base Fire Controls")]
     public float FireRate = 1f;
 
     public int ProjectileAmount = 1;
 
+    public int BurstAmount = 1;
+    public float BurstRate = 0.5f;
+
     public float StartAngle = 180;
     public float EndAngle = 180;
-    private Vector3 projectialDirection = Vector3.forward;
 
+    protected bool isFiring = false;
     protected float lastFire = 0f;
-
     protected bool isActiveWeapon = false;
+    protected int characterId;
 
-    private int _characterId;
+    void OnDrawGizmos()
+    {
+        if (Application.isPlaying && DebugEnabled)
+        {
+            Gizmos.DrawRay(FirePos.transform.position, FirePos.transform.up * 25);
+        }
+    }
 
     public virtual void SetWeapon(int CharacterID, Transform HoldPos)
     {
         if (isActiveWeapon)
             return;
 
-        _characterId = CharacterID;
+        characterId = CharacterID;
         transform.position = HoldPos.position;
         transform.rotation = HoldPos.rotation;
         gameObject.SetActive(true);
@@ -49,44 +63,64 @@ public class BaseWeapon : MonoBehaviour
 
     public virtual void Fire()
     {
+        // only fire if this weapon is active
         if (!isActiveWeapon)
             return;
      
-        if (lastFire <= 0f || Time.time >= lastFire + FireRate)
+        // if last fire is 0 then fire this is the first shot
+        // or fire when rate allows && we are currently not firing
+        if (lastFire <= 0f || (Time.time >= lastFire + FireRate && !isFiring))
         {
-            FireProjectial();
-            lastFire = Time.time;
+            isFiring = true;
+            StartCoroutine(FireProjectial());
         }
     }
+
     protected virtual System.Type GetProjectile()
     {
         return typeof(BaseProjectile);
     }
 
-    protected virtual void FireProjectial()
+    protected virtual IEnumerator FireProjectial()
     {
-        var pa = ProjectileAmount - 1;
-        if (pa <= 0) pa = 1;
-
-        float angleStep = (EndAngle - StartAngle) / pa;
-        float angle =  FirePos.eulerAngles.y + StartAngle;
-
-        for (int i = 0; i < ProjectileAmount; i++)
+        if (BurstAmount <= 0) BurstAmount = 1;
+        var burstCount = 0;
+        // perform burst fire if needed
+        while (burstCount < BurstAmount)
         {
-            Vector3 dir = new Vector3(Mathf.Sin(Mathf.Deg2Rad * angle), 0F, Mathf.Cos(Mathf.Deg2Rad * angle));
-            Quaternion rot = Quaternion.Euler(FirePos.rotation.eulerAngles.x, angle, FirePos.rotation.eulerAngles.z);
+            // fire projectile pattern
+            var pa = ProjectileAmount - 1;
+            if (pa <= 0) pa = 1;
 
-            var proj = GOPoolManager.GetObject(GetProjectile(), Projectial, FirePos.position, rot);
-            var baseProj = proj.GetComponent<BaseProjectile>();
+            float angleStep = (EndAngle - StartAngle) / pa;
+            float angle = FirePos.eulerAngles.y + StartAngle;
 
-            if (baseProj != null)
+            for (int i = 0; i < ProjectileAmount; i++)
             {
-                baseProj.SetCharacterId(_characterId);
-                baseProj.SetDirection(dir);
-                baseProj.SetRange(Range);
-            }
+                Vector3 dir = new Vector3(Mathf.Sin(Mathf.Deg2Rad * angle), 0F, Mathf.Cos(Mathf.Deg2Rad * angle));
+                Quaternion rot = Quaternion.Euler(FirePos.rotation.eulerAngles.x, angle, FirePos.rotation.eulerAngles.z);
 
-            angle += angleStep;
+                var proj = GOPoolManager.GetObject(GetProjectile(), Projectial, FirePos.position, rot);
+                var baseProj = proj.GetComponentInChildren<BaseProjectile>();
+
+                if (baseProj != null)
+                {
+                    baseProj.Reset();
+                    baseProj.SetCharacterId(characterId);
+                    baseProj.SetDirection(dir);
+                    baseProj.SetRange(Range);
+
+                    baseProj.Fire();
+                }
+
+                angle += angleStep;
+            }
+            burstCount++;
+            yield return new WaitForSeconds(BurstRate);
         }
+
+        // firing is complete
+        isFiring = false;
+        lastFire = Time.time;
     }
 }

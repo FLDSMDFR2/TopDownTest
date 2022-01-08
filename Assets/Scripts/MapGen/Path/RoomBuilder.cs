@@ -24,18 +24,21 @@ public class RoomBuilder : MonoBehaviour
             room.transform.parent = DestParentTransform;
 
             var floor = new GameObject("Floor " + room.name);
+            floor.layer = (int) Layers.Environment;
             floor.transform.parent = room.transform;
             floor.AddComponent<MeshFilter>();
             var renderer = floor.AddComponent<MeshRenderer>();
             renderer.material = rooms[key].Config.Floor.GetComponentInChildren<Renderer>().sharedMaterial;
 
             var thevoid = new GameObject("Void " + room.name);
+            thevoid.layer = (int) Layers.Environment;
             thevoid.transform.parent = room.transform;
             thevoid.AddComponent<MeshFilter>();
             renderer = thevoid.AddComponent<MeshRenderer>();
             renderer.material = rooms[key].Config.Void.GetComponentInChildren<Renderer>().sharedMaterial;
 
             var walls = new GameObject("Walls " + room.name);
+            walls.layer = (int) Layers.Environment;
             walls.transform.parent = room.transform;
             walls.AddComponent<MeshFilter>();
             renderer = walls.AddComponent<MeshRenderer>();
@@ -50,17 +53,18 @@ public class RoomBuilder : MonoBehaviour
 
                 buildWalls(key, locationKey, rooms, walls);
 
-                buildEnemySpawn(key, locationKey, rooms, room);
+                //buildEnemySpawn(key, locationKey, rooms, room);
 
                 //last thing  we should  do
                 PlayerSpawn(key, locationKey, rooms, room);
             }
 
             var combiner = thevoid.AddComponent<MeshCombiner>();
-            combiner.AddCollider = false;
-            combiner.CombineMeshes();
+            combiner.CombineMeshes(true,false);
+
             combiner = floor.AddComponent<MeshCombiner>();
             combiner.CombineMeshes();
+
             combiner = walls.AddComponent<MeshCombiner>();
             combiner.CombineMeshes();
 
@@ -87,7 +91,7 @@ public class RoomBuilder : MonoBehaviour
         {
             var floor = Instantiate(rooms[key].Config.Floor,
                 new Vector3(locationKey.x + ObjectSpawnLocation(rooms[key].Config.Floor).x,
-                .1f,
+                0f,
                 locationKey.y + ObjectSpawnLocation(rooms[key].Config.Floor).z), Quaternion.identity, room.transform);
         }
     }
@@ -124,7 +128,7 @@ public class RoomBuilder : MonoBehaviour
         if (rooms[key].RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.Floor &&
             rooms[key].RoomLocations[locationKey].LocationType == RoomLocationTypes.PlayerStartSpawn)
         {
-           var p = Instantiate(PlayerPrefab, new Vector3(locationKey.x + ObjectSpawnLocation(PlayerPrefab).x, ObjectSpawnLocation(PlayerPrefab).y, locationKey.y + ObjectSpawnLocation(PlayerPrefab).z), Quaternion.identity);
+           var p = Instantiate(PlayerPrefab, new Vector3(locationKey.x + ObjectSpawnLocation(PlayerPrefab).x, PlayerPrefab.transform.localScale.y, locationKey.y + ObjectSpawnLocation(PlayerPrefab).z), Quaternion.identity);
            PlayerManager.AddPlayer(p.GetComponent<BasePlayer>());
         }
     }
