@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum DoorSide
@@ -13,29 +14,34 @@ public enum DoorSide
 /// <summary>
 /// Connection between rooms
 /// </summary>
-public class Door
+[Serializable]
+public class DoorData
 {
     /// <summary>
     /// center of the door
     /// </summary>
+    [SerializeField]
     public Vector2Int ConnectionPoint;
 
     /// <summary>
     ///  what side of the room the door is on
     /// </summary>
+    [SerializeField]
     public DoorSide Side;
 
     /// <summary>
     /// Rooms connected by this door
     /// </summary>
-    public List<Room> ConnectedRooms = new List<Room>();
+    [SerializeField]
+    public List<RoomData> ConnectedRooms = new List<RoomData>();
 
     /// <summary>
     /// Size of the door
     /// </summary>
+    [SerializeField]
     public int Size;
 
-    public Door(Vector2Int connectionPoint, DoorSide side, List<Room> rooms, int size)
+    public DoorData(Vector2Int connectionPoint, DoorSide side, List<RoomData> rooms, int size)
     {
         ConnectionPoint = connectionPoint;
         Side = side;

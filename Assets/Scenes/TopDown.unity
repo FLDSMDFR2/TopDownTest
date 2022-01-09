@@ -810,10 +810,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1774743573}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baa7a01925dbe9743878092a8351b80d, type: 3}
+  m_Script: {fileID: 11500000, guid: f13a1a0a861b0674eb9c2ac7827c036b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerPrefab: {fileID: 6337678404921798792, guid: f38da3527c00f5c45a2d59ad7aa77eb1, type: 3}
+  DebugEnabled: 0
+  minRoomConnectionSize: 4
+  Config: {fileID: 11400000, guid: e2f61f2b2a8a935448618f32a5d001f6, type: 2}
 --- !u!4 &1774743575
 Transform:
   m_ObjectHideFlags: 0
@@ -857,7 +859,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Difficulty: 0
-  roomGenerator: {fileID: 1774743578}
   PathGenParentTransform: {fileID: 1695224882}
 --- !u!114 &1774743578
 MonoBehaviour:
@@ -875,8 +876,8 @@ MonoBehaviour:
   mapSizeX: 50
   mapSizeY: 50
   percentageLargeRoomDim: 33
-  minRoomSizeX: 20
-  minRoomSizeY: 20
+  MinRoomSizeX: 20
+  MinRoomSizeY: 20
   numRooms: 2
   percentageGoUp: 60
   percentageGoDown: 33
@@ -884,6 +885,3 @@ MonoBehaviour:
   percentageGoRight: 60
   deviationRate: 40
   maxRoutes: 20
-  minRoomConnectionSize: 4
-  Config: {fileID: 11400000, guid: 1b24d0ca66ec88f42a505855df19294e, type: 2}
-  RoomBuilder: {fileID: 1774743574}

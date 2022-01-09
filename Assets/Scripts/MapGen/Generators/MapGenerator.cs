@@ -3,23 +3,41 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using UnityEngine;
 
+/// <summary>
+/// Generate the Map
+/// </summary>
 public class MapGenerator : MonoBehaviour
 {
+    /// <summary>
+    /// Debug
+    /// </summary>
     [SerializeField]
     protected bool DebugEnabled = false;
 
+    [Header("Map Generation")]
+    /// <summary>
+    /// Map size X
+    /// </summary>
     [SerializeField]
     protected int mapSizeX;
-
+    /// <summary>
+    /// Map size y
+    /// </summary>
     [SerializeField]
     protected int mapSizeY;
-
+    /// <summary>
+    /// Percent change to get a room that is max size in a direction X or Y
+    /// </summary>
     [SerializeField]
     protected int percentageLargeRoomDim;
-
+    /// <summary>
+    /// Min room size X
+    /// </summary>
     [SerializeField]
-    protected int minRoomSizeX;
-
+    public int MinRoomSizeX;
+    /// <summary>
+    /// Generate room size for x based on min size x and map size x (use percentageLargeRoomDim to maybe get max size)
+    /// </summary>
     protected int roomSizeX
     {
         get
@@ -30,14 +48,18 @@ public class MapGenerator : MonoBehaviour
                 return mapSizeX;
 
             // we want to make sure its and even number 
-            var temp = RandomGenerator.SeededRange(minRoomSizeX, mapSizeX);
+            var temp = RandomGenerator.SeededRange(MinRoomSizeX, mapSizeX);
             return temp % 2 != 0 ? temp + 1 : temp;
         }
     }
-
+    /// <summary>
+    /// Min room size X
+    /// </summary>
     [SerializeField]
-    protected int minRoomSizeY;
-
+    public int MinRoomSizeY;
+    /// <summary>
+    /// Generate room size for y based on min size y and map size y (use percentageLargeRoomDim to maybe get max size)
+    /// </summary>
     protected int roomSizeY
     { 
         get
@@ -48,76 +70,71 @@ public class MapGenerator : MonoBehaviour
                 return mapSizeY;
 
             // we want to make sure its and even number 
-            var temp = RandomGenerator.SeededRange(minRoomSizeY, mapSizeY);
+            var temp = RandomGenerator.SeededRange(MinRoomSizeY, mapSizeY);
             return temp % 2 != 0 ? temp + 1 : temp;
         }
     }
-
+    /// <summary>
+    /// Total number of rooms to generate in the map
+    /// </summary>
     [SerializeField]
     protected int numRooms;
-
+    /// <summary>
+    /// Percent for map walker to go up from current location on the map when generation room locations
+    /// </summary>
     [SerializeField]
     protected int percentageGoUp;
+    /// <summary>
+    /// Percent for map walker to go down from current location on the map when generation room locations
+    /// </summary>
     [SerializeField]
     protected int percentageGoDown;
+    /// <summary>
+    /// Percent for map walker to go left from current location on the map when generation room locations
+    /// </summary>
     [SerializeField]
     protected int percentageGoLeft;
+    /// <summary>
+    /// Percent for map walker to go right from current location on the map when generation room locations
+    /// </summary>
     [SerializeField]
     protected int percentageGoRight;
+    /// <summary>
+    /// Rate to change direction
+    /// </summary>
     [SerializeField]
     protected int deviationRate = 33;
+    /// <summary>
+    /// Max number of walkers that can be created
+    /// </summary>
     [SerializeField]
     protected int maxRoutes = 20;
-    [SerializeField]
-    protected int minRoomConnectionSize;
-
+    /// <summary>
+    /// Current number of walkers
+    /// </summary>
     private int routeCount = 0;
+    /// <summary>
+    /// This hold a lookup for all location on the map (not all location will be used)
+    /// </summary>
+    protected Dictionary<Vector2Int, RoomData> map = new Dictionary<Vector2Int, RoomData>();
+    /// <summary>
+    /// This hold a lookup for all rooms generated within the map
+    /// </summary>
+    protected Dictionary<Vector2Int, RoomData> rooms = new Dictionary<Vector2Int, RoomData>(); 
 
-    //---------------------------------
-    // TEMP STUFF UPDATE THIS LATER
-    [SerializeField]
-    protected RoomConfig Config;
-
-    public RoomBuilder RoomBuilder;
-
-    //---------------------------------
-
-    protected Dictionary<Vector2Int, Room> map;
-    protected Dictionary<Vector2Int, Room> rooms;
-
-    // parent obejct for all rooms
-    protected Transform DestParentTransform;
-
-    // Game Difficulty selected
-    protected GameDifficulty difficulty;
-
-    public void RoomGen(Transform DestParent, GameDifficulty dif)
+    public void MapGen()
     {
-        DestParentTransform = DestParent;
-        difficulty = dif;
-
-        SetUp();
-
-        // start to build rooms pass null to set start room
+        Init();
+        // create room data within the map
         CreateRooms(null);
-
-        // update all the rooms
-        UpdateRooms();
-
-        // build the rooms we have created
-        RoomBuilder.BuildRooms(DestParentTransform, rooms);
     }
 
     /// <summary>
-    ///  Set up the room generator
+    ///  Init needed values for map generation
     /// </summary>
-    protected virtual void SetUp()
+    protected virtual void Init()
     {
-        //init the rooms dictionary
-        map = new Dictionary<Vector2Int, Room>();
-        rooms = new Dictionary<Vector2Int, Room>();
-
-        // init rooms locations within the dictionary
+        // init map dictionary locations to null
         for (int i = 0; i < mapSizeX; i++)
         {
             for (int j = 0; j < mapSizeY; j++)
@@ -128,6 +145,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    #region Debug
     void OnDrawGizmos()
     {
         if (Application.isPlaying && DebugEnabled)
@@ -138,43 +156,15 @@ public class MapGenerator : MonoBehaviour
             {
                 Gizmos.DrawWireCube(new Vector3(key.x * mapSizeX + (mapSizeX / 2), 0, key.y * mapSizeY + (mapSizeY / 2)), new Vector3(mapSizeX, .1f, mapSizeY));
             }
-
-            // room display
-            foreach (var r in rooms.Keys)
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawWireCube(new Vector3(rooms[r].RoomConvertedCenter().x, 1f, rooms[r].RoomConvertedCenter().y), new Vector3(4, 4, 4));
-
-                foreach (var d in rooms[r].Doors)
-                {
-                    var direction = Vector3.zero;
-                    if (d.Side == DoorSide.Left)
-                        direction = Vector3.left;
-                    else if (d.Side == DoorSide.Right)
-                        direction = Vector3.right;
-                    else if (d.Side == DoorSide.Up)
-                        direction = Vector3.forward;
-                    else if (d.Side == DoorSide.Down)
-                        direction = Vector3.back;
-
-                    Gizmos.DrawRay(new Vector3(rooms[r].RoomConvertedCenter().x, .5f, rooms[r].RoomConvertedCenter().y), direction * 25);
-                }
-
-                Gizmos.color = Color.green;
-                foreach (var rl in rooms[r].RoomLocations.Keys)
-                {
-                    if (rooms[r].RoomLocations[rl].EnvironmentLocationType == RoomLocationEnvironmentTypes.Door)
-                        Gizmos.DrawWireCube(new Vector3(rl.x, 1f, rl.y), new Vector3(1, 1, 1));
-                }
-            }
         }
     }
+    #endregion
 
     #region Create Rooms
     /// <summary>
     /// Create rooms within the map
     /// </summary>
-    protected virtual void CreateRooms(Room previousRoom)
+    protected virtual void CreateRooms(RoomData previousRoom)
     {
         // we dont have a last room so lets build the first room
         if (previousRoom == null)
@@ -194,15 +184,15 @@ public class MapGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// Build start room
+    /// Create the first room data some place in the middle of the map
     /// </summary>
-    protected virtual Room CreateFirstRoom()
+    protected virtual RoomData CreateFirstRoom()
     {
         // get random location on the map to start some place in the middle of the map
         var mapX = RandomGenerator.SeededRange(mapSizeX / 4, mapSizeX - (mapSizeX / 4));
         var mapY = RandomGenerator.SeededRange(mapSizeY / 4, mapSizeY - (mapSizeY / 4));
 
-        return new Room(new Vector2Int(mapX, mapY), RoomTypes.StartRoom, RoomDifficulty.Easy, Config, roomSizeX, roomSizeY, mapSizeX, mapSizeY);
+        return new RoomData(new Vector2Int(mapX, mapY), roomSizeX, roomSizeY, mapSizeX, mapSizeY); ;
     }
 
     /// <summary>
@@ -361,179 +351,54 @@ public class MapGenerator : MonoBehaviour
 
     protected virtual void TryCreateRoom(Vector2Int location)
     {
-        // TODO: make this random based on difficulty
-        var room = new Room(location, RoomTypes.Enemy, RoomDifficulty.Easy, Config, roomSizeX, roomSizeY, mapSizeX, mapSizeY);
+        // create room data for this location
+        var roomData = new RoomData(location, roomSizeX, roomSizeY, mapSizeX, mapSizeY);
 
         //if the location is in the map and not a room
-        if (AddRoom(location, room))
+        if (AddRoom(location, roomData))
         {
-            CreateRooms(room);
+            CreateRooms(roomData);
         }
     }
 
-
     /// <summary>
-    /// Add the room to  the map and rooms dictionary
+    /// Add the room to the map and rooms dictionary
     /// </summary>
     /// <param name="key">room loc</param>
-    /// <param name="r">room to add</param>
+    /// <param name="rd">roomdata to add</param>
     /// <returns>if room was added</returns>
-    protected virtual bool AddRoom(Vector2Int key, Room r)
+    protected virtual bool AddRoom(Vector2Int key, RoomData rd)
     {
         // if we hit the room count limit then dont add anymore
         if (rooms.Count >= numRooms)
             return false;
 
+        // location is on the map and is not already a room
         if (map.ContainsKey(key) && !rooms.ContainsKey(key))
         {
-            map[key] = r;
-            rooms.Add(key, r);
+            map[key] = rd;
+            rooms.Add(key, rd);
             return true;
         }
         return false;
     }
     #endregion
 
-    #region Update Rooms
-    protected virtual void UpdateRooms()
-    {
-        // add Room Connections
-        AddRoomConnections();
-
-        // set room Difficulty / type
-        UpdateRoomsTypes();
-
-        //Generate room  layout
-        GenerateRoomLayout();
-    }
-
-    /// <summary>
-    /// Add Room connections
-    /// </summary>
-    protected virtual void AddRoomConnections()
-    {
-        // the key list should be in order that the rooms where added
-        foreach (var key in rooms.Keys)
-        {
-            // location to check
-            Vector2Int checkLocation = rooms[key].MapLocation + new Vector2Int(0, 1);
-
-            //check UP if room add door
-            if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
-            {
-                CreateRoomConnection(DoorSide.Up, rooms[key], map[checkLocation]);
-            }
-
-            //check DOWN if room add door
-            checkLocation = rooms[key].MapLocation + new Vector2Int(0, -1);
-            if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
-            {
-                CreateRoomConnection( DoorSide.Down, rooms[key], map[checkLocation]);
-            }
-
-            //check RIGHT if room add door
-            checkLocation = rooms[key].MapLocation + new Vector2Int(1, 0);
-            if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
-            {
-                CreateRoomConnection(DoorSide.Right, rooms[key], map[checkLocation]);
-            }
-
-            //check LEFT if room add door
-            checkLocation = rooms[key].MapLocation + new Vector2Int(-1, 0);
-            if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
-            {
-                CreateRoomConnection(DoorSide.Left, rooms[key], map[checkLocation]);
-            }
-        }
-    }
-
-    protected virtual void CreateRoomConnection(DoorSide side, Room fromRoom, Room toRoom)
-    {
-        // make sure we are not adding a duplicate door
-        foreach (var d in fromRoom.Doors)
-        {
-            foreach (var r in d.ConnectedRooms)
-            {
-                if (r == toRoom) return;
-            }
-        }
-
-        foreach (var d in toRoom.Doors)
-        {
-            foreach (var r in d.ConnectedRooms)
-            {
-                if (r == fromRoom) return;
-            }
-        }
-
-        var ConnectedRooms = new List<Room>();
-        ConnectedRooms.Add(fromRoom);
-        ConnectedRooms.Add(toRoom);
-
-        // set the max connection size base on the room dims default to the smallest room dim
-        var maxConnectionSize = minRoomSizeX > minRoomSizeY ? minRoomSizeY : minRoomSizeX;
-        if (side == DoorSide.Up || side == DoorSide.Down)
-            maxConnectionSize = fromRoom.RoomSizeX > toRoom.RoomSizeX ? toRoom.RoomSizeX : fromRoom.RoomSizeX;
-        else
-            maxConnectionSize = fromRoom.RoomSizeY > toRoom.RoomSizeY ? toRoom.RoomSizeY : fromRoom.RoomSizeY;
-
-        var roomConnectionSide = RandomGenerator.SeededRange(minRoomConnectionSize, (maxConnectionSize / 2) - 1);
-        
-
-        // TODO: maybe move this around so its not always in the middle of the room
-        fromRoom.Doors.Add(new Door(fromRoom.RoomConvertedCenter(), side, ConnectedRooms, roomConnectionSide));
-
-        DoorSide toDoorSide;
-        if (side == DoorSide.Down)
-            toDoorSide = DoorSide.Up;
-        else if (side == DoorSide.Up)
-            toDoorSide = DoorSide.Down;
-        else if (side == DoorSide.Left)
-            toDoorSide = DoorSide.Right;
-        else
-            toDoorSide = DoorSide.Left;
-
-        // TODO: maybe move this around so its not always in the middle of the room
-        toRoom.Doors.Add(new Door(fromRoom.RoomConvertedCenter(), toDoorSide, ConnectedRooms, roomConnectionSide));
-    }
-
-    /// <summary>
-    /// set the room type and difficulty
-    /// </summary>
-    protected virtual void UpdateRoomsTypes()
-    {
-        foreach (var key in rooms.Keys)
-        {
-
-        }
-    }
-
-    /// <summary>
-    /// Once we have updated the room tell the room to generate a layout
-    /// </summary>
-    protected virtual void GenerateRoomLayout()
-    {
-        foreach (var key in rooms.Keys)
-        {
-            rooms[key].GenerateRoomLayout();
-        }
-    }
-    #endregion
-
-
+    #region Helpers
     // return key for room based on real world location
     public virtual Vector2Int GetRoomKey(Vector2Int location)
     {
         return new Vector2Int(location.x / mapSizeX, location.y / mapSizeY);
     }
 
-    public Dictionary<Vector2Int, Room> GetMap()
+    public Dictionary<Vector2Int, RoomData> GetMap()
     {
         return map;
     }
 
-    public Dictionary<Vector2Int, Room> GetRooms()
+    public Dictionary<Vector2Int, RoomData> GetRooms()
     {
         return rooms;
     }
+    #endregion
 }

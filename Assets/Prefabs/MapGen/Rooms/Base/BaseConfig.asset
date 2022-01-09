@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbf2f030112d62c48ae229666cdc4968, type: 3}
-  m_Name: BaseRoomConfig
+  m_Name: BaseConfig
   m_EditorClassIdentifier: 
+  Player: {fileID: 6337678404921798792, guid: f38da3527c00f5c45a2d59ad7aa77eb1, type: 3}
   Floor: {fileID: 8090627154540690214, guid: 77d926c0b009aa54088e10566fe6b591, type: 3}
   Wall: {fileID: 4799307418199010769, guid: 3e983aa4d6c49f145bfdd01374c0c5f7, type: 3}
   Void: {fileID: 8090627154540690214, guid: f0ee4ea90508245419cd6c1c3538bfda, type: 3}

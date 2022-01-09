@@ -53,17 +53,20 @@
     <UnityVersion>2020.3.16f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\StartRoom.cs" />
     <Compile Include="Assets\Scripts\Characters\BaseCharacter.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\EnemyRoom.cs" />
+    <Compile Include="Assets\Scripts\Utils\Rendering\MeshCombiner.cs" />
     <Compile Include="Assets\Scripts\Characters\Player\BasePlayer.cs" />
     <Compile Include="Assets\Scripts\Controllers\Character\EnemyInputController.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Rooms\Door.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\Data\DoorData.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Utils\Culling\CullingManager.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\BaseEnemy.cs" />
     <Compile Include="Assets\Scripts\Controllers\Character\CharacterInputController.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyChaseState.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyWanderState.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomConfigs\Base\RoomConfig.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\RoomConfigs\Base\RoomPrefabConfig.cs" />
     <Compile Include="Assets\Scripts\Controllers\Character\BaseInputController.cs" />
     <Compile Include="Assets\Scripts\Audio\Sound.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Projectile\BaseProjectile.cs" />
@@ -71,13 +74,13 @@
     <Compile Include="Assets\Scripts\Mangers\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\PathFinding.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAIUpdateJob.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Rooms\Room.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Path\RoomBuilder.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomLocation.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\Room.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\Data\RoomLocationData.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Sheilds\BaseShield.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Path\MapGenerator.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Generators\MapGenerator.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\IEnemyStates.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemySearchZone.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Generators\RoomGenerator.cs" />
     <Compile Include="Assets\Scripts\Mangers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\Utils\UI\FPSCounterDisplay.cs" />
@@ -87,10 +90,10 @@
     <Compile Include="Assets\Scripts\Mangers\GOPoolManager.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Weapons\BaseWeapon.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAIUpdateManager.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\Data\RoomData.cs" />
+    <Compile Include="Assets\Scripts\Utils\Helpers\Layers.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\GridPath.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
-    <Compile Include="Assets\Scripts\Utils\Rendering\MeshCombiner.cs" />
-    <Compile Include="Assets\Scripts\Utils\Helpers\Layers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
