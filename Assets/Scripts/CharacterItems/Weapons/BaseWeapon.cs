@@ -30,7 +30,7 @@ public class BaseWeapon : MonoBehaviour
     protected virtual void Update()
     {
         lineRenderer.SetPosition(0, FirePos.position);
-        lineRenderer.SetPosition(1, FirePos.position + (FirePos.up * Range));
+        lineRenderer.SetPosition(1, FirePos.position + (FirePos.forward * Range));
     }
 
     public virtual void SetWeapon(int CharacterID, Transform HoldPos)

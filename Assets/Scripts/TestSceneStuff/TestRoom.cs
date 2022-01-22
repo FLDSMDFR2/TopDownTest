@@ -68,7 +68,7 @@ public class TestRoom : StartRoom
             // add enemy spawn to this location
             var spawn = gameObject.AddComponent<EnemySpawn>();
             spawn.Location = new Vector3(locationKey.x, 1f, locationKey.y); ;
-            spawn.MaxEnemysToSpawn = 1;
+            spawn.MaxEnemysToSpawn = 5;
             spawn.difficulty = Data.Difficulty;
         }
     }

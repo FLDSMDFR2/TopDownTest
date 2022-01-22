@@ -55,16 +55,57 @@ public class EnemyAttackState : EnemyBaseState
         AI.Controller.IsChase = true;
 
         // TODO: change this to be more dynamic
-        // just stop and look at the target
+        // find pos at attacking distance from target
         float3 moveToPos = (AI.transform.position - AI.Enemy.GetTarget().position).normalized * AI.Enemy.AttackingDistance + AI.Enemy.GetTarget().position;
-        AI.Controller.SetMoveDirection(-((float3)AI.transform.position - moveToPos));
+        //add checks to keep spacing between other enemies
+        float3 pos = (moveToPos + (float3)KeepSpacing());
+        pos.y = 0;
 
+        // if we are not at pos we are moving to then keep moving to it
+        AI.Controller.SetMoveDirection(-((float3)AI.transform.position - pos));
+
+        // look at target
         AI.Controller.SetLookLocation(AI.Enemy.GetTarget().transform.position);
-
-
 
         // tell enemy to attack
         AI.Enemy.Attack();
+    }
+
+    /// <summary>
+    /// Check to see if we need to keep spacing between us and another enemy
+    /// </summary>
+    /// <returns></returns>
+    protected virtual Vector3 KeepSpacing()
+    {
+        Vector3 sum = Vector3.zero;
+        float count = 0f;
+        var mask = LayerMask.GetMask(Layers.Enemy.ToString());
+        Collider[] rangeChecks = Physics.OverlapSphere(AI.transform.position, AI.Enemy.DistanceFromOtherEnemies, mask);
+        if (rangeChecks.Length != 0)
+        {
+            foreach (var enemy in rangeChecks)
+            {
+                if (enemy.transform != AI.transform)
+                {
+                    Vector3 difference = AI.transform.position - enemy.transform.position;
+                    difference = difference.normalized / Mathf.Abs(difference.magnitude);
+                    sum += difference;
+                    count++;
+                }
+            }
+        }
+
+        if (count > 0)
+        {
+            // average the direction
+            sum /= count;
+
+            // set the speed of movement
+            sum = sum.normalized * 1;
+
+        }
+
+        return sum;
     }
     #endregion
     
