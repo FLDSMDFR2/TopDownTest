@@ -18,10 +18,32 @@ public class GOPoolManager : MonoBehaviour
         if (objPool.ContainsKey(key) && objPool[key].Count > 0)
         {
             var retObj = objPool[key].Dequeue();
-            retObj.transform.position = pos;
-            retObj.transform.rotation = rot;
-            retObj.SetActive(true);
-            return retObj;
+            var found = false;
+            while (true)
+            {
+                //if not active
+                if (!retObj.activeSelf)
+                {
+                    found = true;
+                    break;
+                }                 
+                else
+                {
+                    if (objPool[key].Count > 0)
+                        retObj = objPool[key].Dequeue();
+                    else
+                        break; // no more in queue
+                }
+                    
+            }
+
+            if (found)
+            {
+                retObj.transform.position = pos;
+                retObj.transform.rotation = rot;
+                retObj.SetActive(true);
+                return retObj;
+            }
         }
 
         return CreateObject(key, obj, pos, rot);

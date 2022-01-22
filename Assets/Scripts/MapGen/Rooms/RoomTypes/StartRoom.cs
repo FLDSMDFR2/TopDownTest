@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class StartRoom : Room
@@ -19,7 +20,7 @@ public class StartRoom : Room
         while (!startLocFound)
         {
             // find random location  and check if we can set as spawn
-            var location = new Vector2Int(RandomGenerator.SeededRange(Data.RoomConvertedOrigin().x, Data.RoomConvertedOrigin().x + Data.RoomSizeX), 
+            var location = new int2(RandomGenerator.SeededRange(Data.RoomConvertedOrigin().x, Data.RoomConvertedOrigin().x + Data.RoomSizeX), 
                 RandomGenerator.SeededRange(Data.RoomConvertedOrigin().y, Data.RoomConvertedOrigin().y + Data.RoomSizeY));
 
             if (Data.RoomLocations.ContainsKey(location) &&
@@ -40,7 +41,7 @@ public class StartRoom : Room
     /// Add room specific elements
     /// </summary>
     /// <param name="locationKey"></param>
-    protected override void PlaceRoomLocationElements(Vector2Int locationKey)
+    protected override void PlaceRoomLocationElements(int2 locationKey)
     {
         base.PlaceRoomLocationElements(locationKey);
 

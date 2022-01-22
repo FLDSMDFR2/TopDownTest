@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
@@ -20,11 +21,49 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     [SerializeField]
     protected int mapSizeX;
+    public int MapSizeX
+    {
+        get
+        {
+            return mapSizeX;
+        }
+    }
     /// <summary>
     /// Map size y
     /// </summary>
     [SerializeField]
     protected int mapSizeY;
+    public int MapSizeY
+    {
+        get
+        {
+            return mapSizeY;
+        }
+    }
+    /// <summary>
+    /// Map Chunk size X
+    /// </summary>
+    [SerializeField]
+    protected int mapChunkSizeX;
+    public int MapChunkSizeX
+    {
+        get
+        {
+            return mapChunkSizeX;
+        }
+    }
+    /// <summary>
+    /// Map Chunk size y
+    /// </summary>
+    [SerializeField]
+    protected int mapChunkSizeY;
+    public int MapChunkSizeY
+    {
+        get
+        {
+            return mapChunkSizeY;
+        }
+    }
     /// <summary>
     /// Percent change to get a room that is max size in a direction X or Y
     /// </summary>
@@ -48,7 +87,7 @@ public class MapGenerator : MonoBehaviour
                 return mapSizeX;
 
             // we want to make sure its and even number 
-            var temp = RandomGenerator.SeededRange(MinRoomSizeX, mapSizeX);
+            var temp = RandomGenerator.SeededRange(MinRoomSizeX, MapChunkSizeX);
             return temp % 2 != 0 ? temp + 1 : temp;
         }
     }
@@ -70,7 +109,7 @@ public class MapGenerator : MonoBehaviour
                 return mapSizeY;
 
             // we want to make sure its and even number 
-            var temp = RandomGenerator.SeededRange(MinRoomSizeY, mapSizeY);
+            var temp = RandomGenerator.SeededRange(MinRoomSizeY, MapChunkSizeY);
             return temp % 2 != 0 ? temp + 1 : temp;
         }
     }
@@ -116,11 +155,11 @@ public class MapGenerator : MonoBehaviour
     /// <summary>
     /// This hold a lookup for all location on the map (not all location will be used)
     /// </summary>
-    protected Dictionary<Vector2Int, RoomData> map = new Dictionary<Vector2Int, RoomData>();
+    protected Dictionary<int2, RoomData> map = new Dictionary<int2, RoomData>();
     /// <summary>
     /// This hold a lookup for all rooms generated within the map
     /// </summary>
-    protected Dictionary<Vector2Int, RoomData> rooms = new Dictionary<Vector2Int, RoomData>(); 
+    protected Dictionary<int2, RoomData> rooms = new Dictionary<int2, RoomData>(); 
 
     public void MapGen()
     {
@@ -135,11 +174,11 @@ public class MapGenerator : MonoBehaviour
     protected virtual void Init()
     {
         // init map dictionary locations to null
-        for (int i = 0; i < mapSizeX; i++)
+        for (int i = 0; i < MapSizeX; i++)
         {
-            for (int j = 0; j < mapSizeY; j++)
+            for (int j = 0; j < MapSizeY; j++)
             {
-                var key = new Vector2Int(j, i);
+                var key = new int2(j, i);
                 map.Add(key, null);
             }
         }
@@ -154,7 +193,7 @@ public class MapGenerator : MonoBehaviour
             Gizmos.color = Color.red;
             foreach (var key in map.Keys)
             {
-                Gizmos.DrawWireCube(new Vector3(key.x * mapSizeX + (mapSizeX / 2), 0, key.y * mapSizeY + (mapSizeY / 2)), new Vector3(mapSizeX, .1f, mapSizeY));
+                Gizmos.DrawWireCube(new Vector3(key.x * MapSizeX + (MapSizeX / 2), 0, key.y * MapSizeY + (MapSizeY / 2)), new Vector3(MapChunkSizeX, .1f, MapChunkSizeY));
             }
         }
     }
@@ -189,10 +228,10 @@ public class MapGenerator : MonoBehaviour
     protected virtual RoomData CreateFirstRoom()
     {
         // get random location on the map to start some place in the middle of the map
-        var mapX = RandomGenerator.SeededRange(mapSizeX / 4, mapSizeX - (mapSizeX / 4));
-        var mapY = RandomGenerator.SeededRange(mapSizeY / 4, mapSizeY - (mapSizeY / 4));
+        var mapX = RandomGenerator.SeededRange(MapSizeX / 4, MapSizeX - (MapSizeX / 4));
+        var mapY = RandomGenerator.SeededRange(MapSizeY / 4, MapSizeY - (MapSizeY / 4));
 
-        return new RoomData(new Vector2Int(mapX, mapY), roomSizeX, roomSizeY, mapSizeX, mapSizeY); ;
+        return new RoomData(new int2(mapX, mapY), roomSizeX, roomSizeY, MapChunkSizeX, MapChunkSizeY); ;
     }
 
     /// <summary>
@@ -200,7 +239,7 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     /// <param name="currentPos"></param>
     /// <param name="previousPos"></param>
-    protected virtual void NewRoute(Vector2Int currentPos, Vector2Int previousPos, int routeLength)
+    protected virtual void NewRoute(int2 currentPos, int2 previousPos, int routeLength)
     {
         if (routeCount < maxRoutes)
         {
@@ -212,13 +251,12 @@ public class MapGenerator : MonoBehaviour
             {
                 //Initialize
                 bool routeUsed = false;
-                var nextRoomOffset = 1;
-                Vector2Int tempCurrent;
+                int2 tempCurrent;
 
                 //Go up
                 if (RandomGenerator.SeededRange(1, percentageGoUp) <= deviationRate && !(previousPos.y > currentPos.y))
                 {
-                    tempCurrent = new Vector2Int(currentPos.x, currentPos.y + nextRoomOffset);
+                    tempCurrent = currentPos + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Up];
                     if (map.ContainsKey(tempCurrent) && !rooms.ContainsKey(tempCurrent))
                     {
                         previousPos = currentPos;
@@ -239,7 +277,7 @@ public class MapGenerator : MonoBehaviour
                 //Go down
                 if (RandomGenerator.SeededRange(1, percentageGoDown) <= deviationRate && !(previousPos.y < currentPos.y))
                 {
-                    tempCurrent = new Vector2Int(currentPos.x, currentPos.y - nextRoomOffset);
+                    tempCurrent = currentPos + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Down];
                     if (map.ContainsKey(tempCurrent) && !rooms.ContainsKey(tempCurrent))
                     {
                         previousPos = currentPos;
@@ -260,7 +298,7 @@ public class MapGenerator : MonoBehaviour
                 //Go left
                 if (RandomGenerator.SeededRange(1, percentageGoLeft) <= deviationRate && !(previousPos.x < currentPos.x))
                 {
-                    tempCurrent = new Vector2Int(currentPos.x - nextRoomOffset, currentPos.y);
+                    tempCurrent = currentPos + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Left];
                     if (map.ContainsKey(tempCurrent) && !rooms.ContainsKey(tempCurrent))
                     {
                         previousPos = currentPos;
@@ -280,7 +318,7 @@ public class MapGenerator : MonoBehaviour
                 //Go right
                 if (RandomGenerator.SeededRange(1, percentageGoRight) <= deviationRate && !(previousPos.x > currentPos.x))
                 {
-                    tempCurrent = new Vector2Int(currentPos.x + nextRoomOffset, currentPos.y);
+                    tempCurrent = currentPos + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Right];
                     if (map.ContainsKey(tempCurrent) && !rooms.ContainsKey(tempCurrent))
                     {
                         previousPos = currentPos;
@@ -302,10 +340,10 @@ public class MapGenerator : MonoBehaviour
                 if (!routeUsed)
                 {
                     //up
-                    var tempCurrentUp = new Vector2Int(currentPos.x, currentPos.y + nextRoomOffset);
-                    var tempCurrentDown = new Vector2Int(currentPos.x, currentPos.y - nextRoomOffset);
-                    var tempCurrentLeft = new Vector2Int(currentPos.x - nextRoomOffset, currentPos.y);
-                    var tempCurrentRight = new Vector2Int(currentPos.x + nextRoomOffset, currentPos.y);
+                    var tempCurrentUp = currentPos + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Up];
+                    var tempCurrentDown = currentPos + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Down];
+                    var tempCurrentLeft = currentPos + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Left];
+                    var tempCurrentRight = currentPos + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Right];
                     if (map.ContainsKey(tempCurrentUp) && !rooms.ContainsKey(tempCurrentUp))
                     {
                         previousPos = currentPos;
@@ -349,10 +387,10 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    protected virtual void TryCreateRoom(Vector2Int location)
+    protected virtual void TryCreateRoom(int2 location)
     {
         // create room data for this location
-        var roomData = new RoomData(location, roomSizeX, roomSizeY, mapSizeX, mapSizeY);
+        var roomData = new RoomData(location, roomSizeX, roomSizeY, MapChunkSizeX, MapChunkSizeY);
 
         //if the location is in the map and not a room
         if (AddRoom(location, roomData))
@@ -367,7 +405,7 @@ public class MapGenerator : MonoBehaviour
     /// <param name="key">room loc</param>
     /// <param name="rd">roomdata to add</param>
     /// <returns>if room was added</returns>
-    protected virtual bool AddRoom(Vector2Int key, RoomData rd)
+    protected virtual bool AddRoom(int2 key, RoomData rd)
     {
         // if we hit the room count limit then dont add anymore
         if (rooms.Count >= numRooms)
@@ -385,18 +423,18 @@ public class MapGenerator : MonoBehaviour
     #endregion
 
     #region Helpers
-    // return key for room based on real world location
-    public virtual Vector2Int GetRoomKey(Vector2Int location)
+    // return key for room Chunk based on real world location
+    public virtual int2 GetRoomKey(int2 location)
     {
-        return new Vector2Int(location.x / mapSizeX, location.y / mapSizeY);
+        return new int2(location.x / mapSizeX, location.y / mapSizeY);
     }
 
-    public Dictionary<Vector2Int, RoomData> GetMap()
+    public Dictionary<int2, RoomData> GetMap()
     {
         return map;
     }
 
-    public Dictionary<Vector2Int, RoomData> GetRooms()
+    public Dictionary<int2, RoomData> GetRooms()
     {
         return rooms;
     }

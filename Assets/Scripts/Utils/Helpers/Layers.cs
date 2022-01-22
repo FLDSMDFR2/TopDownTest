@@ -6,7 +6,9 @@ public enum Layers
     IgnoreRaycast = 2,
     Water = 4,
     UI = 5,
+    Triggers = 7,
     Environment = 8,
     Player = 9,
-    Projectile = 10
+    Enemy = 10,
+    Projectile = 11
 }

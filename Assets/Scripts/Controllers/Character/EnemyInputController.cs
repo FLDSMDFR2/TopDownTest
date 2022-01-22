@@ -4,32 +4,65 @@ using UnityEngine;
 
 public class EnemyInputController : BaseInputController
 {
+    [Header("EnemyInputController")]
+    /// <summary>
+    /// Chase movement speed
+    /// </summary>
+    public float ChaseMoveSpeed = 15f;
 
-    private Vector3 _movementDirection = Vector3.zero;
-    private bool _hasGravity = true;
-
-    public virtual void UpdateEnemy()
+    protected bool isChase;
+    public bool IsChase
     {
-
+        get { return isChase; }
+        set
+        {
+            isChase = value;
+            UpdatesForChase();
+        }
     }
 
-    //protected override void HandleMovement()
-    //{
-    //    //Vector3 move = _movementDirection;
 
-    //    //_controller.Move(move * Time.deltaTime * CurrentSpeed);
-
-    //    ////if (move != Vector3.zero)
-    //    ////    transform.forward = move;
-    //}
-
-    public void SetMovementDirection(Vector3 direction)
+    /// <summary>
+    /// Set the direction to move in
+    /// </summary>
+    /// <param name="moveDir"></param>
+    public virtual void SetMoveDirection(Vector3 moveDir)
     {
-        _movementDirection = direction;
+        // set the move direction for enemy
+        moveDirection = moveDir;
+        moveDirection.Normalize();
     }
 
-    public void SetHasGravity(bool HasGravity)
+    /// <summary>
+    /// Set location for enemy to look at
+    /// </summary>
+    /// <param name="lookLoc"></param>
+    public virtual void SetLookLocation(Vector3 lookLoc)
     {
-        _hasGravity = HasGravity;
+        // set the location to look at
+        lookLocation = lookLoc;
+    }
+
+    /// <summary>
+    /// Set the chase speed
+    /// </summary>
+    /// <param name="speed"></param>
+    public virtual void SetChaseSpeed(float speed)
+    {
+        ChaseMoveSpeed = speed;
+    }
+    /// <summary>
+    /// If we are chasing 
+    /// </summary>
+    protected virtual void UpdatesForChase()
+    {
+        if (IsChase)
+        {
+            CurrentMoveSpeed = ChaseMoveSpeed;
+        }
+        else
+        {
+            CurrentMoveSpeed = BaseMoveSpeed;
+        }
     }
 }

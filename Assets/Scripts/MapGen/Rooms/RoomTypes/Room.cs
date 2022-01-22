@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Room : MonoBehaviour
@@ -37,7 +38,7 @@ public class Room : MonoBehaviour
     /// </summary>
     protected virtual void GenerateRoomLocations()
     {
-        Data.RoomLocations = new Dictionary<Vector2Int, RoomLocationData>();
+        Data.RoomLocations = new Dictionary<int2, RoomLocationData>();
 
         //set origin to the map origin for the room
         var origin = Data.MapRoomConvertedOrigin();
@@ -47,7 +48,7 @@ public class Room : MonoBehaviour
         {
             for (int j = origin.y; j < origin.y + Data.MapSizeY; j++)
             {
-                var key = new Vector2Int(i, j);
+                var key = new int2(i, j);
 
                 if (GenerateHallway(key))
                 {
@@ -70,7 +71,7 @@ public class Room : MonoBehaviour
         {
             for (int j = origin.y; j < origin.y + Data.RoomSizeY; j++)
             {
-                var key = new Vector2Int(i, j);
+                var key = new int2(i, j);
 
                 // Check to place walls and doors if we dont place a wall or door then place a floor
                 if (!GenerateDoors(key, origin.x, origin.y) && Data.RoomLocations.ContainsKey(key))
@@ -88,11 +89,12 @@ public class Room : MonoBehaviour
         {
             for (int j = origin.y; j < origin.y + Data.MapSizeY; j++)
             {
-                var key = new Vector2Int(i, j);
+                var key = new int2(i, j);
 
                 if (GenerateWall(key))
                 {
                     // if this is a hallway mark it as floor
+                    Data.RoomLocations[key].LocationType = RoomLocationTypes.Filled;
                     Data.RoomLocations[key].EnvironmentLocationType = RoomLocationEnvironmentTypes.Wall;
                 }
             }
@@ -110,7 +112,7 @@ public class Room : MonoBehaviour
     /// <param name="startX">bounds x to check against</param>
     /// <param name="StartY">bounds y to check against</param>
     /// <returns></returns>
-    protected virtual bool GenerateDoors(Vector2Int key, int startX, int StartY)
+    protected virtual bool GenerateDoors(int2 key, int startX, int StartY)
     {
         //  check if we are the outer edge of the room
         if (key.x == startX || key.y == StartY || key.x == (startX + Data.RoomSizeX) - 1 || key.y == (StartY + Data.RoomSizeY) - 1)
@@ -142,7 +144,7 @@ public class Room : MonoBehaviour
     /// </summary>
     /// <param name="location"></param>
     /// <returns></returns>
-    protected virtual bool GenerateHallway(Vector2Int location)
+    protected virtual bool GenerateHallway(int2 location)
     {
         var origin = Data.RoomConvertedOrigin();
 
@@ -163,7 +165,7 @@ public class Room : MonoBehaviour
         return false;
     }
 
-    protected virtual bool CheckDoorForHallway(Vector2Int location, DoorSide side)
+    protected virtual bool CheckDoorForHallway(int2 location, DoorSide side)
     {
         foreach (var d in Data.Doors)
         {
@@ -192,7 +194,7 @@ public class Room : MonoBehaviour
     /// </summary>
     /// <param name="location"></param>
     /// <returns></returns>
-    protected virtual bool GenerateDoor(Vector2Int location, DoorSide side)
+    protected virtual bool GenerateDoor(int2 location, DoorSide side)
     {
         foreach (var d in Data.Doors)
         {
@@ -221,36 +223,36 @@ public class Room : MonoBehaviour
     /// </summary>
     /// <param name="location">location to check</param>
     /// <returns></returns>
-    protected virtual bool GenerateWall(Vector2Int location)
+    protected virtual bool GenerateWall(int2 location)
     {
         // if we are outside the room
         if (Data.RoomLocations[location].EnvironmentLocationType == RoomLocationEnvironmentTypes.None)
         {
             //check if we are next to a floor or door if so then we need to be a wall
 
-            //right
-            var checkLoc = location + new Vector2Int(1, 0);
+            //right        
+            var checkLoc = location + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Right];
             if (Data.RoomLocations.ContainsKey(checkLoc) &&
                 (Data.RoomLocations[checkLoc].EnvironmentLocationType == RoomLocationEnvironmentTypes.Floor ||
                 Data.RoomLocations[checkLoc].EnvironmentLocationType == RoomLocationEnvironmentTypes.Door))
                 return true;
 
             //left
-            checkLoc = location + new Vector2Int(-1, 0);
+            checkLoc = location + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Left];
             if (Data.RoomLocations.ContainsKey(checkLoc) &&
                (Data.RoomLocations[checkLoc].EnvironmentLocationType == RoomLocationEnvironmentTypes.Floor ||
                 Data.RoomLocations[checkLoc].EnvironmentLocationType == RoomLocationEnvironmentTypes.Door))
                 return true;
 
             //up
-            checkLoc = location + new Vector2Int(0, 1);
+            checkLoc = location + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Up];
             if (Data.RoomLocations.ContainsKey(checkLoc) &&
                 (Data.RoomLocations[checkLoc].EnvironmentLocationType == RoomLocationEnvironmentTypes.Floor ||
                 Data.RoomLocations[checkLoc].EnvironmentLocationType == RoomLocationEnvironmentTypes.Door))
                 return true;
 
             //down
-            checkLoc = location + new Vector2Int(0, -1);
+            checkLoc = location + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Down];
             if (Data.RoomLocations.ContainsKey(checkLoc) &&
                 (Data.RoomLocations[checkLoc].EnvironmentLocationType == RoomLocationEnvironmentTypes.Floor ||
                 Data.RoomLocations[checkLoc].EnvironmentLocationType == RoomLocationEnvironmentTypes.Door))
@@ -275,7 +277,91 @@ public class Room : MonoBehaviour
     /// </summary>
     protected virtual void GenerateRoomObstacles()
     {
-        // TODO: ADD
+        foreach (var locKey in Data.RoomLocations.Keys)
+        {
+            // if the location doesnt have a wall and is empty this might be an obstacle in the room
+            if (Data.RoomLocations[locKey].EnvironmentLocationType != RoomLocationEnvironmentTypes.Wall &&
+                Data.RoomLocations[locKey].LocationType == RoomLocationTypes.Empty)
+            {
+                //check ajasent location for walls this would be increaded odds of a wall here then
+                var wallChange = RandomGenerator.SeededRange(1, 100);
+                var percentChange = 1;
+                if (HasTypeAdjacent(locKey, RoomLocationEnvironmentTypes.Wall)) percentChange = 55;
+
+                if (wallChange < percentChange && ObstacleCheck(locKey))
+                {
+                    Data.RoomLocations[locKey].LocationType = RoomLocationTypes.Filled;
+                    Data.RoomLocations[locKey].EnvironmentLocationType = RoomLocationEnvironmentTypes.Wall;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Perform check if Obstacle can / should be placed
+    /// </summary>
+    /// <returns></returns>
+    protected virtual bool ObstacleCheck(int2 loc)
+    {
+        // check if any walls are at a diagnal if so then dont place 
+
+        //Up Left
+        var checkDiag = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.UpLeft];
+        if (Data.RoomLocations.ContainsKey(checkDiag) && Data.RoomLocations[checkDiag].EnvironmentLocationType == RoomLocationEnvironmentTypes.Wall)
+        {
+            // if we have a wall diagnal then check the two orthognial directs for walls if we dont have at least one then we dont want to place this wall
+            var org1 = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Up];
+            var org2 = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Left];
+            if ((Data.RoomLocations.ContainsKey(org1) && Data.RoomLocations[org1].EnvironmentLocationType != RoomLocationEnvironmentTypes.Wall) &&
+                (Data.RoomLocations.ContainsKey(org2) && Data.RoomLocations[org2].EnvironmentLocationType != RoomLocationEnvironmentTypes.Wall))
+            {
+                return false;
+            }
+        }
+
+        //Up right
+        checkDiag = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.UpRight];
+        if (Data.RoomLocations.ContainsKey(checkDiag) && Data.RoomLocations[checkDiag].EnvironmentLocationType == RoomLocationEnvironmentTypes.Wall)
+        {
+            // if we have a wall diagnal then check the two orthognial directs for walls if we dont have at least one then we dont want to place this wall
+            var org1 = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Up];
+            var org2 = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Right];
+            if ((Data.RoomLocations.ContainsKey(org1) && Data.RoomLocations[org1].EnvironmentLocationType != RoomLocationEnvironmentTypes.Wall) &&
+                (Data.RoomLocations.ContainsKey(org2) && Data.RoomLocations[org2].EnvironmentLocationType != RoomLocationEnvironmentTypes.Wall))
+            {
+                return false;
+            }
+        }
+
+        //down right
+        checkDiag = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.DownRight];
+        if (Data.RoomLocations.ContainsKey(checkDiag) && Data.RoomLocations[checkDiag].EnvironmentLocationType == RoomLocationEnvironmentTypes.Wall)
+        {
+            // if we have a wall diagnal then check the two orthognial directs for walls if we dont have at least one then we dont want to place this wall
+            var org1 = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Down];
+            var org2 = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Right];
+            if ((Data.RoomLocations.ContainsKey(org1) && Data.RoomLocations[org1].EnvironmentLocationType != RoomLocationEnvironmentTypes.Wall) &&
+                (Data.RoomLocations.ContainsKey(org2) && Data.RoomLocations[org2].EnvironmentLocationType != RoomLocationEnvironmentTypes.Wall))
+            {
+                return false;
+            }
+        }
+
+        //down left
+        checkDiag = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.DownLeft];
+        if (Data.RoomLocations.ContainsKey(checkDiag) && Data.RoomLocations[checkDiag].EnvironmentLocationType == RoomLocationEnvironmentTypes.Wall)
+        {
+            // if we have a wall diagnal then check the two orthognial directs for walls if we dont have at least one then we dont want to place this wall
+            var org1 = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Down];
+            var org2 = loc + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Left];
+            if ((Data.RoomLocations.ContainsKey(org1) && Data.RoomLocations[org1].EnvironmentLocationType != RoomLocationEnvironmentTypes.Wall) &&
+                (Data.RoomLocations.ContainsKey(org2) && Data.RoomLocations[org2].EnvironmentLocationType != RoomLocationEnvironmentTypes.Wall))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
     #endregion
 
@@ -336,7 +422,7 @@ public class Room : MonoBehaviour
     /// Instantiate the location elements by RoomLocationEnvironmentTypes
     /// </summary>
     /// <param name="locationKey">room location key</param>
-    protected virtual void PlaceRoomLocationElements(Vector2Int locationKey)
+    protected virtual void PlaceRoomLocationElements(int2 locationKey)
     {
         //void
         if (Data.RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.None)
@@ -381,6 +467,18 @@ public class Room : MonoBehaviour
     #endregion
 
     #region Helpers
+    protected virtual bool HasTypeAdjacent(int2 locKey, RoomLocationEnvironmentTypes type)
+    {
+        foreach (var dir in MapTraversal.NeighborsDirectionsAll)
+        {
+            var checkKey = locKey + dir;
+            if (Data.RoomLocations.ContainsKey(checkKey) && Data.RoomLocations[checkKey].EnvironmentLocationType == type)
+                return true;
+        }
+
+        return false;
+    }
+
     protected virtual Vector3 ObjectSpawnLocation(GameObject obj)
     {
         return new Vector3(0, obj.transform.localScale.y / 2, 0);

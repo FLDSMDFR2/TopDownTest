@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\Characters\Enemies\BaseEnemy.cs" />
     <Compile Include="Assets\Scripts\Controllers\Character\CharacterInputController.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyChaseState.cs" />
+    <Compile Include="Assets\Scripts\Utils\PathFinding\Job PathFinding\FindPathJob.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyWanderState.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\RoomConfigs\Base\RoomPrefabConfig.cs" />
     <Compile Include="Assets\Scripts\Controllers\Character\BaseInputController.cs" />
@@ -73,27 +74,33 @@
     <Compile Include="Assets\Scripts\Characters\Enemies\EnemySpawnManager.cs" />
     <Compile Include="Assets\Scripts\Mangers\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\PathFinding.cs" />
-    <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAIUpdateJob.cs" />
+    <Compile Include="Assets\Scripts\Utils\PathFinding\Job PathFinding\PathFindingJobDetails.cs" />
+    <Compile Include="Assets\Scripts\TestSceneStuff\RoomGeneratorTester.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\Room.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\Data\RoomLocationData.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Sheilds\BaseShield.cs" />
     <Compile Include="Assets\Scripts\MapGen\Generators\MapGenerator.cs" />
+    <Compile Include="Assets\Scripts\Utils\PathFinding\Job PathFinding\PathNode.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\IEnemyStates.cs" />
-    <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemySearchZone.cs" />
     <Compile Include="Assets\Scripts\MapGen\Generators\RoomGenerator.cs" />
     <Compile Include="Assets\Scripts\Mangers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAI.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\FieldOfView\FieldOfView.cs" />
     <Compile Include="Assets\Scripts\Utils\UI\FPSCounterDisplay.cs" />
     <Compile Include="Assets\Scripts\Utils\RandomGenerator.cs" />
+    <Compile Include="Assets\Scripts\Utils\PathFinding\Job PathFinding\PathFinding_V2.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\EnemySpawn.cs" />
     <Compile Include="Assets\Scripts\Utils\TraceManager.cs" />
+    <Compile Include="Assets\Scripts\TestSceneStuff\TestRoom.cs" />
     <Compile Include="Assets\Scripts\Mangers\GOPoolManager.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Weapons\BaseWeapon.cs" />
-    <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAIUpdateManager.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\Data\RoomData.cs" />
     <Compile Include="Assets\Scripts\Utils\Helpers\Layers.cs" />
+    <Compile Include="Assets\Scripts\Utils\PathFinding\PathFindingPool.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\GridPath.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\FieldOfView\FieldOfViewEditor.cs" />
+    <Compile Include="Assets\Scripts\Utils\Helpers\MapTraversal.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

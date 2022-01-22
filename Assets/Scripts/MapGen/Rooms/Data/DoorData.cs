@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public enum DoorSide
@@ -21,7 +22,7 @@ public class DoorData
     /// center of the door
     /// </summary>
     [SerializeField]
-    public Vector2Int ConnectionPoint;
+    public int2 ConnectionPoint;
 
     /// <summary>
     ///  what side of the room the door is on
@@ -41,7 +42,7 @@ public class DoorData
     [SerializeField]
     public int Size;
 
-    public DoorData(Vector2Int connectionPoint, DoorSide side, List<RoomData> rooms, int size)
+    public DoorData(int2 connectionPoint, DoorSide side, List<RoomData> rooms, int size)
     {
         ConnectionPoint = connectionPoint;
         Side = side;

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using Unity.Mathematics;
 
 public class PriorityQueue<T>
 {
@@ -48,54 +49,46 @@ public class PathFinding
 {
     // Someone suggested making this a 2d field.
     // That will be worth looking at if you run into performance issues.
-    public Dictionary<Vector2Int, Vector2Int> cameFrom = new Dictionary<Vector2Int, Vector2Int>();
-    public Dictionary<Vector2Int, float> costSoFar = new Dictionary<Vector2Int, float>();
+    public Dictionary<int2, int2> cameFrom = new Dictionary<int2, int2>();
+    public Dictionary<int2, float> costSoFar = new Dictionary<int2, float>();
 
-    public Vector2Int start;
-    private Vector2Int goal;
+    private int2 start;
+    private int2 goal;
 
-
-    public virtual List<Vector2Int> GetFindPath(GridPath grid, Vector3 start, Vector3 goal)
+    public virtual List<PathFindingJobDetails> PerformPathFinding(GridPath grid, List<PathFindingJobDetails> pathJobs)
     {
-        FindPath(grid, start, goal);
-        return GetPath();
-    }
+        foreach (var job in pathJobs)
+        {
+            FindPath(grid, job.StartPos, job.EndPos);
+            job.Path = GetPath();
+        }
 
-    static public float Heuristic(Vector2Int a, Vector2Int b)
-    {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+        return pathJobs;
     }
 
     // Conduct the A* search
-    public virtual void FindPath(GridPath grid, Vector3 start, Vector3 goal)
+    public virtual void FindPath(GridPath grid, float3 s, float3 g)
     {
-        // start is current sprite Location
-       // var s  = new Vector2Int((int)start.x, (int)start.z);
-        var s = Round(start);
-
-        this.start = s;
-        // goal is sprite destination eg tile user clicked on
-        //var g = new Vector2Int((int)goal.x, (int)goal.z);
-        var g = Round(goal);
-        this.goal = g;
+        start = grid.Round(s);
+        goal = grid.Round(g);
 
         cameFrom.Clear();
         costSoFar.Clear();
 
         // frontier is a List of key-value pairs:
         // Location, (float) priority
-        var frontier = new PriorityQueue<Vector2Int>();
+        var frontier = new PriorityQueue<int2>();
         // Add the starting location to the frontier with a priority of 0
-        frontier.Enqueue(s, 0f);
+        frontier.Enqueue(start, 0f);
 
-        cameFrom.Add(s, s); // is set to start, None in example
-        costSoFar.Add(s, 0f);
+        cameFrom.Add(start, start); // is set to start, None in example
+        costSoFar.Add(start, 0f);
 
         while (frontier.Count > 0f)
         {
             // Get the Location from the frontier that has the lowest
             // priority, then remove that Location from the frontier
-            Vector2Int current = frontier.Dequeue();
+            int2 current = frontier.Dequeue();
 
             // If we're at the goal Location, stop looking.
             if (current.Equals(goal)) break;
@@ -128,7 +121,7 @@ public class PathFinding
 
                     costSoFar.Add(neighbor, newCost);
                     cameFrom.Add(neighbor, current);
-                    float priority = newCost + Heuristic(neighbor, g);
+                    float priority = newCost + Heuristic(neighbor, goal);
                     frontier.Enqueue(neighbor, priority);
                 }
             }
@@ -136,52 +129,30 @@ public class PathFinding
 
     }
 
+    static public float Heuristic(int2 a, int2 b)
+    {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+    }
+
     // Return a List of Locations representing the found path
-    public virtual List<Vector2Int> GetPath()
+    public virtual List<int2> GetPath()
     {
 
-        List<Vector2Int> path = new List<Vector2Int>();
-        Vector2Int current = goal;
-        // path.Add(current);
+        List<int2> path = new List<int2>();
+        int2 current = goal;
 
         while (!current.Equals(start))
         {
             if (!cameFrom.ContainsKey(current))
             {
                 TraceManager.WriteTrace(TraceChannel.Main, TraceType.error, "cameFrom does not contain current ["+ current.ToString() + "].");
-                return new List<Vector2Int>();
+                return new List<int2>();
             }
             path.Add(current);
             current = cameFrom[current];
         }
-        // path.Add(start);
+
         path.Reverse();
         return path;
-    }
-
-    public Vector2Int Round(Vector3 loc)
-    {
-
-        Vector2Int retval = new Vector2Int();
-
-        if  (loc.x % 1 >= .5)
-        {
-            retval.x = ((int)loc.x) + 1;
-        }
-        else
-        {
-            retval.x = ((int)loc.x);
-        }
-
-        if (loc.z % 1 >= .5)
-        {
-            retval.y = ((int)loc.z) + 1;
-        }
-        else
-        {
-            retval.y = ((int)loc.z);
-        }
-
-        return retval;
     }
 }

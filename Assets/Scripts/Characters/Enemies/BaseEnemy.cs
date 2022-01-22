@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BaseEnemy : BaseCharacter
 {
+    [SerializeField]
     protected Transform _target;
 
     public void SetTarget(Transform target)

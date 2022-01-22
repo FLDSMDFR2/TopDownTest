@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
@@ -8,8 +9,10 @@ using UnityEngine;
 /// </summary>
 public enum RoomTypes
 {
-    StartRoom,
+    None,
+    Test,
     Empty,
+    StartRoom,
     Enemy,
     Boss,
     Loot,
@@ -34,8 +37,8 @@ public class RoomData
     /// Location of the room with then the Map
     /// </summary>
     [SerializeField]
-    protected Vector2Int mapLocation;
-    public Vector2Int MapLocation
+    protected int2 mapLocation;
+    public int2 MapLocation
     {
         get { return mapLocation; }
         set { mapLocation = value; }
@@ -94,8 +97,8 @@ public class RoomData
     /// List of all locations within this room
     /// </summary>
     [SerializeField]
-    protected Dictionary<Vector2Int, RoomLocationData> roomLocations;
-    public Dictionary<Vector2Int, RoomLocationData> RoomLocations
+    protected Dictionary<int2, RoomLocationData> roomLocations;
+    public Dictionary<int2, RoomLocationData> RoomLocations
     {
         get { return roomLocations; }
         set { roomLocations = value; }
@@ -132,7 +135,7 @@ public class RoomData
         set { doors = value; }
     }
 
-    public RoomData(Vector2Int location, int sizeX, int sizeY, int mSizeX, int mSizeY)
+    public RoomData(int2 location, int sizeX, int sizeY, int mSizeX, int mSizeY)
     {
         MapLocation = location;
         RoomSizeX = sizeX;
@@ -148,25 +151,25 @@ public class RoomData
     /// Returns 0,0 location for room locations map bottom corner
     /// </summary>
     /// <returns></returns>
-    public virtual Vector2Int MapRoomConvertedOrigin()
+    public virtual int2 MapRoomConvertedOrigin()
     {
-        return (MapLocation * new Vector2Int(MapSizeX, MapSizeY));
+        return (MapLocation * new int2(MapSizeX, MapSizeY));
     }
     /// <summary>
     /// Returns 0,0 location for room bottom corner
     /// </summary>
     /// <returns></returns>
-    public virtual Vector2Int RoomConvertedOrigin()
+    public virtual int2 RoomConvertedOrigin()
     {
-        return (RoomConvertedCenter() - new Vector2Int((RoomSizeX / 2), (RoomSizeY / 2)));
+        return (RoomConvertedCenter() - new int2((RoomSizeX / 2), (RoomSizeY / 2)));
     }
     /// <summary>
     /// get the center of the room location within the map
     /// </summary>
     /// <returns></returns>
-    public virtual Vector2Int RoomConvertedCenter()
+    public virtual int2 RoomConvertedCenter()
     {
-        return (MapLocation * new Vector2Int(MapSizeX, MapSizeY)) + new Vector2Int((MapSizeX / 2), (MapSizeY / 2));
+        return (MapLocation * new int2(MapSizeX, MapSizeY)) + new int2((MapSizeX / 2), (MapSizeY / 2));
     }
     #endregion
 }

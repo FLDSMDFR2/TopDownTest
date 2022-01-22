@@ -23,21 +23,26 @@ public class GameManager : MonoBehaviour
     /// Map Generator
     /// </summary>
     protected MapGenerator mapGenerator;
+    public MapGenerator GetMapGenerator { get { return mapGenerator; } }
     /// <summary>
     /// Room Generator
     /// </summary>
     protected RoomGenerator roomGenerator;
     /// <summary>
-    /// Transform to place built GO into
+    /// Transform to place built map GO into
     /// </summary>
     [SerializeField]
-    protected Transform PathGenParentTransform;
+    protected Transform MapObjectParent;
 
     protected GridPath PathFindingGrid = new GridPath();
     /// <summary>
     /// Access to path finding on the map
     /// </summary>
     public GridPath GetGridPath { get { return PathFindingGrid; } }
+
+    [SerializeField]
+    protected PathFinding_V2 PathV2;
+    public PathFinding_V2 GetPathV2 { get { return PathV2; } }
 
     void Awake()
     {
@@ -59,10 +64,13 @@ public class GameManager : MonoBehaviour
 
         //Generate the rooms
         roomGenerator = GetComponent<RoomGenerator>();
-        roomGenerator.RoomGen(mapGenerator, PathGenParentTransform);
+        roomGenerator.RoomGen(mapGenerator, MapObjectParent);
 
-        // set the map for the any path finding needed
+        //TODO: REMOVE THIS OLD PATHFINDING
         PathFindingGrid.SetRoomGenerator(mapGenerator);
+
+        // set the map for version 2 path finding
+        PathV2.SetMap(mapGenerator);
     }
 
 }

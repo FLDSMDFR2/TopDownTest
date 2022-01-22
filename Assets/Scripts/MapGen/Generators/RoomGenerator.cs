@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
@@ -107,7 +108,7 @@ public class RoomGenerator : MonoBehaviour
         foreach (var key in mapRooms.Keys)
         {
             // location to check
-            Vector2Int checkLocation = mapRooms[key].MapLocation + new Vector2Int(0, 1);
+            int2 checkLocation = mapRooms[key].MapLocation + new int2(0, 1);
 
             //check UP if room add door
             if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
@@ -116,21 +117,21 @@ public class RoomGenerator : MonoBehaviour
             }
 
             //check DOWN if room add door
-            checkLocation = mapRooms[key].MapLocation + new Vector2Int(0, -1);
+            checkLocation = mapRooms[key].MapLocation + new int2(0, -1);
             if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
             {
                 CreateRoomConnection(DoorSide.Down, mapRooms[key], map[checkLocation]);
             }
 
             //check RIGHT if room add door
-            checkLocation = mapRooms[key].MapLocation + new Vector2Int(1, 0);
+            checkLocation = mapRooms[key].MapLocation + new int2(1, 0);
             if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
             {
                 CreateRoomConnection(DoorSide.Right, mapRooms[key], map[checkLocation]);
             }
 
             //check LEFT if room add door
-            checkLocation = mapRooms[key].MapLocation + new Vector2Int(-1, 0);
+            checkLocation = mapRooms[key].MapLocation + new int2(-1, 0);
             if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
             {
                 CreateRoomConnection(DoorSide.Left, mapRooms[key], map[checkLocation]);

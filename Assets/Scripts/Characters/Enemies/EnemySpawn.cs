@@ -7,10 +7,10 @@ public class EnemySpawn : MonoBehaviour
     public Vector3 Location;
     public RoomDifficulty difficulty = RoomDifficulty.Easy;
     public int MaxEnemysToSpawn;
+    [SerializeField]
+    protected int enemysSpawned;
     public float MaxTime = 5f;
     public float MinTime = .5f;
-
-    protected int enemysSpawned;
 
     void Start()
     {

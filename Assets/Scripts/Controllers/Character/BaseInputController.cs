@@ -5,10 +5,19 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class BaseInputController : MonoBehaviour
 {
+    [Header("BaseInputController")]
     /// <summary>
     /// Base speed to move
     /// </summary>
     public float BaseMoveSpeed = 5f;
+    /// <summary>
+    /// Base speed to look
+    /// </summary>
+    public float BaseLookSpeed = 5f;
+    /// <summary>
+    /// Dash speed
+    /// </summary>
+    public float DashSpeed;
     /// <summary>
     /// Current moving speed
     /// </summary>
@@ -24,13 +33,17 @@ public class BaseInputController : MonoBehaviour
 
     public float LookOffSet = 90;
     /// <summary>
-    /// Position to look at
+    /// Location to look at
     /// </summary>
-    protected Vector3 lookPosition;
+    protected Vector3 lookLocation;
     /// <summary>
     /// Direction vector to look at
     /// </summary>
     protected Vector3 lookDirection;
+    /// <summary>
+    /// If we want to dash
+    /// </summary>
+    protected bool isDash;
 
     public void Awake()
     {
@@ -45,6 +58,9 @@ public class BaseInputController : MonoBehaviour
         //handle all movment input
         HandleMovementInput();
 
+        //handle dash input
+        HandleDashInput();
+
         //handle all looking input
         HandleLookInput();
     }
@@ -57,36 +73,54 @@ public class BaseInputController : MonoBehaviour
         PerformLook();
     }
 
+    #region Handlers
     /// <summary>
     /// Handle input for movement
     /// </summary>
-    protected virtual void HandleMovementInput()
-    {
-        moveDirection.x = Input.GetAxisRaw("Horizontal");
-        moveDirection.z = Input.GetAxisRaw("Vertical");
-        moveDirection.Normalize();
-    }
+    protected virtual void HandleMovementInput(){}
+    /// <summary>
+    /// Handle Dash input
+    /// </summary>
+    protected virtual void HandleDashInput() {}
+    /// <summary>
+    /// Handle input to look
+    /// </summary>
+    protected virtual void HandleLookInput() {}
+    #endregion
+
+    #region Perform
     /// <summary>
     /// Perform movment
     /// </summary>
     protected virtual void PerformMovement()
     {
-        //body.MovePosition(body.position + moveDirection * CurrentMoveSpeed * Time.fixedDeltaTime);
-        body.AddForce(moveDirection * CurrentMoveSpeed, ForceMode.Impulse);
-    }
-    /// <summary>
-    /// Handle input to look
-    /// </summary>
-    protected virtual void HandleLookInput(){}
+        if (isDash)
+        {
+            body.AddForce(moveDirection * DashSpeed, ForceMode.VelocityChange);
+            isDash = false;
+        }
+        else
+        {
+            // noraml movement
+            body.AddForce(moveDirection * CurrentMoveSpeed, ForceMode.Impulse);
+        }
 
+    }
     /// <summary>
     /// Perform Look
     /// </summary>
     protected virtual void PerformLook()
     {
-        lookDirection = lookPosition - body.position;
+        lookDirection = lookLocation - body.position;
         var angle = Mathf.Atan2(lookDirection.z, lookDirection.x) * Mathf.Rad2Deg - LookOffSet;
-        //body.rotation = Quaternion.Euler(0f,-angle,0f);
-        body.MoveRotation(Quaternion.Euler(0f, -angle, 0f));
+        if (BaseLookSpeed == 0)//instant
+        {
+            body.MoveRotation(Quaternion.Euler(0f, -angle, 0f));
+        }
+        else
+        {
+            body.MoveRotation(Quaternion.Lerp(body.rotation, Quaternion.Euler(0f, -angle, 0f), Time.fixedDeltaTime * BaseLookSpeed));
+        }
     }
+    #endregion
 }

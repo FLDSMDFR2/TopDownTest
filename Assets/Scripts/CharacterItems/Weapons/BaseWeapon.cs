@@ -5,12 +5,9 @@ using UnityEngine;
 public class BaseWeapon : MonoBehaviour
 {
     [Header("Base Weapon")]
-    [SerializeField]
-    protected bool DebugEnabled = false;
-
+    public LineRenderer lineRenderer;
+    public float lineRendererDistance;
     public Transform FirePos;
-    //public Transform HoldPos;
-
     public GameObject Projectial;
     public float Range;
 
@@ -30,12 +27,10 @@ public class BaseWeapon : MonoBehaviour
     protected bool isActiveWeapon = false;
     protected int characterId;
 
-    void OnDrawGizmos()
+    protected virtual void Update()
     {
-        if (Application.isPlaying && DebugEnabled)
-        {
-            Gizmos.DrawRay(FirePos.transform.position, FirePos.transform.up * 25);
-        }
+        lineRenderer.SetPosition(0, FirePos.position);
+        lineRenderer.SetPosition(1, FirePos.position + (FirePos.up * lineRendererDistance));
     }
 
     public virtual void SetWeapon(int CharacterID, Transform HoldPos)
@@ -66,17 +61,17 @@ public class BaseWeapon : MonoBehaviour
         // only fire if this weapon is active
         if (!isActiveWeapon)
             return;
-     
+
         // if last fire is 0 then fire this is the first shot
         // or fire when rate allows && we are currently not firing
-        if (lastFire <= 0f || (Time.time >= lastFire + FireRate && !isFiring))
+        if (!isFiring && (lastFire <= 0f || Time.time >= lastFire + FireRate))
         {
             isFiring = true;
             StartCoroutine(FireProjectial());
         }
     }
 
-    protected virtual System.Type GetProjectile()
+    protected virtual System.Type GetProjectileType()
     {
         return typeof(BaseProjectile);
     }
@@ -100,7 +95,7 @@ public class BaseWeapon : MonoBehaviour
                 Vector3 dir = new Vector3(Mathf.Sin(Mathf.Deg2Rad * angle), 0F, Mathf.Cos(Mathf.Deg2Rad * angle));
                 Quaternion rot = Quaternion.Euler(FirePos.rotation.eulerAngles.x, angle, FirePos.rotation.eulerAngles.z);
 
-                var proj = GOPoolManager.GetObject(GetProjectile(), Projectial, FirePos.position, rot);
+                var proj = GOPoolManager.GetObject(GetProjectileType(), Projectial, FirePos.position, rot);
                 var baseProj = proj.GetComponentInChildren<BaseProjectile>();
 
                 if (baseProj != null)

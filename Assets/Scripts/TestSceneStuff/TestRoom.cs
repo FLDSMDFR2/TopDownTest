@@ -1,26 +1,43 @@
+using System.Collections;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class EnemyRoom : Room
+/// <summary>
+/// Test room to make dev easier... hopefully
+/// 1,700 X  1,200 Y 
+/// </summary>
+public class TestRoom : StartRoom
 {
-    /// <summary>
-    /// Generate data for room
-    /// </summary>
-    protected override void GenerateRoomByType()
+    #region Generate Start Room details
+    protected override void GenerateStartRoomType()
     {
-        base.GenerateRoomByType();
+        var startLocFound = false;
+        while (!startLocFound)
+        {
+            // find random location  and check if we can set as spawn
+            var location = new int2(1700 + 25, 1200 + 5);
+
+            if (Data.RoomLocations.ContainsKey(location) &&
+                Data.RoomLocations[location].EnvironmentLocationType == RoomLocationEnvironmentTypes.Floor &&
+              Data.RoomLocations[location].LocationType == RoomLocationTypes.Empty)
+            {
+                // if the location is a floor and is empty set as spwan location
+                Data.RoomLocations[location].LocationType = RoomLocationTypes.PlayerStartSpawn;
+                startLocFound = true;
+            }
+        }
 
         GenerateEnemyRoomType();
     }
 
-    #region Generate Enemy Room details
     protected virtual void GenerateEnemyRoomType()
     {
         var locFound = false;
         while (!locFound)
         {
             // find random location  and check if we can set as spawn
-            var location = new int2(RandomGenerator.SeededRange(Data.RoomConvertedOrigin().x, Data.RoomConvertedOrigin().x + Data.RoomSizeX), 
+            var location = new int2(RandomGenerator.SeededRange(Data.RoomConvertedOrigin().x, Data.RoomConvertedOrigin().x + Data.RoomSizeX),
                 RandomGenerator.SeededRange(Data.RoomConvertedOrigin().y, Data.RoomConvertedOrigin().y + Data.RoomSizeY));
 
             if (Data.RoomLocations.ContainsKey(location) &&
@@ -51,7 +68,7 @@ public class EnemyRoom : Room
             // add enemy spawn to this location
             var spawn = gameObject.AddComponent<EnemySpawn>();
             spawn.Location = new Vector3(locationKey.x, 1f, locationKey.y); ;
-            spawn.MaxEnemysToSpawn = 5;
+            spawn.MaxEnemysToSpawn = 1;
             spawn.difficulty = Data.Difficulty;
         }
     }

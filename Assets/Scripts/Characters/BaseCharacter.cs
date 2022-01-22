@@ -54,6 +54,8 @@ public class BaseCharacter : MonoBehaviour
         //TODO: THIS SHOULD BE BETTER
         ActiveWeapon = WeaponSlot.GetComponentInChildren<BaseWeapon>(true);
         Shield = ShieldSlot.GetComponentInChildren<BaseShield>(true);
+        // set the weapon to active
+        ActiveWeapon.SetWeapon(CharacterID, WeaponHoldPos);
     }
 
     /// <summary>

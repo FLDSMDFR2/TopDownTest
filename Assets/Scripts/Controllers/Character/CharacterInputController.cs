@@ -12,6 +12,26 @@ public class CharacterInputController : BaseInputController
         // check for fire input
         CheckForFire();
     }
+    /// <summary>
+    /// Handle input for movement
+    /// </summary>
+    protected override void HandleMovementInput()
+    {
+        moveDirection.x = Input.GetAxisRaw("Horizontal");
+        moveDirection.z = Input.GetAxisRaw("Vertical");
+        moveDirection.Normalize();
+    }
+
+    /// <summary>
+    /// Handle Dash input
+    /// </summary>
+    protected override void HandleDashInput()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            isDash = true;
+        }
+    }
 
     /// <summary>
     /// Override look handler to look at mouse location
@@ -25,7 +45,7 @@ public class CharacterInputController : BaseInputController
 
         if (gPlane.Raycast(mouseRay, out rayLength))
         {
-            lookPosition = mouseRay.GetPoint(rayLength);
+            lookLocation = mouseRay.GetPoint(rayLength);
         }
     }
 
@@ -49,12 +69,9 @@ public class CharacterInputController : BaseInputController
     /// Event to raise when firing 
     /// </summary>
     public event Action OnFirePrimary;
-    public void FirePrimary()
+    protected void FirePrimary()
     {
-        if (OnFirePrimary != null)
-        {
-            OnFirePrimary();
-        }
+        OnFirePrimary?.Invoke();
     }
     #endregion
 }

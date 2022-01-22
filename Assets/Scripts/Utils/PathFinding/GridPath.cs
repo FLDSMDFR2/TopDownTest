@@ -1,25 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 
 public class GridPath
  {
-
-    // DIRS is directions
-    // I added diagonals to this but noticed it can create problems--
-    // like the path will go through obstacles that are diagonal from each other.
-    protected static readonly Vector2Int[] DIRS = new[] {
-        new Vector2Int(1, 0), // to right of tile
-        new Vector2Int(0, -1), // below tile
-        new Vector2Int(-1, 0), // to left of tile
-        new Vector2Int(0, 1), // above tile
-        new Vector2Int(1, 1), // diagonal top right
-        new Vector2Int(-1, 1), // diagonal top left
-        new Vector2Int(1, -1), // diagonal bottom right
-        new Vector2Int(-1, -1) // diagonal bottom left
-     };
-
     protected MapGenerator roomGenerator;
 
     public virtual void SetRoomGenerator(MapGenerator rg)
@@ -27,15 +13,19 @@ public class GridPath
         roomGenerator = rg;
     }
 
-
     // check if location is within a room
-    public virtual bool InBounds(Vector2Int id)
+    public virtual bool InBounds(int2 id)
     {
         return roomGenerator.GetRooms().ContainsKey(roomGenerator.GetRoomKey(id));
     }
 
+    public virtual bool Passable(float3 id)
+    {
+        return Passable(Round(id));
+    }
+
     // check to see if this location is blocked or not
-    public virtual bool Passable(Vector2Int id)
+    public virtual bool Passable(int2 id)
     {       
         if (roomGenerator.GetRooms().ContainsKey(roomGenerator.GetRoomKey(id)))
         {
@@ -52,7 +42,7 @@ public class GridPath
     }
 
     // If the heuristic = 2f, the movement is diagonal
-    public virtual float Cost(Vector2Int a, Vector2Int b)
+    public virtual float Cost(int2 a, int2 b)
     {
 
         if (roomGenerator.GetRooms().ContainsKey(roomGenerator.GetRoomKey(b)))
@@ -75,15 +65,41 @@ public class GridPath
 
     // Check the tiles that are next to, above, below, or diagonal to
     // this tile, and return them if they're within the game bounds and passable
-    public virtual IEnumerable<Vector2Int> Neighbors(Vector2Int id)
+    public virtual IEnumerable<int2> Neighbors(int2 id)
     {
-        foreach (var dir in DIRS)
+        foreach (var dir in MapTraversal.NeighborsDirectionsAll)
         {
-            Vector2Int next = new Vector2Int(id.x + dir.x, id.y + dir.y);
+            int2 next = new int2(id.x + dir.x, id.y + dir.y);
             if (InBounds(next) && Passable(next))
             {
                 yield return next;
             }
         }
+    }
+
+    public int2 Round(float3 loc)
+    {
+
+        int2 retval = new int2();
+
+        if (loc.x % 1 >= .5)
+        {
+            retval.x = ((int)loc.x) + 1;
+        }
+        else
+        {
+            retval.x = ((int)loc.x);
+        }
+
+        if (loc.z % 1 >= .5)
+        {
+            retval.y = ((int)loc.z) + 1;
+        }
+        else
+        {
+            retval.y = ((int)loc.z);
+        }
+
+        return retval;
     }
 }

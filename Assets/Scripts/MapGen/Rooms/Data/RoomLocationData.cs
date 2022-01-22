@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
@@ -43,8 +44,8 @@ public class RoomLocationData
     /// Location key within the room
     /// </summary>
     [SerializeField]
-    protected Vector2Int roomLocation;
-    public Vector2Int Location
+    protected int2 roomLocation;
+    public int2 Location
     {
         get { return roomLocation; }
         set { roomLocation = value; }
@@ -98,7 +99,7 @@ public class RoomLocationData
         set { locationTraversalCost = value; }
     }
 
-    public RoomLocationData(Vector2Int location, RoomLocationEnvironmentTypes Envtype, RoomLocationTypes type)
+    public RoomLocationData(int2 location, RoomLocationEnvironmentTypes Envtype, RoomLocationTypes type)
     {
         Location = location;
         EnvironmentLocationType = Envtype;
@@ -122,6 +123,20 @@ public class RoomLocationData
             LocationTraversalType = RoomLocationTraversalTypes.Clear;
             locationTraversalCost = 1;
         }
+    }
+
+    /// <summary>
+    /// If this location is passable when path finding
+    /// </summary>
+    /// <returns></returns>
+    public virtual bool DetermineIsPassable()
+    {
+        if (LocationTraversalType == RoomLocationTraversalTypes.Clear || LocationTraversalType == RoomLocationTraversalTypes.Impeded)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
