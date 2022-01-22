@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -29,17 +30,17 @@ public class BaseInputController : MonoBehaviour
     /// <summary>
     /// Movement vector
     /// </summary>
-    protected Vector3 moveDirection;
+    protected float3 moveDirection;
 
     public float LookOffSet = 90;
     /// <summary>
     /// Location to look at
     /// </summary>
-    protected Vector3 lookLocation;
+    protected float3 lookLocation;
     /// <summary>
     /// Direction vector to look at
     /// </summary>
-    protected Vector3 lookDirection;
+    protected float3 lookDirection;
     /// <summary>
     /// If we want to dash
     /// </summary>
@@ -111,7 +112,7 @@ public class BaseInputController : MonoBehaviour
     /// </summary>
     protected virtual void PerformLook()
     {
-        lookDirection = lookLocation - body.position;
+        lookDirection = lookLocation - (float3)body.position;
         var angle = Mathf.Atan2(lookDirection.z, lookDirection.x) * Mathf.Rad2Deg - LookOffSet;
         if (BaseLookSpeed == 0)//instant
         {

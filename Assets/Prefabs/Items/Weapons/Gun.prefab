@@ -241,10 +241,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 948811340251969136}
-  lineRendererDistance: 15
   FirePos: {fileID: 6868498651272905785}
   Projectial: {fileID: 683715891614362776, guid: 197f8fbaba6f8bc4fa9f01f630ba4465, type: 3}
-  Range: 0.5
+  Range: 15
   FireRate: 0.2
   ProjectileAmount: 5
   BurstAmount: 1
@@ -270,8 +269,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 133e63563b9168a49b311fee10d83529, type: 2}
-  - {fileID: 2100000, guid: 9240753663b3b9e49b0d50f233e3fa26, type: 2}
+  - {fileID: 2100000, guid: 77886385995641f44841c4f3de7870c5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -4,134 +4,137 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class EnemyWanderState : IEnemyStates
+public class EnemyWanderState : EnemyPathFindingState
 {
-    protected EnemyAI AI;
-    protected int pathIndex = -1;
-    protected bool waitForPath;
+    /// <summary>
+    /// check value if we dont have a search dest location set
+    /// </summary>
+    protected float3 unassignedDest = new float3(-1, -1, -1);
+    /// <summary>
+    /// Destination we are traveling to to search it
+    /// </summary>
+    protected float3 searchLocationDest = new float3(-1, -1, -1);
+    /// <summary>
+    /// Count we are on for looking differnt directions once we have reached the search location
+    /// </summary>
+    protected int searchLookCount;
+    /// <summary>
+    /// Location to look at when stopped and looking
+    /// </summary>
+    protected Vector3 searchLook = Vector3.zero;
 
-    protected int searchLocations;
-
-    public EnemyStates PerformState(EnemyAI ai)
-    {
-        AI = ai;
-
-        PerformSearchLogic();
-
-        return FindNextState();
-    }
-
-    public EnemyStates FindNextState()
+    #region State Change
+    /// <summary>
+    /// Find the next state based on current status
+    /// </summary>
+    /// <returns></returns>
+    protected override EnemyStates FindNextState()
     {
         if (AI.Enemy.HasTarget())
         {
-            pathIndex = -1;
+            ChangingStates();
             return EnemyStates.Chase;
         }
-        else
-        {
-            return EnemyStates.Wander;
-        }
-    }
 
-    protected virtual void PerformSearchLogic()
+        return EnemyStates.Wander;
+    }
+    /// <summary>
+    /// If we are changing out of this state then do any clean up
+    /// </summary>
+    protected override void ChangingStates()
     {
-        if (AI.pathDtl.Path == null || pathIndex < 0)
+        searchLocationDest = unassignedDest;
+        currentPathIndex = -1;
+    }
+    #endregion
+
+    #region State Logic
+    /// <summary>
+    /// Perfrom this status logic
+    /// </summary>
+    protected override void PerformStateLogic()
+    {
+        //find we dont have a searchdest
+        if (searchLocationDest.Equals(unassignedDest))
         {
-            FindPath();
-        }
-        else if (waitForPath && !AI.pathDtl.UpdatePath)
-        {
-            // we are waiting for path and it is now updated
-            AI.pathDtl = PathFindingPool.GetObjectForPathFinding(AI.gameObject);
-            waitForPath = false;
-        }
-        else if (pathIndex < AI.pathDtl.Path.Count)
-        {
-            var nextLoc = new Vector3(AI.pathDtl.Path[pathIndex].x, AI.transform.position.y, AI.pathDtl.Path[pathIndex].y);
-            if (ArrivedAtLoc(nextLoc))
+            // find new dest
+            while (!GameManager.Instance.GetGridPath.Passable(searchLocationDest))
             {
-                pathIndex++;
+                searchLocationDest = new float3(UnityEngine.Random.Range(AI.transform.position.x - AI.SearchRadius, AI.transform.position.x + AI.SearchRadius),
+                   AI.transform.position.y,
+                   UnityEngine.Random.Range(AI.transform.position.z - AI.SearchRadius, AI.transform.position.z + AI.SearchRadius));
             }
-            else
-            {
-                // look and move to the next location
-                AI.Controller.SetLookLocation(nextLoc);
-                AI.Controller.SetMoveDirection(-(AI.gameObject.transform.position - nextLoc));
-            }
+
+            //find path here
+            FindPath(searchLocationDest);
         }
         else
         {
-            AtSearchLocation();
+            // we have a dest so lets find a path and move to it
+            FindAndMoveOnPath(searchLocationDest);
         }
 
         // look to see if we can see the player and the player is in range of LOS
-        if(AI.FOV.PerformFOVCheck() && AI.FOV.CanDetect)
+        if (AI.FOV.PerformFOVCheck() && AI.FOV.CanDetect)
         {
             AI.Enemy.SetTarget(AI.FOV.Target);
         }
     }
 
-    protected virtual void AtSearchLocation()
+    /// <summary>
+    /// Perfor logic for once we have reach the end of the path
+    /// </summary>
+    protected override void AtEndOfPath()
     {
+        // stop the enemy
         AI.Controller.SetMoveDirection(Vector3.zero);
-        var searchLook = Vector3.zero;
-        if (searchLocations == 0)
+
+        if (searchLookCount == 0 && searchLook == Vector3.zero)
         {
-            var x = 1 * Mathf.Cos(30 * Mathf.Deg2Rad);
-            var y = 1 * Mathf.Sin(30 * Mathf.Deg2Rad);
-            searchLook = AI.transform.position;
-            searchLook.x += x;
-            searchLook.z += y;
+            //look right 60 degress
+            searchLook = LookTo(AI.transform, 60, 1);
         }
-        else if (searchLocations == 1)
+        else if (searchLookCount == 1 && searchLook == Vector3.zero)
         {
-            var x = 1 * Mathf.Cos(-60 * Mathf.Deg2Rad);
-            var y = 1 * Mathf.Sin(-60 * Mathf.Deg2Rad);
-            searchLook = AI.transform.position;
-            searchLook.x += x;
-            searchLook.z += y;
+            //look back left 120 degress so we look right / left 60 degress from start 
+            searchLook = LookTo(AI.transform, -120, 1);
         }
 
+        //update look to
         AI.Controller.SetLookLocation(searchLook);
+
         float dot = Vector3.Dot(AI.transform.forward, (searchLook - AI.transform.position).normalized);
         if (dot == 1)
         {
-            searchLocations++;
+            searchLookCount++;
+            searchLook = Vector3.zero;
         }
-        
-        if (searchLocations == 2)
+
+        if (searchLookCount == 2)
         {
-            searchLocations = 0;
-            FindPath();
+            searchLookCount = 0;
+            searchLocationDest = unassignedDest;
         }
     }
+    #endregion
 
-    protected virtual bool ArrivedAtLoc(Vector3 nextLoc)
+    #region Helpers
+    /// <summary>
+    /// Look to angle offset based on current location and facing
+    /// </summary>
+    /// <param name="pos">transfom of object to find look pos</param>
+    /// <param name="angle">angle from current facing we want to look to</param>
+    /// <param name="distance">distance we will look out</param>
+    /// <returns>location we will look at</returns>
+    protected virtual Vector3 LookTo(Transform pos, float angle, float distance)
     {
-        // check if we are close enough to the location to count as arrived
-        var mag = (AI.transform.transform.position - nextLoc).magnitude;
-        return mag < 0.1f;
+        // local coordinate rotation around the Y axis to the given angle
+        Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.up);
+        // add the desired distance to the direction
+        Vector3 addDistanceToDirection = rotation * pos.forward * distance;
+
+        // add the distance and direction to the current position to get the final destination
+        return pos.position + addDistanceToDirection;
     }
-
-    protected virtual void FindPath()
-    {
-        //find valid next loc
-        Vector3 next = new Vector3(-1,-1,-1);
-        while (!GameManager.Instance.GetGridPath.Passable(next))
-        {
-            next = new Vector3(UnityEngine.Random.Range(AI.transform.position.x - AI.SearchRadius, AI.transform.position.x + AI.SearchRadius),
-               AI.transform.position.y,
-               UnityEngine.Random.Range(AI.transform.position.z - AI.SearchRadius, AI.transform.position.z + AI.SearchRadius));
-        }
-
-        //Update path details
-        AI.pathDtl.StartPos = AI.transform.position;
-        AI.pathDtl.EndPos = next;
-        AI.pathDtl.UpdatePath = true;
-        PathFindingPool.AddObjectForPathFinding(AI.gameObject, AI.pathDtl);
-
-        pathIndex = 0;
-        waitForPath = true;
-    }
+    #endregion
 }

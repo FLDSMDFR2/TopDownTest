@@ -12,6 +12,7 @@ public class BaseProjectile : MonoBehaviour
     protected int _characterId;
     protected Vector3 direction = Vector3.forward;
     protected float range = 1;
+    protected Vector3 startPos;
 
     protected virtual void Awake()
     {
@@ -36,7 +37,12 @@ public class BaseProjectile : MonoBehaviour
 
     public virtual void SetRange(float r)
     {
+        //set range
         range = r;
+
+        //save starting position so we can check to see if we have hit the range
+        startPos = transform.position;
+
         StartCoroutine(DestoryProjectialRange());
     }
 
@@ -70,7 +76,11 @@ public class BaseProjectile : MonoBehaviour
 
     protected virtual IEnumerator DestoryProjectialRange()
     {
-        yield return new WaitForSeconds(range);
+        // while we are less then range just yeild
+        while(Vector3.Distance(startPos, transform.position) < range)
+        {
+            yield return null;
+        }
         GOPoolManager.AddObject(this.GetType(), gameObject);
     }
 

@@ -9,15 +9,33 @@ public class FieldOfView : MonoBehaviour
     protected bool DebugEnabled = false;
 
     [Header("Config")]
+    /// <summary>
+    /// Radius for area we will still detect a target
+    /// </summary>
     public float DetectRadius;
+    /// <summary>
+    /// Radius for when we will see a target
+    /// </summary>
     public float LOSRadius;
+    /// <summary>
+    /// Angle for the field of view on the line of site
+    /// </summary>
     [Range(0, 360)]
     public float LOSAngle;
 
+    /// <summary>
+    /// Target layers we are looking for
+    /// </summary>
     public LayerMask TargetMask;
+    /// <summary>
+    /// Layers that obstruct the view
+    /// </summary>
     public LayerMask ObstructionMask;
 
     [Header("RunTime Assigned")]
+    /// <summary>
+    /// Target we have found.. if there is one
+    /// </summary>
     public Transform Target;
     /// <summary>
     /// If we can see the target and its in range to detect
@@ -27,7 +45,9 @@ public class FieldOfView : MonoBehaviour
     /// If line of site is not blocked to the target
     /// </summary>
     public bool CanSee;
-
+    /// <summary>
+    /// If we have seen a target and it is now out of line of site but still in the DetectRadius
+    /// </summary>
     protected bool trackingTarget;
 
     #region Debug
@@ -57,6 +77,10 @@ public class FieldOfView : MonoBehaviour
     }
     #endregion
 
+    /// <summary>
+    /// Perform check for if target is in our Field of view
+    /// </summary>
+    /// <returns></returns>
     public virtual bool PerformFOVCheck()
     {
         // check if target has entered LOS
@@ -81,6 +105,10 @@ public class FieldOfView : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// If a target is in line of site
+    /// </summary>
+    /// <returns></returns>
     protected virtual bool PerformLOSCheck()
     {
         // get object in range
@@ -128,6 +156,10 @@ public class FieldOfView : MonoBehaviour
         return CanSee;
     }
 
+    /// <summary>
+    /// If a target is in detection range
+    /// </summary>
+    /// <returns></returns>
     protected virtual bool PerformDetectionCheck()
     {
         // get object in range

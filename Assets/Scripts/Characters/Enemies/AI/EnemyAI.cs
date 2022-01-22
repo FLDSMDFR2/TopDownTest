@@ -17,15 +17,22 @@ public class EnemyAI : MonoBehaviour
     protected bool DebugEnabled = false;
 
     public EnemyStates CurrentState = EnemyStates.Wander;
-    public IEnemyStates EnemyWander = new EnemyWanderState();
-    public IEnemyStates EnemyChase = new EnemyChaseState();
+    protected EnemyWanderState EnemyWander = new EnemyWanderState();
+    protected EnemyChaseState EnemyChase = new EnemyChaseState();
+    protected EnemyAttackState EnemyAttack = new EnemyAttackState();
 
     [Header("Enemy AI")]
     public float SearchRadius;
 
-    public float PathCheckRate;
-
     public bool Disabled = false;
+
+    [Header("Enemy Wander State")]
+    public float WanderPathCheckRate;
+
+    [Header("Enemy Chase State")]
+    public float ChasePathCheckRate;
+
+    [Header("Enemy Attack State")]
 
     [HideInInspector]
     public EnemyInputController Controller;
@@ -36,7 +43,7 @@ public class EnemyAI : MonoBehaviour
     [HideInInspector]
     public PathFindingJobDetails pathDtl = new PathFindingJobDetails();
 
-    void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         if (Application.isPlaying && pathDtl.Path != null && pathDtl.Path.Count > 0 && DebugEnabled)
         {
@@ -47,15 +54,22 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         Controller = GetComponent<EnemyInputController>();
         Enemy = GetComponent<BaseEnemy>();
         FOV = GetComponent<FieldOfView>();
         PathFindingPool.AddObjectForPathFinding(this.gameObject, pathDtl);
+
+        InitStates();
+    }
+    protected virtual void InitStates()
+    {
+        EnemyWander.PathCheckRate = WanderPathCheckRate;
+        EnemyChase.PathCheckRate = ChasePathCheckRate;
     }
 
-    public void Update()
+    protected virtual void Update()
     {
         if (Disabled || Enemy == null)
             return;
@@ -72,7 +86,7 @@ public class EnemyAI : MonoBehaviour
                 CurrentState = EnemyChase.PerformState(this);
                 break;
             case EnemyStates.Attack:
-
+                CurrentState = EnemyAttack.PerformState(this);
                 break;
             default:
                 break;

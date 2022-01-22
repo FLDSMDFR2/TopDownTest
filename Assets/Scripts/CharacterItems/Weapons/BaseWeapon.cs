@@ -6,7 +6,7 @@ public class BaseWeapon : MonoBehaviour
 {
     [Header("Base Weapon")]
     public LineRenderer lineRenderer;
-    public float lineRendererDistance;
+
     public Transform FirePos;
     public GameObject Projectial;
     public float Range;
@@ -30,7 +30,7 @@ public class BaseWeapon : MonoBehaviour
     protected virtual void Update()
     {
         lineRenderer.SetPosition(0, FirePos.position);
-        lineRenderer.SetPosition(1, FirePos.position + (FirePos.up * lineRendererDistance));
+        lineRenderer.SetPosition(1, FirePos.position + (FirePos.up * Range));
     }
 
     public virtual void SetWeapon(int CharacterID, Transform HoldPos)

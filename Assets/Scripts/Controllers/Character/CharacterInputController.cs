@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Events;
+using Unity.Mathematics;
 
 public class CharacterInputController : BaseInputController
 {
@@ -18,8 +18,9 @@ public class CharacterInputController : BaseInputController
     protected override void HandleMovementInput()
     {
         moveDirection.x = Input.GetAxisRaw("Horizontal");
+        moveDirection.y = 0;
         moveDirection.z = Input.GetAxisRaw("Vertical");
-        moveDirection.Normalize();
+        moveDirection = math.normalizesafe(moveDirection);
     }
 
     /// <summary>

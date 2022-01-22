@@ -101,6 +101,9 @@
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\FieldOfView\FieldOfViewEditor.cs" />
     <Compile Include="Assets\Scripts\Utils\Helpers\MapTraversal.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyAttackState.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyBaseState.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyPathFindingState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -91,7 +91,7 @@ public class PathFinding_V2 : MonoBehaviour
         {
             // Save the results from the job to a list, the values in results need to be reversed
             job.Path = new List<int2>(job.Job.Results.ToArray());
-            job.Path.RemoveAt(job.Path.Count - 1);//remove start pos
+            if(job.Path.Count > 0) job.Path.RemoveAt(job.Path.Count - 1);//remove start pos
             job.Path.Reverse();// path is build backwards from end so revers it
             job.Job.Results.Dispose();
         }
