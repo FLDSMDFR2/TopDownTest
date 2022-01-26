@@ -7,26 +7,41 @@ public class Item : MonoBehaviour
 {
     [Header("Item")]
     /// <summary>
-    /// Cost to have this item in use
-    /// ie drain on the battery
+    /// Data for this class
     /// </summary>
-    [SerializeField]
-    protected float upKeepCost;
+    public ItemData Data;
+
+    private void Awake()
+    {
+        PerformAwake();
+    }
+
+    protected virtual void PerformAwake()
+    {
+        CreateClassData();
+    }
+
+    private void Start()
+    {
+        PerformStart();
+    }
+
+    protected virtual void PerformStart(){}
+
     /// <summary>
-    /// Cost to use the Item
+    /// Create Class data needed for this class
     /// </summary>
-    [SerializeField]
-    protected float useCost;
+    protected virtual void CreateClassData() { }
 
     /// <summary>
     /// Get the up keep cost for this item
     /// </summary>
     /// <returns></returns>
-    public virtual float UpKeepCost() { return upKeepCost; }
+    public virtual float UpKeepCost() { return Data.UpKeepCost; }
 
     /// <summary>
     /// Get the Use Cost for this item
     /// </summary>
     /// <returns></returns>
-    public virtual float UseCost() { return useCost; }
+    public virtual float UseCost() { return Data.UseCost; }
 }

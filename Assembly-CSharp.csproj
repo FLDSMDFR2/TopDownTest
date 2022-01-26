@@ -82,7 +82,7 @@
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyPathFindingState.cs" />
     <Compile Include="Assets\Scripts\TestSceneStuff\RoomGeneratorTester.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\Room.cs" />
-    <Compile Include="Assets\Scripts\CharacterItems\Modifiers\WeaponModifiers\Shooting\FireModifierBase.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\Modifiers\WeaponModifiers\FireModifiers\FireModifierBase.cs" />
     <Compile Include="Assets\Scripts\Utils\Helpers\MapTraversal.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\Data\RoomLocationData.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ModifiableItems\Sheilds\BaseShield.cs" />
@@ -95,7 +95,7 @@
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyBaseState.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\FieldOfView\FieldOfView.cs" />
-    <Compile Include="Assets\Scripts\Utils\UI\FPSCounterDisplay.cs" />
+    <Compile Include="Assets\Scripts\UI\Utils\FPSCounterDisplay.cs" />
     <Compile Include="Assets\Scripts\Utils\RandomGenerator.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\Job PathFinding\PathFinding_V2.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Item.cs" />
@@ -115,6 +115,14 @@
     <Compile Include="Assets\Scripts\UI\UI_Power.cs" />
     <Compile Include="Assets\Scripts\UI\Events\UIEvents.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Modifiers\BatteryModifiers\BatteryModifier.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\Weapons\BaseWeaponData.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\Weapons\FireModifiers\FireModifierData.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ItemData.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\ItemModifierData.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\ModifiableItemData.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\Weapons\WeaponModifierData.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\Batteries\BaseBatteryData.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\Batteries\BatteryModifierData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

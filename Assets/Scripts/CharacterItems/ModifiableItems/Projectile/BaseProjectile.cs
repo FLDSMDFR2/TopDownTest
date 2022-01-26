@@ -40,9 +40,9 @@ public class BaseProjectile : ModifiableItem, IPoolable
     /// </summary>
     protected Vector3 startPos;
 
-    protected override void Awake()
+    protected override void PerformAwake()
     {
-        base.Awake();
+        base.PerformAwake();
         body = GetComponent<Rigidbody>();
     }
 

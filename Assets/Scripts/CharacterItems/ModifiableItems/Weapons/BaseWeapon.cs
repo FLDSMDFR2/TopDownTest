@@ -6,34 +6,41 @@ public class BaseWeapon : ModifiableItem
 {
     [Header("Base Weapon")]
     /// <summary>
+    /// Data for this class
+    /// </summary>
+    [HideInInspector]
+    public BaseWeaponData ClassData;
+    /// <summary>
     /// Location to shoot from
     /// </summary>
     public Transform FirePos;
     /// <summary>
-    /// Projectile prefab we will shoot (visual)
+    /// Range of weapon
     /// </summary>
-    public GameObject Projectial;
-    /// <summary>
-    /// Base Range of weapon
-    /// </summary>
-    [SerializeField]
-    protected float BaseRange;
     protected float range;
-    public float Range { get { return range; } }
+    public float Range
+    {
+        get { return range; }
+        set { range = value; }
+    }
     /// <summary>
-    /// Base speed of weapons projectile
+    /// Speed of weapons projectile
     /// </summary>
-    [SerializeField]
-    protected float BaseSpeed;
     protected float speed;
-    public float Speed { get { return speed; } }
+    public float Speed
+    {
+        get { return speed; }
+        set { speed = value; }
+    }
     /// <summary>
-    /// Base damge of weapon
+    /// Damge of weapon
     /// </summary>
-    [SerializeField]
-    protected float BaseDamage;
     protected float damage;
-    public float Damage { get { return damage; } }
+    public float Damage
+    {
+        get { return damage; }
+        set { damage = value; }
+    }
     /// <summary>
     /// Character assigned to this weapon
     /// </summary>
@@ -46,13 +53,22 @@ public class BaseWeapon : ModifiableItem
 
     protected FireModifierBase shootingModifier;
 
-    protected override void Awake()
+    protected override void PerformAwake()
     {
-        base.Awake();
+        base.PerformAwake();
 
         CalculateDamage();
         CalculateRange();
         CalculateSpeed();
+    }
+
+    protected override void CreateClassData()
+    {
+        ClassData = (BaseWeaponData)base.Data;
+        if (ClassData == null)
+        {
+            TraceManager.WriteTrace(TraceChannel.Main, TraceType.error, "BaseWeaponData Data set failed.");
+        }
     }
 
     /// <summary>
@@ -106,7 +122,7 @@ public class BaseWeapon : ModifiableItem
     /// <returns></returns>
     protected virtual void CalculateDamage()
     {
-        damage += BaseDamage;
+        Damage += ClassData.BaseDamage;
     }
 
     /// <summary>
@@ -115,7 +131,7 @@ public class BaseWeapon : ModifiableItem
     /// <returns></returns>
     protected virtual void CalculateSpeed()
     {
-        speed += BaseSpeed;
+        Speed += ClassData.BaseSpeed;
     }
     /// <summary>
     /// Range of weapon Base range + modifiers
@@ -123,7 +139,7 @@ public class BaseWeapon : ModifiableItem
     /// <returns></returns>
     protected virtual void CalculateRange()
     {
-        range += BaseRange;
+        Range += ClassData.BaseRange;
     }
 
     #region Modifiers
@@ -139,6 +155,8 @@ public class BaseWeapon : ModifiableItem
 
     protected override void SetModifiers()
     {
+        base.SetModifiers();
+
         var mods = GetModifierByType(typeof(WeaponModifier));
         foreach(var mod in mods)
         {

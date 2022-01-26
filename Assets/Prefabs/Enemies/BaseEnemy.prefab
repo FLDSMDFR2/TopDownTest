@@ -374,10 +374,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75be0ac46e6203a4bb15d8ca4661c964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upKeepCost: 0
-  useCost: 0
-  BaseMaxPower: 0
-  power: -1
+  Data: {fileID: 11400000, guid: 4e9048ffa74ceed4497f0fccc53dd803, type: 2}
+  ClassData: {fileID: 0}
 --- !u!1001 &1749335093560239094
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -385,6 +383,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3513223028101785596}
     m_Modifications:
+    - target: {fileID: 2920473605545929329, guid: 251cc553628ff554792a1a722e11942e, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: b6b2a9fde0c2559499cc68440d27eef4, type: 2}
     - target: {fileID: 2920473605545929329, guid: 251cc553628ff554792a1a722e11942e, type: 3}
       propertyPath: Power
       value: 0
@@ -463,6 +465,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3513223027955240687}
     m_Modifications:
+    - target: {fileID: -5675464481546804522, guid: 31f002448206c4f49b4c025c4cae4125, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 0684e9574b1739c49a96dfd4ca724d22, type: 2}
     - target: {fileID: 2433412917224738113, guid: 31f002448206c4f49b4c025c4cae4125, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -507,6 +513,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6106089185397757870, guid: 31f002448206c4f49b4c025c4cae4125, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: bc5ecfcd0cc0e2d42a415fe5a19e6719, type: 2}
     - target: {fileID: 6308384958842454710, guid: 31f002448206c4f49b4c025c4cae4125, type: 3}
       propertyPath: m_Name
       value: EnemyGun

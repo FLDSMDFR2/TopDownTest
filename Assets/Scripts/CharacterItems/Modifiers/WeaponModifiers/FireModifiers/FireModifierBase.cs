@@ -4,33 +4,12 @@ using UnityEngine;
 
 public class FireModifierBase : WeaponModifier
 {
-    [Header("Fire Modifier Base")]
+    [Header("Fire Modifier")]
     /// <summary>
-    /// Rate at which to shoot
+    /// Data for this class
     /// </summary>
-    public float FireRate = 1f;
-    /// <summary>
-    /// Amount of projectiles to shoot
-    /// </summary>
-    public int ProjectileAmount = 1;
-    /// <summary>
-    /// Start angle of shoot spread
-    /// </summary>
-    public float StartAngle = 180;
-    /// <summary>
-    /// End angle of shoot spread
-    /// </summary>
-    public float EndAngle = 180;
-
-    [Header("Burst")]
-    /// <summary>
-    /// Number of burst to perform
-    /// </summary>
-    public int BurstAmount = 1;
-    /// <summary>
-    /// time between each burst shot
-    /// </summary>
-    public float BurstRate = 0.5f;
+    [HideInInspector]
+    public FireModifierData ClassData;
     /// <summary>
     /// If we are currently firing
     /// </summary>
@@ -52,12 +31,21 @@ public class FireModifierBase : WeaponModifier
     /// </summary>
     protected BaseProjectile projectile;
 
+    protected override void CreateClassData()
+    {
+        ClassData = (FireModifierData)base.Data;
+        if (ClassData == null)
+        {
+            TraceManager.WriteTrace(TraceChannel.Main, TraceType.error, "FireModifierData Data set failed.");
+        }
+    }
+
     public override void InitWeaponModifier(BaseWeapon weapon)
     {
         base.InitWeaponModifier(weapon);
 
         firePos = weapon.FirePos;
-        projectileObject = weapon.Projectial;
+        projectileObject = weapon.ClassData.Projectial;
         projectile = projectileObject.GetComponent<BaseProjectile>();
     }
 
@@ -67,7 +55,7 @@ public class FireModifierBase : WeaponModifier
     /// <returns></returns>
     public override float UseCost()
     {
-        return useCost * (ProjectileAmount * BurstAmount);
+        return Data.UseCost * (ClassData.ProjectileAmount * ClassData.BurstAmount);
     }
 
     /// <summary>
@@ -77,7 +65,7 @@ public class FireModifierBase : WeaponModifier
     {
         // if last fire is 0 then fire this is the first shot
         // or fire when rate allows && we are currently not firing
-        if (!isFiring && (lastFire <= 0f || Time.time >= lastFire + FireRate))
+        if (!isFiring && (lastFire <= 0f || Time.time >= lastFire + weapon.ClassData.FireRate))
         {
             if (weapon.Character.BatterUseCheck(weapon.UseCost()))
             {
@@ -92,19 +80,19 @@ public class FireModifierBase : WeaponModifier
     /// </summary>
     protected virtual IEnumerator FireProjectial()
     {
-        if (BurstAmount <= 0) BurstAmount = 1;
+        if (ClassData.BurstAmount <= 0) ClassData.BurstAmount = 1;
         var burstCount = 0;
         // perform burst fire if needed
-        while (burstCount < BurstAmount)
+        while (burstCount < ClassData.BurstAmount)
         {
             // fire projectile pattern
-            var pa = ProjectileAmount - 1;
+            var pa = ClassData.ProjectileAmount - 1;
             if (pa <= 0) pa = 1;
 
-            float angleStep = (EndAngle - StartAngle) / pa;
-            float angle = firePos.eulerAngles.y + StartAngle;
+            float angleStep = (ClassData.EndAngle - ClassData.StartAngle) / pa;
+            float angle = firePos.eulerAngles.y + ClassData.StartAngle;
 
-            for (int i = 0; i < ProjectileAmount; i++)
+            for (int i = 0; i < ClassData.ProjectileAmount; i++)
             {
                 Vector3 dir = new Vector3(Mathf.Sin(Mathf.Deg2Rad * angle), 0F, Mathf.Cos(Mathf.Deg2Rad * angle));
                 Quaternion rot = Quaternion.Euler(firePos.rotation.eulerAngles.x + 90, angle, firePos.rotation.eulerAngles.z);
@@ -114,14 +102,14 @@ public class FireModifierBase : WeaponModifier
 
                 if (baseProj != null)
                 {
-                    baseProj.InitProjectile(weapon.Character.ID, dir, weapon.Range, weapon.Speed,weapon.Damage);
+                    baseProj.InitProjectile(weapon.Character.ID, dir, weapon.Range, weapon.Speed, weapon.Damage);
                     baseProj.Fire();
                 }
 
                 angle += angleStep;
             }
             burstCount++;
-            if (BurstAmount > 1) yield return new WaitForSeconds(BurstRate);
+            if (ClassData.BurstAmount > 1) yield return new WaitForSeconds(ClassData.BurstRate);
         }
 
         // firing is complete

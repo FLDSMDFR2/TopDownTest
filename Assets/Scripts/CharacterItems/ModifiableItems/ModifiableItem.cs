@@ -21,13 +21,18 @@ public class ModifiableItem : Item
     /// </summary>
     protected float modifiersUseCost;
 
-    protected virtual void Awake()
+    protected override void PerformAwake()
     {
+        base.PerformAwake();
+
         // get all itme modifiers assigned to this ModifiableItem
         modifiers = new List<ItemModifier>(GetComponents<ItemModifier>());
 
         InitClassDetails();
+    }
 
+    protected override void PerformStart()
+    {
         SetModifierCosts();
         SetModifiers();
     }
@@ -69,7 +74,7 @@ public class ModifiableItem : Item
     /// <returns></returns>
     public override float UseCost()
     {
-        return modifiersUseCost + useCost;
+        return modifiersUseCost + Data.UseCost;
     }
 
     /// <summary>

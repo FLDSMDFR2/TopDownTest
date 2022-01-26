@@ -3,34 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseBattery : ModifiableItem
-{
-    [Header("Base Battery")]
+
+{    [Header("Base Battery")]
     /// <summary>
-    /// Max power in battery
+    /// Data for this class
     /// </summary>
-    [SerializeField]
-    protected float BaseMaxPower;
+    [HideInInspector]
+    public BaseBatteryData ClassData;
+    /// <summary>
+    /// Max power of batter with all modifiers applied
+    /// </summary>
     protected float maxPower;
-    public float MaxPower { get { return maxPower; } }
     /// <summary>
-    /// Current power in battery
+    /// Current power of battery
     /// </summary>
-    [SerializeField]
-    protected float power = -1;
+    protected float power = -1; 
     protected float currentPower
     {
         set
         {
             power = value;
             if (character != null)
-                UIEvents.RaisePowerUpdateEvent(character.ID, power, MaxPower);
+                UIEvents.RaisePowerUpdateEvent(character.ID, power, maxPower);
         }
         get { return power; }
     }
-    /// <summary>
-    /// the rate at which we consume power
-    /// </summary>
-    protected float Rate = 1;
     /// <summary>
     /// The Amount we will consume from the batter per second without doing anything
     /// This should be a comination of all general power consumtion ie (system power, shields, sensers...)
@@ -46,6 +43,15 @@ public class BaseBattery : ModifiableItem
     protected BaseCharacter character;
     public BaseCharacter Character { set { character = value; } }
 
+    protected override void CreateClassData()
+    {
+        ClassData = (BaseBatteryData)base.Data;
+        if (ClassData == null)
+        {
+            TraceManager.WriteTrace(TraceChannel.Main, TraceType.error, "BaseBatteryData Data set failed.");
+        }
+    }
+
     /// <summary>
     /// Init this class details
     /// </summary>
@@ -53,7 +59,7 @@ public class BaseBattery : ModifiableItem
     {
         base.InitClassDetails();
 
-        maxPower = BaseMaxPower;
+        maxPower = ClassData.BaseMaxPower;
     }
 
     /// <summary>
@@ -101,7 +107,7 @@ public class BaseBattery : ModifiableItem
         while (IsRunning)
         {
             // wait a sec then consum battery and continue 
-            yield return new WaitForSeconds(Rate);
+            yield return new WaitForSeconds(ClassData.Rate);
 
             currentPower = Mathf.Clamp(currentPower - consumeAmountPerRate, 0, maxPower);
         }
@@ -116,7 +122,7 @@ public class BaseBattery : ModifiableItem
         foreach (var mod in mods)
         {
             var batterMod =  mod as BatteryModifier;
-            maxPower += batterMod.Power;
+            maxPower += batterMod.ClassData.Power;
         }
     }
 }
