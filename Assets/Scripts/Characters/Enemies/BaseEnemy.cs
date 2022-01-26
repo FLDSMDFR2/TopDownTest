@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseEnemy : BaseCharacter
+public class BaseEnemy : BaseCharacter, IPoolable
 {
     [Header("Base Enemy")]
+    /// <summary>
+    /// Id of this object for object pooling
+    /// </summary>
+    [SerializeField]
+    protected string PoolingID;
     /// <summary>
     /// Range this enemy will start attacking within
     /// </summary>
@@ -65,11 +70,26 @@ public class BaseEnemy : BaseCharacter
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cost"></param>
+    /// <returns></returns>
+    public override bool BatterUseCheck(float cost)
+    {
+        return true;
+    }
+
+    /// <summary>
     /// Death handling
     /// </summary>
     protected override void Dead()
     {
         base.Dead();
-        GOPoolManager.AddObject(this.GetType(), gameObject);
+        GOPoolManager.AddObject(GetPoolId(), gameObject);
+    }
+
+    public string GetPoolId()
+    {
+        return PoolingID;
     }
 }

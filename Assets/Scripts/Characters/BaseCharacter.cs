@@ -6,7 +6,7 @@ public class BaseCharacter : MonoBehaviour
     /// <summary>
     /// Character ID
     /// </summary>
-    public int CharacterID;
+    public int ID;
     /// <summary>
     /// Base health 
     /// </summary>
@@ -29,6 +29,10 @@ public class BaseCharacter : MonoBehaviour
     /// Shield to use
     /// </summary>
     public GameObject ShieldSlot;
+    /// <summary>
+    /// Shield to use
+    /// </summary>
+    public GameObject BatterySlot;
     //********PROBABLY SHOULD REMOVE THIS FOR BETTER SOLUTION******
 
     /// <summary>
@@ -39,11 +43,29 @@ public class BaseCharacter : MonoBehaviour
     /// Active character shield to use
     /// </summary>
     protected BaseShield Shield;
+    /// <summary>
+    /// Base Battery
+    /// </summary>
+    protected BaseBattery battery;
 
     protected virtual void Awake()
     {
         InitalizeHealth();
         LoadInventoy();
+    }
+
+    protected virtual void Start()
+    {
+        // init things for the battery consume cost
+        if (battery != null)
+        {
+            battery.Character = this;
+            battery.SetConsumeAmountPerSec(ActiveWeapon.UpKeepCost());
+            if (Shield != null)
+            {
+                battery.SetConsumeAmountPerSec(Shield.UpKeepCost());
+            }
+        }
     }
 
     /// <summary>
@@ -54,8 +76,10 @@ public class BaseCharacter : MonoBehaviour
         //TODO: THIS SHOULD BE BETTER
         ActiveWeapon = WeaponSlot.GetComponentInChildren<BaseWeapon>(true);
         Shield = ShieldSlot.GetComponentInChildren<BaseShield>(true);
+        if (BatterySlot != null) battery = BatterySlot.GetComponent<BaseBattery>();
+
         // set the weapon to active
-        ActiveWeapon.SetWeapon(CharacterID, WeaponHoldPos);
+        ActiveWeapon.SetWeapon(this, WeaponHoldPos);
     }
 
     /// <summary>
@@ -71,7 +95,7 @@ public class BaseCharacter : MonoBehaviour
     /// </summary>
     protected virtual void FireWeapon()
     {
-        ActiveWeapon.SetWeapon(CharacterID, WeaponHoldPos);
+        ActiveWeapon.SetWeapon(this, WeaponHoldPos);
         ActiveWeapon.Fire();
     }
 
@@ -81,16 +105,32 @@ public class BaseCharacter : MonoBehaviour
     /// <param name="damageTaken"></param>
     public virtual void TakeDamage(float damageTaken)
     {
-
+        //if we have a shield
         if (Shield != null)
         {
-            damageTaken = Shield.TakeDamage(damageTaken);
+            //check if we can deflect the damage
+            if (BatterUseCheck(damageTaken))
+                return;
         }
 
         CurentHealth = Mathf.Clamp(CurentHealth -= damageTaken, 0, MaxHealth());
 
         if (CurentHealth <= 0f)
             Dead();
+    }
+
+    /// <summary>
+    ///  Check if we can use item based on battery
+    /// </summary>
+    /// <param name="cost"></param>
+    /// <returns></returns>
+    public virtual bool BatterUseCheck(float cost)
+    {
+        if (battery != null)
+        {
+            return battery.ConsumePower(cost);
+        }
+        return true;
     }
 
     /// <summary>

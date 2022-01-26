@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GOPoolManager : MonoBehaviour
 {
-    protected static Dictionary<Type, Queue<GameObject>> objPool = new Dictionary<Type, Queue<GameObject>>();
+    protected static Dictionary<string, Queue<GameObject>> objPool = new Dictionary<string, Queue<GameObject>>();
     protected static Transform myTransform;
 
     private void Start()
@@ -13,7 +13,7 @@ public class GOPoolManager : MonoBehaviour
         myTransform = this.transform;
     }
 
-    public static GameObject GetObject(Type key, GameObject obj, Vector3 pos, Quaternion rot)
+    public static GameObject GetObject(string key, GameObject obj, Vector3 pos, Quaternion rot)
     {
         if (objPool.ContainsKey(key) && objPool[key].Count > 0)
         {
@@ -49,12 +49,12 @@ public class GOPoolManager : MonoBehaviour
         return CreateObject(key, obj, pos, rot);
     }
 
-    protected static GameObject CreateObject(Type key, GameObject obj, Vector3 pos, Quaternion rot)
+    protected static GameObject CreateObject(string key, GameObject obj, Vector3 pos, Quaternion rot)
     {
         GameObject retVal = null;
         foreach (Transform child in myTransform)
         {
-            if (child.name == key.Name)
+            if (child.name.Equals(key))
             {
                 retVal = Instantiate(obj, pos, rot, child);
                 break;
@@ -63,7 +63,7 @@ public class GOPoolManager : MonoBehaviour
 
         if (retVal == null)
         {
-            var parent = new GameObject(key.Name);
+            var parent = new GameObject(key);
             parent.transform.parent = myTransform;
 
             retVal = Instantiate(obj, pos, rot, parent.transform);
@@ -72,7 +72,7 @@ public class GOPoolManager : MonoBehaviour
         return retVal;
     }
 
-    public static void AddObject(Type key, GameObject obj)
+    public static void AddObject(string key, GameObject obj)
     {
         if (objPool.ContainsKey(key))
         {

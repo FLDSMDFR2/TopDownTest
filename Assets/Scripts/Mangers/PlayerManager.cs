@@ -12,6 +12,8 @@ public class PlayerManager
 
     public static void AddPlayer(BasePlayer player)
     {
+        //TODO: CHANGES THIS BUT FOR NOW WE ONLY HAVE 1 PLAYER SO SET THE UI EVENTS TO LISTEND FOR THIS PLAYERS EVENTS
+        UIEvents.SetPlayerId(player.ID);
         Players.Add(player);
     }
 

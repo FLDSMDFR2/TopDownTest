@@ -32,12 +32,16 @@ public class EnemySpawn : MonoBehaviour
     protected virtual void SpawnEnemy()
     {
         var enemyPrefab = EnemySpawnManager.GetEnemySpawnByDifficulty(difficulty);
-        var enemy = GOPoolManager.GetObject(typeof(BaseEnemy), enemyPrefab, Location, transform.rotation);
+        var enemyScript = enemyPrefab.GetComponent<BaseEnemy>();
+        if (enemyScript != null)
+        {
+            var enemy = GOPoolManager.GetObject(enemyScript.GetPoolId(), enemyPrefab, Location, transform.rotation);
 
-        var bEnemy = enemy.GetComponent<BaseEnemy>();
-        if (bEnemy == null)
-            return;
-        bEnemy.InitalizeHealth();
+            var bEnemy = enemy.GetComponent<BaseEnemy>();
+            if (bEnemy == null)
+                return;
+            bEnemy.InitalizeHealth();
+        }
 
         enemysSpawned += 1;
     }

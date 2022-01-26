@@ -1,5 +1,52 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6135811021259636236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6035719159420983155}
+  - component: {fileID: 2434346642144452437}
+  m_Layer: 9
+  m_Name: Battery
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6035719159420983155
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6135811021259636236}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6337678404864323187}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2434346642144452437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6135811021259636236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75be0ac46e6203a4bb15d8ca4661c964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upKeepCost: 0
+  useCost: 0
+  BaseMaxPower: 300
+  power: -1
 --- !u!1 &6337678403697969877
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,6 +138,7 @@ Transform:
   m_Children:
   - {fileID: 6337678403697969874}
   - {fileID: 6337678403852903361}
+  - {fileID: 6035719159420983155}
   m_Father: {fileID: 6337678404921798804}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -223,12 +271,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4633ddd94fa9e3c42ae56c95bebe0442, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CharacterID: 1
-  BaseHealth: 100
+  ID: 1
+  BaseHealth: 1
   CurentHealth: 0
   WeaponHoldPos: {fileID: 6337678405704728276}
   WeaponSlot: {fileID: 6337678403697969877}
   ShieldSlot: {fileID: 6337678403852903360}
+  BatterySlot: {fileID: 6135811021259636236}
 --- !u!114 &8932784836195068663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,6 +394,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6337678403852903361}
     m_Modifications:
+    - target: {fileID: 2920473605545929329, guid: 251cc553628ff554792a1a722e11942e, type: 3}
+      propertyPath: upKeepCost
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2920473605545929333, guid: 251cc553628ff554792a1a722e11942e, type: 3}
       propertyPath: m_RootOrder
       value: 0

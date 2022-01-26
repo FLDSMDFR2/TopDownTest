@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 683715891614362779}
   - component: {fileID: 683715891614362778}
   - component: {fileID: 1092194805534865385}
-  - component: {fileID: -1283022901253127178}
+  - component: {fileID: -3122667289011763603}
   m_Layer: 11
   m_Name: Enemy Projectial
   m_TagString: Projectile
@@ -28,13 +28,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 683715891614362776}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
 --- !u!33 &683715891614360420
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -114,7 +114,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
---- !u!114 &-1283022901253127178
+--- !u!114 &-3122667289011763603
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,8 +123,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 683715891614362776}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d324b4c2b5742246b6c358a7b232a3b, type: 3}
+  m_Script: {fileID: 11500000, guid: f90b9471e12f22f499928cf211cae41e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 10
-  Damage: 5
+  upKeepCost: 0
+  useCost: 0
+  PoolingID: EnemyBaseProjectile

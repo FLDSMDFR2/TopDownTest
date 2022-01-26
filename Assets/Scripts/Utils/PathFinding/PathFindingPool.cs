@@ -11,8 +11,8 @@ public class PathFindingPool : MonoBehaviour
     {
         // THIS SHOULD HAPPEN AFTER ALL OBJECT COULD HAVE REQUEST
         // PATH OBJECTS SHOULD FLAG FOR PATH UPDATE IN UPDATE
-        //PerformPathUpdates();
-        PerformPathUpdates_v2();
+        PerformPathUpdates();
+        //PerformPathUpdates_v2();
     }
 
     protected virtual void PerformPathUpdates()

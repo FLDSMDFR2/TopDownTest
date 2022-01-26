@@ -1,8 +1,11 @@
-﻿
+﻿using UnityEngine;
+
+[RequireComponent(typeof(CharacterInputController))]
 public class BasePlayer : BaseCharacter
 {
-    protected CharacterInputController inputController;
+    [Header("Base Player")]
 
+    protected CharacterInputController inputController;
     protected override void Awake()
     {
         base.Awake();
