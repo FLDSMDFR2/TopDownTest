@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 public class ModifiableItem : Item
 {
+    #region Variables
     /// <summary>
     /// Modifiers assoicated with this ModifiableItem
     /// </summary>
@@ -20,7 +21,9 @@ public class ModifiableItem : Item
     /// Cost to use this items modifiers
     /// </summary>
     protected float modifiersUseCost;
+    #endregion
 
+    #region Item Init
     protected override void PerformAwake()
     {
         base.PerformAwake();
@@ -36,29 +39,9 @@ public class ModifiableItem : Item
         SetModifierCosts();
         SetModifiers();
     }
+    #endregion
 
-    /// <summary>
-    /// Init this class details
-    /// </summary>
-    protected virtual void InitClassDetails(){}
-
-    /// <summary>
-    /// Get the cost for all assigned modifiers
-    /// </summary>
-    protected virtual void SetModifierCosts()
-    {
-        foreach (var item in modifiers)
-        {
-            modifiersUpKeepCost += item.UpKeepCost();
-            modifiersUseCost += item.UseCost();
-        }
-    }
-
-    /// <summary>
-    /// Set up info from modifiers
-    /// </summary>
-    protected virtual void SetModifiers(){}
-
+    #region Item Overrides
     /// <summary>
     /// Cost to Up keep
     /// </summary>
@@ -76,6 +59,30 @@ public class ModifiableItem : Item
     {
         return modifiersUseCost + Data.UseCost;
     }
+    #endregion
+
+    #region Class Logic
+    /// <summary>
+    /// Init this class details
+    /// </summary>
+    protected virtual void InitClassDetails() { }
+
+    /// <summary>
+    /// Get the cost for all assigned modifiers
+    /// </summary>
+    protected virtual void SetModifierCosts()
+    {
+        foreach (var item in modifiers)
+        {
+            modifiersUpKeepCost += item.UpKeepCost();
+            modifiersUseCost += item.UseCost();
+        }
+    }
+
+    /// <summary>
+    /// Set up info from modifiers
+    /// </summary>
+    protected virtual void SetModifiers() { }
 
     /// <summary>
     /// Get a list of all modifiers by type
@@ -93,4 +100,5 @@ public class ModifiableItem : Item
 
         return retList;
     }
+    #endregion
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BaseWeapon : ModifiableItem
 {
+    #region Variables
     [Header("Base Weapon")]
     /// <summary>
     /// Data for this class
@@ -52,7 +53,9 @@ public class BaseWeapon : ModifiableItem
     protected bool isActiveWeapon = false;
 
     protected FireModifierBase shootingModifier;
+    #endregion
 
+    #region Item Init
     protected override void PerformAwake()
     {
         base.PerformAwake();
@@ -61,7 +64,9 @@ public class BaseWeapon : ModifiableItem
         CalculateRange();
         CalculateSpeed();
     }
-
+    /// <summary>
+    /// convert base data to our class specifc data
+    /// </summary>
     protected override void CreateClassData()
     {
         ClassData = (BaseWeaponData)base.Data;
@@ -70,7 +75,39 @@ public class BaseWeapon : ModifiableItem
             TraceManager.WriteTrace(TraceChannel.Main, TraceType.error, "BaseWeaponData Data set failed.");
         }
     }
+    #endregion
 
+    #region ModifiableItem
+    protected virtual void SetShootingModifier(WeaponModifier mod)
+    {
+        if (shootingModifier != null)
+        {
+            TraceManager.WriteTrace(TraceChannel.Main, TraceType.warning, "Multiple shooting modifiers added.");
+            return;
+        }
+        shootingModifier = (FireModifierBase)mod;
+    }
+
+    protected override void SetModifiers()
+    {
+        base.SetModifiers();
+
+        var mods = GetModifierByType(typeof(WeaponModifier));
+        foreach (var mod in mods)
+        {
+            var weaponMode = mod as WeaponModifier;
+            if (weaponMode == null) continue;
+
+            if (weaponMode is FireModifierBase)
+            {
+                SetShootingModifier(weaponMode);
+            }
+            weaponMode.InitWeaponModifier(this);
+        }
+    }
+    #endregion
+
+    #region Class Logic
     /// <summary>
     /// Set weapon active for character
     /// </summary>
@@ -140,35 +177,6 @@ public class BaseWeapon : ModifiableItem
     protected virtual void CalculateRange()
     {
         Range += ClassData.BaseRange;
-    }
-
-    #region Modifiers
-    protected virtual void SetShootingModifier(WeaponModifier mod)
-    {
-        if (shootingModifier != null)
-        {
-            TraceManager.WriteTrace(TraceChannel.Main, TraceType.warning, "Multiple shooting modifiers added.");
-            return;
-        }
-        shootingModifier = (FireModifierBase)mod;
-    }
-
-    protected override void SetModifiers()
-    {
-        base.SetModifiers();
-
-        var mods = GetModifierByType(typeof(WeaponModifier));
-        foreach(var mod in mods)
-        {
-            var weaponMode = mod as WeaponModifier;
-            if (weaponMode == null) continue;
-
-            if (weaponMode is FireModifierBase)
-            {
-                SetShootingModifier(weaponMode);
-            }
-            weaponMode.InitWeaponModifier(this);
-        }
     }
     #endregion
 }

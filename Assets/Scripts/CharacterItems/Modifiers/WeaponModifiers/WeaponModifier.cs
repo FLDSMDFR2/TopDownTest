@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class WeaponModifier : ItemModifier
 {
+    #region Variables
     /// <summary>
     /// Weapon this modifer is used for
     /// </summary>
     protected BaseWeapon weapon;
+    #endregion
 
+    #region Class Init
     /// <summary>
     /// Init the weapon modifier
     /// </summary>
@@ -17,4 +20,5 @@ public class WeaponModifier : ItemModifier
     {
         this.weapon = weapon;
     }
+    #endregion
 }

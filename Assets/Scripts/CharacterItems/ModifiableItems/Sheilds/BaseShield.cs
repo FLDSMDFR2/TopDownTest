@@ -4,21 +4,27 @@ using UnityEngine;
 
 public class BaseShield : ModifiableItem
 {
-    private void Start()
+    #region Item Init
+    protected override void PerformStart()
     {
+        base.PerformStart();
+
         gameObject.SetActive(false);
     }
+    #endregion
 
+    #region Class Logic
     public virtual void ActivateShield()
     {
         gameObject.SetActive(true);
 
-        StartCoroutine(DamageTaken());
+        StartCoroutine(VisualizeSheild());
     }
 
-    private IEnumerator DamageTaken()
+    private IEnumerator VisualizeSheild()
     {
         yield return new WaitForSeconds(2);
         gameObject.SetActive(false);
     }
+    #endregion
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FireModifierBase : WeaponModifier
 {
+    #region Variables
     [Header("Fire Modifier")]
     /// <summary>
     /// Data for this class
@@ -30,7 +31,12 @@ public class FireModifierBase : WeaponModifier
     /// Data class for projectial
     /// </summary>
     protected BaseProjectile projectile;
+    #endregion
 
+    #region Item Init
+    /// <summary>
+    /// convert base data to our class specifc data
+    /// </summary>
     protected override void CreateClassData()
     {
         ClassData = (FireModifierData)base.Data;
@@ -39,16 +45,9 @@ public class FireModifierBase : WeaponModifier
             TraceManager.WriteTrace(TraceChannel.Main, TraceType.error, "FireModifierData Data set failed.");
         }
     }
+    #endregion
 
-    public override void InitWeaponModifier(BaseWeapon weapon)
-    {
-        base.InitWeaponModifier(weapon);
-
-        firePos = weapon.FirePos;
-        projectileObject = weapon.ClassData.Projectial;
-        projectile = projectileObject.GetComponent<BaseProjectile>();
-    }
-
+    #region Item Overrides
     /// <summary>
     /// Cost to Use
     /// </summary>
@@ -57,7 +56,20 @@ public class FireModifierBase : WeaponModifier
     {
         return Data.UseCost * (ClassData.ProjectileAmount * ClassData.BurstAmount);
     }
+    #endregion
 
+    #region WeaponModifier
+    public override void InitWeaponModifier(BaseWeapon weapon)
+    {
+        base.InitWeaponModifier(weapon);
+
+        firePos = weapon.FirePos;
+        projectileObject = weapon.ClassData.Projectial;
+        projectile = projectileObject.GetComponent<BaseProjectile>();
+    }
+    #endregion
+
+    #region Class Logic
     /// <summary>
     /// Perform Fire funcunality for this modifer
     /// </summary>
@@ -116,4 +128,5 @@ public class FireModifierBase : WeaponModifier
         isFiring = false;
         lastFire = Time.time;
     }
+    #endregion
 }

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseBattery : ModifiableItem
-
-{    [Header("Base Battery")]
+{
+    #region Variables
+    [Header("Base Battery")]
     /// <summary>
     /// Data for this class
     /// </summary>
@@ -17,7 +18,7 @@ public class BaseBattery : ModifiableItem
     /// <summary>
     /// Current power of battery
     /// </summary>
-    protected float power = -1; 
+    protected float power = -1;
     protected float currentPower
     {
         set
@@ -42,7 +43,12 @@ public class BaseBattery : ModifiableItem
     /// </summary>
     protected BaseCharacter character;
     public BaseCharacter Character { set { character = value; } }
+    #endregion
 
+    #region Item Init
+    /// <summary>
+    /// convert base data to our class specifc data
+    /// </summary>
     protected override void CreateClassData()
     {
         ClassData = (BaseBatteryData)base.Data;
@@ -61,7 +67,24 @@ public class BaseBattery : ModifiableItem
 
         maxPower = ClassData.BaseMaxPower;
     }
+    #endregion
 
+    #region ModifiableItem
+    /// <summary>
+    /// Set up info from modifiers
+    /// </summary>
+    protected override void SetModifiers()
+    {
+        var mods = GetModifierByType(typeof(BatteryModifier));
+        foreach (var mod in mods)
+        {
+            var batterMod = mod as BatteryModifier;
+            maxPower += batterMod.ClassData.Power;
+        }
+    }
+    #endregion
+
+    #region Class Logic
     /// <summary>
     /// When we power on battery we need to set a rate at which we will constume the battery power while doing nothing
     /// </summary>
@@ -112,17 +135,5 @@ public class BaseBattery : ModifiableItem
             currentPower = Mathf.Clamp(currentPower - consumeAmountPerRate, 0, maxPower);
         }
     }
-
-    /// <summary>
-    /// Set up info from modifiers
-    /// </summary>
-    protected override void SetModifiers()
-    {
-        var mods = GetModifierByType(typeof(BatteryModifier));
-        foreach (var mod in mods)
-        {
-            var batterMod =  mod as BatteryModifier;
-            maxPower += batterMod.ClassData.Power;
-        }
-    }
+    #endregion
 }

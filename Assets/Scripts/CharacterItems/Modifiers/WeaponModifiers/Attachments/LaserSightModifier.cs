@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class LaserSightModifier : WeaponModifier
 {
+    #region Variables
     [Header("Laser Sight Modifier")]
     /// <summary>
     /// line render for the laser sight
@@ -15,7 +16,9 @@ public class LaserSightModifier : WeaponModifier
     /// distance laser will go out
     /// </summary>
     protected float distance;
+    #endregion
 
+    #region WeaponModifier
     public override void InitWeaponModifier(BaseWeapon weapon)
     {
         base.InitWeaponModifier(weapon);
@@ -25,7 +28,9 @@ public class LaserSightModifier : WeaponModifier
 
         startPos = weapon.FirePos;
     }
+    #endregion
 
+    #region Class Logic
     protected virtual void Update()
     {
         if (startPos != null)
@@ -34,4 +39,5 @@ public class LaserSightModifier : WeaponModifier
             lineRenderer.SetPosition(1, startPos.position + (startPos.forward * weapon.Range));
         }
     }
+    #endregion
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class BaseProjectile : ModifiableItem, IPoolable
 {
+    #region Variables
     [Header("Base Projectile")]
     /// <summary>
     /// Id of this object for object pooling
@@ -39,13 +40,17 @@ public class BaseProjectile : ModifiableItem, IPoolable
     /// start pos
     /// </summary>
     protected Vector3 startPos;
+    #endregion
 
+    #region Item Init
     protected override void PerformAwake()
     {
         base.PerformAwake();
         body = GetComponent<Rigidbody>();
     }
+    #endregion
 
+    #region Class Logic
     /// <summary>
     /// Init the Projectile before firing
     /// </summary>
@@ -142,8 +147,12 @@ public class BaseProjectile : ModifiableItem, IPoolable
     }
     #endregion
 
+    #endregion
+
+    #region IPoolable
     public virtual string GetPoolId()
     {
         return PoolingID;
     }
+    #endregion
 }
