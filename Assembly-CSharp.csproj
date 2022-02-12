@@ -54,16 +54,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\StartRoom.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\RoomItem.cs" />
     <Compile Include="Assets\Scripts\Characters\BaseCharacter.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\EnemyRoom.cs" />
     <Compile Include="Assets\Scripts\Utils\Rendering\MeshCombiner.cs" />
     <Compile Include="Assets\Scripts\Characters\Player\BasePlayer.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\Weapons\FireModifiers\FireModifierData.cs" />
     <Compile Include="Assets\Scripts\Controllers\Character\EnemyInputController.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\Data\DoorData.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Utils\Culling\CullingManager.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyAttackState.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\BaseEnemy.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\Batteries\BatteryModifierData.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Modifiers\WeaponModifiers\Attachments\LaserSightModifier.cs" />
     <Compile Include="Assets\Scripts\Controllers\Character\CharacterInputController.cs" />
     <Compile Include="Assets\Scripts\Mangers\IPoolable.cs" />
@@ -71,7 +73,7 @@
     <Compile Include="Assets\Scripts\CharacterItems\Modifiers\WeaponModifiers\WeaponModifier.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\Job PathFinding\FindPathJob.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyWanderState.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\RoomConfigs\Base\RoomPrefabConfig.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\RoomConfigs\RoomPrefabConfig.cs" />
     <Compile Include="Assets\Scripts\Controllers\Character\BaseInputController.cs" />
     <Compile Include="Assets\Scripts\Audio\Sound.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ModifiableItems\Projectile\BaseProjectile.cs" />
@@ -79,11 +81,13 @@
     <Compile Include="Assets\Scripts\Mangers\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\PathFinding.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\Job PathFinding\PathFindingJobDetails.cs" />
+    <Compile Include="Assets\Scripts\UI\Events\UIEvents.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyPathFindingState.cs" />
-    <Compile Include="Assets\Scripts\TestSceneStuff\RoomGeneratorTester.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\Room.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\Room.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Modifiers\WeaponModifiers\FireModifiers\FireModifierBase.cs" />
     <Compile Include="Assets\Scripts\Utils\Helpers\MapTraversal.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\Modifiers\BatteryModifiers\BatteryModifier.cs" />
+    <Compile Include="Assets\Scripts\UI\UI_Power.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\Data\RoomLocationData.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ModifiableItems\Sheilds\BaseShield.cs" />
     <Compile Include="Assets\Scripts\MapGen\Generators\MapGenerator.cs" />
@@ -93,17 +97,22 @@
     <Compile Include="Assets\Scripts\MapGen\Generators\RoomGenerator.cs" />
     <Compile Include="Assets\Scripts\Mangers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAI.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\Items\RoomItemCharger.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyBaseState.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\Weapons\BaseWeaponData.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\FieldOfView\FieldOfView.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ItemData.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\ItemModifierData.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\Batteries\BaseBatteryData.cs" />
     <Compile Include="Assets\Scripts\UI\Utils\FPSCounterDisplay.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\Weapons\WeaponModifierData.cs" />
     <Compile Include="Assets\Scripts\Utils\RandomGenerator.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\Job PathFinding\PathFinding_V2.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Item.cs" />
-    <Compile Include="Assets\Scripts\Characters\Enemies\EnemySpawn.cs" />
     <Compile Include="Assets\Scripts\Utils\TraceManager.cs" />
-    <Compile Include="Assets\Scripts\TestSceneStuff\TestRoom.cs" />
     <Compile Include="Assets\Scripts\Mangers\GOPoolManager.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ModifiableItems\Weapons\BaseWeapon.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\ModifiableItemData.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ModifiableItems\ModifiableItem.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\Data\RoomData.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ModifiableItems\Batteries\BaseBattery.cs" />
@@ -112,17 +121,9 @@
     <Compile Include="Assets\Scripts\Utils\PathFinding\GridPath.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\FieldOfView\FieldOfViewEditor.cs" />
-    <Compile Include="Assets\Scripts\UI\UI_Power.cs" />
-    <Compile Include="Assets\Scripts\UI\Events\UIEvents.cs" />
-    <Compile Include="Assets\Scripts\CharacterItems\Modifiers\BatteryModifiers\BatteryModifier.cs" />
-    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\Weapons\BaseWeaponData.cs" />
-    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\Weapons\FireModifiers\FireModifierData.cs" />
-    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ItemData.cs" />
-    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\ItemModifierData.cs" />
-    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\ModifiableItemData.cs" />
-    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\Weapons\WeaponModifierData.cs" />
-    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\Batteries\BaseBatteryData.cs" />
-    <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\Batteries\BatteryModifierData.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\RoomItemObject.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\RoomConfigs\RoomItemPrefab.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\Items\RoomItemEnemySpawn.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

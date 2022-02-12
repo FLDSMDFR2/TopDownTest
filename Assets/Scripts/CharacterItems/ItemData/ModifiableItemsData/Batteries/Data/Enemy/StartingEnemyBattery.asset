@@ -15,7 +15,5 @@ MonoBehaviour:
   ItemName: StartingBattery
   upKeepCost: 0
   useCost: 0
-  BaseMaxPower: 0
-  MaxPower: 0
-  Power: -1
+  BaseMaxPower: 50
   Rate: 1

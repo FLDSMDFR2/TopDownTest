@@ -70,16 +70,6 @@ public class BaseEnemy : BaseCharacter, IPoolable
     }
 
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="cost"></param>
-    /// <returns></returns>
-    public override bool BatterUseCheck(float cost)
-    {
-        return true;
-    }
-
-    /// <summary>
     /// Death handling
     /// </summary>
     protected override void Dead()

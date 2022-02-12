@@ -16,11 +16,15 @@ public class StartRoom : Room
     #region Generate Start Room details
     protected virtual void GenerateStartRoomType()
     {
+        var maxTrys = 100;
+        var count = 0;
         var startLocFound = false;
-        while (!startLocFound)
+        int2 location;
+
+        while (!startLocFound && count < maxTrys)
         {
             // find random location  and check if we can set as spawn
-            var location = new int2(RandomGenerator.SeededRange(Data.RoomConvertedOrigin().x, Data.RoomConvertedOrigin().x + Data.RoomSizeX), 
+            location = new int2(RandomGenerator.SeededRange(Data.RoomConvertedOrigin().x, Data.RoomConvertedOrigin().x + Data.RoomSizeX), 
                 RandomGenerator.SeededRange(Data.RoomConvertedOrigin().y, Data.RoomConvertedOrigin().y + Data.RoomSizeY));
 
             if (Data.RoomLocations.ContainsKey(location) &&
@@ -31,6 +35,7 @@ public class StartRoom : Room
                 Data.RoomLocations[location].LocationType = RoomLocationTypes.PlayerStartSpawn;
                 startLocFound = true;
             }
+            count++;
         }
     }
     #endregion
@@ -41,9 +46,9 @@ public class StartRoom : Room
     /// Add room specific elements
     /// </summary>
     /// <param name="locationKey"></param>
-    protected override void PlaceRoomLocationElements(int2 locationKey)
+    protected override void PlaceRoomLocationEnvironmentElements(int2 locationKey)
     {
-        base.PlaceRoomLocationElements(locationKey);
+        base.PlaceRoomLocationEnvironmentElements(locationKey);
 
         // spawn the player
         if (Data.RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.Floor &&

@@ -13,7 +13,6 @@ public enum RoomTypes
     Test,
     Empty,
     StartRoom,
-    Enemy,
     Boss,
     Loot,
     Secret
@@ -33,6 +32,7 @@ public enum RoomDifficulty
 [Serializable]
 public class RoomData
 {
+    #region Properties
     /// <summary>
     /// Location of the room with then the Map
     /// </summary>
@@ -135,6 +135,18 @@ public class RoomData
         set { doors = value; }
     }
 
+    /// <summary>
+    /// List of all Items that can be in this room
+    /// </summary>
+    [SerializeField]
+    protected List<RoomItem> roomItems;
+    public List<RoomItem> RoomItems
+    {
+        get { return roomItems; }
+        set { roomItems = value; }
+    }
+    #endregion
+
     public RoomData(int2 location, int sizeX, int sizeY, int mSizeX, int mSizeY)
     {
         MapLocation = location;
@@ -144,6 +156,7 @@ public class RoomData
         MapSizeY = mSizeY;
 
         doors = new List<DoorData>();
+        roomItems = new List<RoomItem>();
     }
 
     #region Helpers

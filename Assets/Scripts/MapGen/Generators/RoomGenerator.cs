@@ -92,7 +92,7 @@ public class RoomGenerator : MonoBehaviour
         // Create and build rooms base on map data
         BuildRooms();
 
-        //Generate room  layout
+        //Generate room layout
         GenerateRoomLayout();
     }
 
@@ -102,13 +102,12 @@ public class RoomGenerator : MonoBehaviour
     /// </summary>
     protected virtual void AddRoomConnections()
     {
-        // the key list should be in order that the rooms where added
         var mapRooms = mapGenerator.GetRooms();
         var map = mapGenerator.GetMap();
         foreach (var key in mapRooms.Keys)
         {
             // location to check
-            int2 checkLocation = mapRooms[key].MapLocation + new int2(0, 1);
+            int2 checkLocation = mapRooms[key].MapLocation + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Up];
 
             //check UP if room add door
             if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
@@ -117,21 +116,21 @@ public class RoomGenerator : MonoBehaviour
             }
 
             //check DOWN if room add door
-            checkLocation = mapRooms[key].MapLocation + new int2(0, -1);
+            checkLocation = mapRooms[key].MapLocation + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Down];
             if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
             {
                 CreateRoomConnection(DoorSide.Down, mapRooms[key], map[checkLocation]);
             }
 
             //check RIGHT if room add door
-            checkLocation = mapRooms[key].MapLocation + new int2(1, 0);
+            checkLocation = mapRooms[key].MapLocation + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Right];
             if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
             {
                 CreateRoomConnection(DoorSide.Right, mapRooms[key], map[checkLocation]);
             }
 
             //check LEFT if room add door
-            checkLocation = mapRooms[key].MapLocation + new int2(-1, 0);
+            checkLocation = mapRooms[key].MapLocation + MapTraversal.NeighborsDirectionsAll[(int)MapTraversal.MapTraversalDirectionsIndex.Left];
             if (map.ContainsKey(checkLocation) && map[checkLocation] != null)
             {
                 CreateRoomConnection(DoorSide.Left, mapRooms[key], map[checkLocation]);
@@ -203,7 +202,7 @@ public class RoomGenerator : MonoBehaviour
     /// </summary>
     protected virtual void UpdateRoomsTypes()
     {
-        //TODO : MAKE THIS BETTER
+        //TODO : MAKE THIS BETTER LOOK AT THE WHOLE MAP AND ASSIGN ROOMS TYPES WHERE NEEDED
         var count = 0;
 
         var mapRooms = mapGenerator.GetRooms();
@@ -218,11 +217,12 @@ public class RoomGenerator : MonoBehaviour
             }
             else
             {
-                //set all the rest of the room to an enemy room
-                mapRooms[key].RoomType = RoomTypes.Enemy;
+                mapRooms[key].RoomType = RoomTypes.None;
                 mapRooms[key].PrefabConfig = Config;
                 mapRooms[key].Difficulty = RoomDifficulty.Easy;
             }
+
+            AddRoomItems(mapRooms[key]);
 
             count++;
         }
@@ -250,9 +250,6 @@ public class RoomGenerator : MonoBehaviour
             case RoomTypes.StartRoom:
                 room = go.AddComponent<StartRoom>();
                 break;
-            case RoomTypes.Enemy:
-                room = go.AddComponent<EnemyRoom>();
-                break;
             default:
                 room = go.AddComponent<Room>();
                 break;
@@ -264,6 +261,21 @@ public class RoomGenerator : MonoBehaviour
             rooms.Add(room);
         }
     }
+
+    #region AddRoomItems
+    /// <summary>
+    /// Once we have updated the room tell the room to generate a layout
+    /// </summary>
+    protected virtual void AddRoomItems(RoomData data)
+    {
+        var charger = new RoomItemCharger();
+        data.RoomItems.Add(charger);
+
+        var enemySpawn = new RoomItemEnemySpawn();
+        data.RoomItems.Add(enemySpawn);
+    }
+    #endregion
+
     #endregion
 
     #region GenerateRoomLayout

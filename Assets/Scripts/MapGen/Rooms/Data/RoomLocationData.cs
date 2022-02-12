@@ -21,7 +21,7 @@ public enum RoomLocationTypes
     Empty,
     Filled,
     PlayerStartSpawn,
-    EnemySpawn
+    Item
 }
 
 /// <summary>
@@ -40,6 +40,7 @@ public enum RoomLocationTraversalTypes
 [Serializable]
 public class RoomLocationData
 {
+    #region Properties
     /// <summary>
     /// Location key within the room
     /// </summary>
@@ -96,8 +97,18 @@ public class RoomLocationData
     public int LocationTraversalCost
     {
         get { return locationTraversalCost; }
-        set { locationTraversalCost = value; }
     }
+
+    /// <summary>
+    /// if this room location has an item this will be set
+    /// </summary>
+    protected RoomItem item;
+    public RoomItem Item
+    {
+        get { return item; }
+        set { item = value; }
+    }
+    #endregion
 
     public RoomLocationData(int2 location, RoomLocationEnvironmentTypes Envtype, RoomLocationTypes type)
     {
@@ -116,6 +127,12 @@ public class RoomLocationData
         {
             LocationTraversalType = RoomLocationTraversalTypes.Blocked;
             locationTraversalCost = System.Int32.MaxValue;
+        }
+        else if (LocationType == RoomLocationTypes.Item)
+        {
+            // Set impeded path value if there are items at this loction
+            LocationTraversalType = RoomLocationTraversalTypes.Impeded;
+            locationTraversalCost = 10;
         }
         else
         {

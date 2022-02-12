@@ -43,7 +43,8 @@ public class Room : MonoBehaviour
         //set origin to the map origin for the room
         var origin = Data.MapRoomConvertedOrigin();
 
-        // loop over the whole room map set all location to None by default, also check for hallways as this will be outside the room but within the map
+        // loop over the whole room map set all location to None by default, 
+        // also check for hallways as this will be outside the room but within the map
         for (int i = origin.x; i < origin.x + Data.MapSizeX; i++)
         {
             for (int j = origin.y; j < origin.y + Data.MapSizeY; j++)
@@ -66,7 +67,7 @@ public class Room : MonoBehaviour
         // update origin to the rooms origin
         origin = Data.RoomConvertedOrigin();
 
-        // loop over the room locations
+        // loop over all locations within the room
         for (int i = origin.x; i < origin.x + Data.RoomSizeX; i++)
         {
             for (int j = origin.y; j < origin.y + Data.RoomSizeY; j++)
@@ -84,7 +85,8 @@ public class Room : MonoBehaviour
 
         origin = Data.MapRoomConvertedOrigin();
 
-        // loop over the whole room map set all location to None by default, also check for hallways as this will be outside the room but within the map
+        // After setting floors and the void loop the whole map location again to check for wall locations
+        // any location that has a floor touching the void
         for (int i = origin.x; i < origin.x + Data.MapSizeX; i++)
         {
             for (int j = origin.y; j < origin.y + Data.MapSizeY; j++)
@@ -102,6 +104,9 @@ public class Room : MonoBehaviour
 
         // add room type specific details
         GenerateRoomByType();
+
+        //try and add items to this room
+        GenerateItems();
     }
 
     #region Generate Room Helpers
@@ -271,6 +276,45 @@ public class Room : MonoBehaviour
         GenerateRoomObstacles();
     }
 
+    /// <summary>
+    /// Add items to this room
+    /// </summary>
+    protected virtual void GenerateItems()
+    {
+        // if this room has not items then just skip this
+        if (Data.RoomItems == null || Data.RoomItems.Count <= 0) return;
+
+        // loop over all room locations trying to place items
+        var origin = Data.RoomConvertedOrigin();
+
+        // loop over all locations within the room
+        for (int i = origin.x; i < origin.x + Data.RoomSizeX; i++)
+        {
+            for (int j = origin.y; j < origin.y + Data.RoomSizeY; j++)
+            {
+                var key = new int2(i, j);
+
+                // if this location is the void or a wall we cant place an item here so skip
+                if (Data.RoomLocations[key].EnvironmentLocationType == RoomLocationEnvironmentTypes.None ||
+                    Data.RoomLocations[key].EnvironmentLocationType == RoomLocationEnvironmentTypes.Wall)
+                    continue;
+
+                    // check each item to see if we can place it at this location within the room
+                    foreach (var item in Data.RoomItems)
+                {
+                    if (item.CanPlaceItem(this, key))
+                    {
+                        Data.RoomLocations[key].Item = item;
+                        Data.RoomLocations[key].LocationType = RoomLocationTypes.Item;
+
+                        // if we have placed an item at this location then we cant place another so break
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     #region Room Obstacles
     /// <summary>
     /// Add random obstacles to the room
@@ -378,7 +422,8 @@ public class Room : MonoBehaviour
         // loop over the room locations
         foreach (var locationKey in Data.RoomLocations.Keys)
         {
-            PlaceRoomLocationElements(locationKey);
+            PlaceRoomLocationEnvironmentElements(locationKey);
+            PlaceRoomLocationItems(locationKey);
         }
 
         CombineRoomMeshes();
@@ -422,34 +467,67 @@ public class Room : MonoBehaviour
     /// Instantiate the location elements by RoomLocationEnvironmentTypes
     /// </summary>
     /// <param name="locationKey">room location key</param>
-    protected virtual void PlaceRoomLocationElements(int2 locationKey)
+    protected virtual void PlaceRoomLocationEnvironmentElements(int2 locationKey)
     {
         //void
         if (Data.RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.None)
         {
-            var thevoid = Instantiate(Data.PrefabConfig.Void,
-                new Vector3(locationKey.x + ObjectSpawnLocation(Data.PrefabConfig.Void).x,
-                ObjectSpawnLocation(Data.PrefabConfig.Void).y,
-                locationKey.y + ObjectSpawnLocation(Data.PrefabConfig.Void).z), Quaternion.identity, VoidGO.transform);
+            var prefab = Data.PrefabConfig.Void;
+            var thevoid = Instantiate(prefab,
+                new Vector3(locationKey.x + ObjectSpawnLocation(prefab).x,
+                ObjectSpawnLocation(prefab).y,
+                locationKey.y + ObjectSpawnLocation(prefab).z), Quaternion.identity, VoidGO.transform);
         }
         //floor
         if (Data.RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.Floor ||
             Data.RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.Door)
         {
-            var floor = Instantiate(Data.PrefabConfig.Floor,
-                new Vector3(locationKey.x + ObjectSpawnLocation(Data.PrefabConfig.Floor).x,
+            var prefab = Data.PrefabConfig.Floor;
+            var floor = Instantiate(prefab,
+                new Vector3(locationKey.x + ObjectSpawnLocation(prefab).x,
                 0f,
-                locationKey.y + ObjectSpawnLocation(Data.PrefabConfig.Floor).z), Quaternion.identity, FloorGO.transform);
+                locationKey.y + ObjectSpawnLocation(prefab).z), Quaternion.identity, FloorGO.transform);
         }
         //wall
         if (Data.RoomLocations[locationKey].EnvironmentLocationType == RoomLocationEnvironmentTypes.Wall)
         {
-            var wall = Instantiate(Data.PrefabConfig.Wall,
-                new Vector3(locationKey.x + ObjectSpawnLocation(Data.PrefabConfig.Wall).x,
-                ObjectSpawnLocation(Data.PrefabConfig.Wall).y,
-                locationKey.y + ObjectSpawnLocation(Data.PrefabConfig.Wall).z), Quaternion.identity, WallsGO.transform);
+            var prefab = Data.PrefabConfig.Wall;
+            var wall = Instantiate(prefab,
+                new Vector3(locationKey.x + ObjectSpawnLocation(prefab).x,
+                ObjectSpawnLocation(prefab).y,
+                locationKey.y + ObjectSpawnLocation(prefab).z), Quaternion.identity, WallsGO.transform);
         }
     }
+
+    /// <summary>
+    /// Place items for this location
+    /// </summary>
+    /// <param name="locationKey"></param>
+    protected virtual void PlaceRoomLocationItems(int2 locationKey)
+    {
+        // if and item should be here and the item is not null place it
+        if (Data.RoomLocations[locationKey].LocationType == RoomLocationTypes.Item && Data.RoomLocations[locationKey].Item != null)
+        {
+            //get the prefab for this item type
+            var prefab = Data.PrefabConfig.GetRoomItemPrefab(Data.RoomLocations[locationKey].Item.Type);
+            // if we dont have prefab configured for this item return and dont place it
+            if (prefab == null) return;
+
+            //create the object
+            var item = Instantiate(prefab,
+                new Vector3(locationKey.x + ObjectSpawnLocation(prefab).x,
+                ObjectSpawnLocation(prefab).y,
+                locationKey.y + ObjectSpawnLocation(prefab).z), Quaternion.identity, gameObject.transform);
+
+            var itemObj = item.GetComponent<RoomItemObject>();
+            if (itemObj != null)
+            {
+                Data.RoomLocations[locationKey].Item.RoomItemMonoBehaviour = itemObj;
+                itemObj.Item = Data.RoomLocations[locationKey].Item;
+            }
+        }
+    }
+
     /// <summary>
     /// Combine meshes for room
     /// </summary>
@@ -467,7 +545,7 @@ public class Room : MonoBehaviour
     #endregion
 
     #region Helpers
-    protected virtual bool HasTypeAdjacent(int2 locKey, RoomLocationEnvironmentTypes type)
+    public virtual bool HasTypeAdjacent(int2 locKey, RoomLocationEnvironmentTypes type)
     {
         foreach (var dir in MapTraversal.NeighborsDirectionsAll)
         {

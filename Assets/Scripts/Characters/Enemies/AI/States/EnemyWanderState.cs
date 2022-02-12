@@ -23,6 +23,8 @@ public class EnemyWanderState : EnemyPathFindingState
     /// </summary>
     protected Vector3 searchLook = Vector3.zero;
 
+    protected float lookMargin = .0001f;
+
     #region State Change
     /// <summary>
     /// Find the next state based on current status
@@ -104,7 +106,7 @@ public class EnemyWanderState : EnemyPathFindingState
         AI.Controller.SetLookLocation(searchLook);
 
         float dot = Vector3.Dot(AI.transform.forward, (searchLook - AI.transform.position).normalized);
-        if (dot == 1)
+        if (dot <= 1 + lookMargin && dot >= 1 - lookMargin)
         {
             searchLookCount++;
             searchLook = Vector3.zero;

@@ -16,3 +16,8 @@ MonoBehaviour:
   Floor: {fileID: 8090627154540690214, guid: 77d926c0b009aa54088e10566fe6b591, type: 3}
   Wall: {fileID: 4799307418199010769, guid: 3e983aa4d6c49f145bfdd01374c0c5f7, type: 3}
   Void: {fileID: 8090627154540690214, guid: f0ee4ea90508245419cd6c1c3538bfda, type: 3}
+  RoomItemPrefabs:
+  - Type: 1
+    Prefab: {fileID: 7388832446092826725, guid: 1e172b1011db6a1439b368b80618c84d, type: 3}
+  - Type: 2
+    Prefab: {fileID: 7388832446092826725, guid: c750da5e4444b0d489b513bccc38d0e8, type: 3}
