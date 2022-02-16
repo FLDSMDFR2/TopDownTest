@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(FieldOfView))]
 public class BaseCharacter : MonoBehaviour
 {
     [Header("Base Character")]
@@ -24,15 +25,18 @@ public class BaseCharacter : MonoBehaviour
     /// <summary>
     /// Weapon to use
     /// </summary>
-    public GameObject WeaponSlot;
+    [SerializeField]
+    protected GameObject WeaponSlot;
     /// <summary>
     /// Shield to use
     /// </summary>
-    public GameObject ShieldSlot;
+    [SerializeField]
+    protected GameObject ShieldSlot;
     /// <summary>
     /// Shield to use
     /// </summary>
-    public GameObject BatterySlot;
+    [SerializeField]
+    protected GameObject BatterySlot;
     //********PROBABLY SHOULD REMOVE THIS FOR BETTER SOLUTION******
 
     /// <summary>
@@ -47,9 +51,17 @@ public class BaseCharacter : MonoBehaviour
     /// Base Battery
     /// </summary>
     protected BaseBattery battery;
+    public BaseBattery Battery { get { return battery; } }
+    /// <summary>
+    /// Field of view for this character
+    /// </summary>
+    [HideInInspector]
+    public FieldOfView FOV;
 
     protected virtual void Awake()
     {
+        FOV = GetComponent<FieldOfView>();
+
         InitalizeHealth();
         LoadInventoy();
     }
@@ -149,5 +161,10 @@ public class BaseCharacter : MonoBehaviour
     protected virtual void Dead()
     {
         //override this
+    }
+
+    protected virtual void OnDestroy()
+    {
+        //clean up
     }
 }

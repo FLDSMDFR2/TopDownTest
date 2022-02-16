@@ -9,8 +9,6 @@ public class RoomItem
     [SerializeField]
     public RoomItemType Type = RoomItemType.None;
 
-    public MonoBehaviour RoomItemMonoBehaviour;
-
     protected int maxItemUsesInRoom;
 
     protected int UseCount;
@@ -25,6 +23,7 @@ public class RoomItem
 
     public virtual void Start() { }
 
+    #region Place Location Checks
     /// <summary>
     /// Place the item
     /// </summary>
@@ -52,4 +51,5 @@ public class RoomItem
     {
         return false;
     }
+    #endregion
 }

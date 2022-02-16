@@ -155,6 +155,7 @@ GameObject:
   - component: {fileID: 4218679179029624868}
   - component: {fileID: 6337678404921798802}
   - component: {fileID: 8932784836195068663}
+  - component: {fileID: 7030084041213299494}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -205,7 +206,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: c593caac43a42124c87a81c2982ea800, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -276,6 +277,7 @@ MonoBehaviour:
   WeaponSlot: {fileID: 6337678403697969877}
   ShieldSlot: {fileID: 6337678403852903360}
   BatterySlot: {fileID: 6135811021259636236}
+  FOV: {fileID: 0}
 --- !u!114 &8932784836195068663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,6 +295,31 @@ MonoBehaviour:
   DashSpeed: 300
   CurrentMoveSpeed: 10
   LookOffSet: 90
+--- !u!114 &7030084041213299494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6337678404921798792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a9cbeeec5b57294a865ba4830dc35ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DebugEnabled: 0
+  DetectRadius: 0
+  LOSRadius: 10
+  LOSAngle: 90
+  TargetMask:
+    serializedVersion: 2
+    m_Bits: 4096
+  ObstructionMask:
+    serializedVersion: 2
+    m_Bits: 256
+  Target: {fileID: 0}
+  CanDetect: 0
+  CanSee: 0
 --- !u!1 &6337678405704728279
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,6 +409,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3707413088388706845, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c593caac43a42124c87a81c2982ea800, type: 2}
+    - target: {fileID: 4049458521226573784, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c593caac43a42124c87a81c2982ea800, type: 2}
     - target: {fileID: 6106089185397757870, guid: 8e1b618ea5b8c5747bed6713dc546985, type: 3}
       propertyPath: Data
       value: 

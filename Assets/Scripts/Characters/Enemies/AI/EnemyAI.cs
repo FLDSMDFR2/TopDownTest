@@ -8,9 +8,9 @@ public enum EnemyStates
     Chase,
     Attack
 }
-[RequireComponent(typeof(EnemyInputController))]
+
 [RequireComponent(typeof(BaseEnemy))]
-[RequireComponent(typeof(FieldOfView))]
+[RequireComponent(typeof(EnemyInputController))]
 public class EnemyAI : MonoBehaviour
 {
     [SerializeField]
@@ -58,7 +58,7 @@ public class EnemyAI : MonoBehaviour
     {
         Controller = GetComponent<EnemyInputController>();
         Enemy = GetComponent<BaseEnemy>();
-        FOV = GetComponent<FieldOfView>();
+        FOV = Enemy.FOV;
         PathFindingPool.AddObjectForPathFinding(this.gameObject, pathDtl);
 
         InitStates();

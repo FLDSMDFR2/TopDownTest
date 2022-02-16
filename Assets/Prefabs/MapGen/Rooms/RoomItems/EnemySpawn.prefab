@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4537037862553420967}
   - component: {fileID: 4324298655029968978}
   - component: {fileID: 7178612611991753018}
-  - component: {fileID: -2157734758206181739}
+  - component: {fileID: 1079854299325458227}
   m_Layer: 0
   m_Name: EnemySpawn
   m_TagString: Untagged
@@ -82,7 +82,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-2157734758206181739
+--- !u!114 &1079854299325458227
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,8 +91,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7388832446092826725}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f00014e69bb4dc44b46941d5734cace, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ffb49fac4b951842b3270ff7e0bbb16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Item:
     Type: 0
+    RoomItemMonoBehaviour: {fileID: 0}

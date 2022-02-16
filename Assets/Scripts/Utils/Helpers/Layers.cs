@@ -10,5 +10,6 @@ public enum Layers
     Environment = 8,
     Player = 9,
     Enemy = 10,
-    Projectile = 11
+    Projectile = 11,
+    RoomItem = 12
 }

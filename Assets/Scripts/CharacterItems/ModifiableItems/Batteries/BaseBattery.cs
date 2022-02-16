@@ -123,7 +123,7 @@ public class BaseBattery : ModifiableItem
     /// <summary>
     /// Increase battery power
     /// </summary>
-    /// <param name="amount">aamout to increase by</param>
+    /// <param name="amount">amout to increase by</param>
     public virtual void IncreasePower(float amount)
     {
         if (!IsRunning) return;

@@ -505,7 +505,7 @@ public class Room : MonoBehaviour
     /// <param name="locationKey"></param>
     protected virtual void PlaceRoomLocationItems(int2 locationKey)
     {
-        // if and item should be here and the item is not null place it
+        // if an item should be here and the item is not null place it
         if (Data.RoomLocations[locationKey].LocationType == RoomLocationTypes.Item && Data.RoomLocations[locationKey].Item != null)
         {
             //get the prefab for this item type
@@ -522,7 +522,6 @@ public class Room : MonoBehaviour
             var itemObj = item.GetComponent<RoomItemObject>();
             if (itemObj != null)
             {
-                Data.RoomLocations[locationKey].Item.RoomItemMonoBehaviour = itemObj;
                 itemObj.Item = Data.RoomLocations[locationKey].Item;
             }
         }

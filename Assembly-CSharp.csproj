@@ -63,16 +63,17 @@
     <Compile Include="Assets\Scripts\MapGen\Rooms\Data\DoorData.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Utils\Culling\CullingManager.cs" />
-    <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyAttackState.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\Attack\EnemyAttackState.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\BaseEnemy.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\Batteries\BatteryModifierData.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Modifiers\WeaponModifiers\Attachments\LaserSightModifier.cs" />
     <Compile Include="Assets\Scripts\Controllers\Character\CharacterInputController.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\ItemGameObjects\RoomItemInteractableObject.cs" />
     <Compile Include="Assets\Scripts\Mangers\IPoolable.cs" />
-    <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyChaseState.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\Chase\EnemyChaseState.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Modifiers\WeaponModifiers\WeaponModifier.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\Job PathFinding\FindPathJob.cs" />
-    <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyWanderState.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\Wander\EnemyWanderState.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\RoomConfigs\RoomPrefabConfig.cs" />
     <Compile Include="Assets\Scripts\Controllers\Character\BaseInputController.cs" />
     <Compile Include="Assets\Scripts\Audio\Sound.cs" />
@@ -98,13 +99,15 @@
     <Compile Include="Assets\Scripts\Mangers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\Items\RoomItemCharger.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\RoomConfigs\RoomItemPrefab.cs" />
     <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\EnemyBaseState.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\Weapons\BaseWeaponData.cs" />
-    <Compile Include="Assets\Scripts\Characters\Enemies\AI\FieldOfView\FieldOfView.cs" />
+    <Compile Include="Assets\Scripts\Utils\FieldOfView\FieldOfView.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ItemData\ItemData.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\ItemModifierData.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\Batteries\BaseBatteryData.cs" />
     <Compile Include="Assets\Scripts\UI\Utils\FPSCounterDisplay.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\Items\RoomItemEnemySpawn.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiersData\Weapons\WeaponModifierData.cs" />
     <Compile Include="Assets\Scripts\Utils\RandomGenerator.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\Job PathFinding\PathFinding_V2.cs" />
@@ -120,10 +123,34 @@
     <Compile Include="Assets\Scripts\Utils\PathFinding\PathFindingPool.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\GridPath.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
-    <Compile Include="Assets\Scripts\Characters\Enemies\AI\FieldOfView\FieldOfViewEditor.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\RoomItemObject.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomTypes\RoomConfigs\RoomItemPrefab.cs" />
-    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\Items\RoomItemEnemySpawn.cs" />
+    <Compile Include="Assets\Scripts\Utils\FieldOfView\FieldOfViewEditor.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\ItemGameObjects\RoomItemObject.cs" />
+    <Compile Include="Assets\Scripts\UI\In-Game\Interact\UI_RoomItemIteraction.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\ItemGameObjects\RoomObjects\EnemySpawnItemObject.cs" />
+    <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\ItemGameObjects\RoomInteractableObjects\ChargerItemObject.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
+    <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
+    <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

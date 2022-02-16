@@ -11,6 +11,9 @@ public class CharacterInputController : BaseInputController
 
         // check for fire input
         CheckForFire();
+
+        //check for interact input
+        CheckForInteract();
     }
     /// <summary>
     /// Handle input for movement
@@ -65,6 +68,17 @@ public class CharacterInputController : BaseInputController
         }
     }
 
+    /// <summary>
+    /// Check to see if we are trying to interact
+    /// </summary>
+    protected virtual void CheckForInteract()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Interact();
+        }
+    }
+
     #region Events
     /// <summary>
     /// Event to raise when firing 
@@ -73,6 +87,15 @@ public class CharacterInputController : BaseInputController
     protected void FirePrimary()
     {
         OnFirePrimary?.Invoke();
+    }
+
+    /// <summary>
+    /// Event to raise when trying to interact
+    /// </summary>
+    public event Action OnInteract;
+    protected void Interact()
+    {
+        OnInteract?.Invoke();
     }
     #endregion
 }
