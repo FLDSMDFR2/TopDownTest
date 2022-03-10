@@ -19,9 +19,13 @@ public class LaserSightModifier : WeaponModifier
     #endregion
 
     #region WeaponModifier
-    public override void InitWeaponModifier(BaseWeapon weapon)
+    /// <summary>
+    /// Assign modifier details to the item we will modify
+    /// </summary>
+    protected override void AssignModifierDetails()
     {
-        base.InitWeaponModifier(weapon);
+        base.AssignModifierDetails();
+
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.startWidth = .1f;
         lineRenderer.endWidth = .01f;

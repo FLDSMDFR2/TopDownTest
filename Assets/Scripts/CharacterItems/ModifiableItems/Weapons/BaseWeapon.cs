@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BaseWeapon : ModifiableItem
 {
@@ -78,7 +76,7 @@ public class BaseWeapon : ModifiableItem
     #endregion
 
     #region ModifiableItem
-    protected virtual void SetShootingModifier(WeaponModifier mod)
+    public virtual void SetShootingModifier(WeaponModifier mod)
     {
         if (shootingModifier != null)
         {
@@ -86,24 +84,6 @@ public class BaseWeapon : ModifiableItem
             return;
         }
         shootingModifier = (FireModifierBase)mod;
-    }
-
-    protected override void SetModifiers()
-    {
-        base.SetModifiers();
-
-        var mods = GetModifierByType(typeof(WeaponModifier));
-        foreach (var mod in mods)
-        {
-            var weaponMode = mod as WeaponModifier;
-            if (weaponMode == null) continue;
-
-            if (weaponMode is FireModifierBase)
-            {
-                SetShootingModifier(weaponMode);
-            }
-            weaponMode.InitWeaponModifier(this);
-        }
     }
     #endregion
 

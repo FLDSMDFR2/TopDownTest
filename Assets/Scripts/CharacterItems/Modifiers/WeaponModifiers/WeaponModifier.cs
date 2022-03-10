@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BaseWeapon))]
 public class WeaponModifier : ItemModifier
 {
     #region Variables
@@ -12,13 +11,22 @@ public class WeaponModifier : ItemModifier
     #endregion
 
     #region Class Init
-    /// <summary>
-    /// Init the weapon modifier
-    /// </summary>
-    /// <param name="weapon"></param>
-    public virtual void InitWeaponModifier(BaseWeapon weapon)
+    protected override void PerformAwake()
     {
-        this.weapon = weapon;
+        base.PerformAwake();
+
+        weapon = this.GetComponent<BaseWeapon>();
+    }
+    #endregion
+
+    #region Class Logic
+    /// <summary>
+    /// Assign modifier details to the item we will modify
+    /// </summary>
+    protected override void AssignModifierDetails()
+    {
+        weapon.SetModifierUseCosts(Data.UseCost);
+        weapon.SetModifierUpKeepCosts(Data.UpKeepCost);
     }
     #endregion
 }

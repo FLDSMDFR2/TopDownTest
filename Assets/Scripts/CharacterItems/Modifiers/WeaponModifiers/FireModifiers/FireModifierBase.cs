@@ -59,10 +59,14 @@ public class FireModifierBase : WeaponModifier
     #endregion
 
     #region WeaponModifier
-    public override void InitWeaponModifier(BaseWeapon weapon)
+    /// <summary>
+    /// Assign modifier details to the item we will modify
+    /// </summary>
+    protected override void AssignModifierDetails()
     {
-        base.InitWeaponModifier(weapon);
+        base.AssignModifierDetails();
 
+        weapon.SetShootingModifier(this);
         firePos = weapon.FirePos;
         projectileObject = weapon.ClassData.Projectial;
         projectile = projectileObject.GetComponent<BaseProjectile>();

@@ -8,14 +8,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: EnemySpawn
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: ce8acfeb83b01654991e158cfc5234e4, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
-  stringTagMap:
-    RenderType: Transparent
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses:
   - SHADOWCASTER
   m_SavedProperties:
@@ -78,6 +77,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_2d25411ec20a43f6976e1d0f02f62511: 1.99
+    - Vector1_d00491d244f04ba984e6e16671daa257: 0.01
+    - Vector1_db01933e2b274c869b5e1cdac9b6ad28: 0.76
+    - Vector1_e748d0b9f0be42ee931d1c8f43a35c2d: 30
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -107,6 +110,9 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 0
     m_Colors:
+    - Color_1327b9bc7adb474186128f79d2daa624: {r: 2, g: 0, b: 1.678431, a: 0.70980394}
+    - Color_5ab5a9b34c3843b688209cf8db786c44: {r: 2, g: 0, b: 1.717647, a: 0}
+    - Color_704fb59fd2bb4bde8f960063e7fc5f7d: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 1}
     - _BaseColor: {r: 1, g: 0, b: 0, a: 0.62352943}
     - _Color: {r: 1, g: 0.12787376, b: 0, a: 0.5019608}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

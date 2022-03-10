@@ -17,7 +17,7 @@ public class EnemySpawnItemObject : RoomItemObject
 
     protected override void GenerateConfigValues()
     {
-        maxEnemysToSpawn = 5;
+        maxEnemysToSpawn = 1;
     }
 
     #region Logic

@@ -10,15 +10,11 @@ public class ModifiableItem : Item
 {
     #region Variables
     /// <summary>
-    /// Modifiers assoicated with this ModifiableItem
-    /// </summary>
-    protected List<ItemModifier> modifiers;
-    /// <summary>
-    /// Upkeep Cost to use this items modifiers
+    /// Upkeep Cost to use this items with modifiers
     /// </summary>
     protected float modifiersUpKeepCost;
     /// <summary>
-    /// Cost to use this items modifiers
+    /// Cost to use this items with modifiers
     /// </summary>
     protected float modifiersUseCost;
     #endregion
@@ -28,16 +24,7 @@ public class ModifiableItem : Item
     {
         base.PerformAwake();
 
-        // get all itme modifiers assigned to this ModifiableItem
-        modifiers = new List<ItemModifier>(GetComponents<ItemModifier>());
-
         InitClassDetails();
-    }
-
-    protected override void PerformStart()
-    {
-        SetModifierCosts();
-        SetModifiers();
     }
     #endregion
 
@@ -68,37 +55,21 @@ public class ModifiableItem : Item
     protected virtual void InitClassDetails() { }
 
     /// <summary>
-    /// Get the cost for all assigned modifiers
+    /// Set Modifier Use Costs
     /// </summary>
-    protected virtual void SetModifierCosts()
+    /// <param name="cost"></param>
+    public virtual void SetModifierUseCosts(float cost)
     {
-        foreach (var item in modifiers)
-        {
-            modifiersUpKeepCost += item.UpKeepCost();
-            modifiersUseCost += item.UseCost();
-        }
+        modifiersUseCost += cost;
     }
 
     /// <summary>
-    /// Set up info from modifiers
+    /// Set Modifier UpKeep Costs
     /// </summary>
-    protected virtual void SetModifiers() { }
-
-    /// <summary>
-    /// Get a list of all modifiers by type
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    protected virtual List<ItemModifier> GetModifierByType(Type type)
+    /// <param name="cost"></param>
+    public virtual void SetModifierUpKeepCosts(float cost)
     {
-        var retList = new List<ItemModifier>();
-        foreach (var mod in modifiers)
-        {
-            if (mod.GetType().IsSubclassOf(type) || mod.GetType() == type)
-                retList.Add(mod);
-        }
-
-        return retList;
+        modifiersUpKeepCost += cost;
     }
     #endregion
 }

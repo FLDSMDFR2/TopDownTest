@@ -71,16 +71,11 @@ public class BaseBattery : ModifiableItem
 
     #region ModifiableItem
     /// <summary>
-    /// Set up info from modifiers
+    /// Update Max Power
     /// </summary>
-    protected override void SetModifiers()
+    public virtual void UpdateMaxPower(float power)
     {
-        var mods = GetModifierByType(typeof(BatteryModifier));
-        foreach (var mod in mods)
-        {
-            var batterMod = mod as BatteryModifier;
-            maxPower += batterMod.ClassData.Power;
-        }
+        maxPower += power;
     }
     #endregion
 

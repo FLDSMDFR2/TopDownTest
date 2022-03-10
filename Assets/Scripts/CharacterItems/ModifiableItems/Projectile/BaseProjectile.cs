@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class BaseProjectile : ModifiableItem, IPoolable
+public class BaseProjectile : MonoBehaviour, IPoolable
 {
     #region Variables
     [Header("Base Projectile")]
@@ -43,9 +43,8 @@ public class BaseProjectile : ModifiableItem, IPoolable
     #endregion
 
     #region Item Init
-    protected override void PerformAwake()
+    protected virtual void Awake()
     {
-        base.PerformAwake();
         body = GetComponent<Rigidbody>();
     }
     #endregion

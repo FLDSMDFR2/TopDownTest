@@ -1,29 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BaseBattery))]
 public class BatteryModifier : ItemModifier
 {
     #region Variables
-    [Header("Battery Modifier")]
     /// <summary>
-    /// Data for this class
+    /// battery this modifer is used for
     /// </summary>
-    [HideInInspector]
-    public BatteryModifierData ClassData;
+    protected BaseBattery battery;
     #endregion
 
-    #region Item Init
-    /// <summary>
-    /// convert base data to our class specifc data
-    /// </summary>
-    protected override void CreateClassData()
+    #region Class Init
+    protected override void PerformAwake()
     {
-        ClassData = (BatteryModifierData)base.Data;
-        if (ClassData == null)
-        {
-            TraceManager.WriteTrace(TraceChannel.Main, TraceType.error, "BatteryModifierData Data set failed.");
-        }
+        base.PerformAwake();
+
+        battery = this.GetComponent<BaseBattery>();
+    }
+    #endregion
+
+    #region Class Logic
+    /// <summary>
+    /// Assign modifier details to the item we will modify
+    /// </summary>
+    protected override void AssignModifierDetails()
+    {
+        battery.SetModifierUseCosts(Data.UseCost);
+        battery.SetModifierUpKeepCosts(Data.UpKeepCost);
     }
     #endregion
 }
