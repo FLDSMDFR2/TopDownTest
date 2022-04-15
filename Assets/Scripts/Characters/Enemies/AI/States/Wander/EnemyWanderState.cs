@@ -13,7 +13,7 @@ public class EnemyWanderState : EnemyPathFindingState
     /// <summary>
     /// Destination we are traveling to to search it
     /// </summary>
-    protected float3 searchLocationDest = new float3(-1, -1, -1);
+    protected float3 unassigned = new float3(-1, -1, -1);
     /// <summary>
     /// Count we are on for looking differnt directions once we have reached the search location
     /// </summary>
@@ -22,6 +22,10 @@ public class EnemyWanderState : EnemyPathFindingState
     /// Location to look at when stopped and looking
     /// </summary>
     protected Vector3 searchLook = Vector3.zero;
+    /// <summary>
+    /// If we have a target in hearing range
+    /// </summary>
+    protected BaseCharacter hearingTarget;
 
     protected float lookMargin = .0001f;
 
@@ -45,7 +49,8 @@ public class EnemyWanderState : EnemyPathFindingState
     /// </summary>
     protected override void ChangingStates()
     {
-        searchLocationDest = unassignedDest;
+        StopListening();
+        unassigned = unassignedDest;
         currentPathIndex = -1;
     }
     #endregion
@@ -57,29 +62,38 @@ public class EnemyWanderState : EnemyPathFindingState
     protected override void PerformStateLogic()
     {
         //find we dont have a searchdest
-        if (searchLocationDest.Equals(unassignedDest))
+        if (unassigned.Equals(unassignedDest))
         {
             // find new dest
-            while (!GameManager.Instance.GetGridPath.Passable(searchLocationDest))
+            while (!GameManager.Instance.GetGridPath.Passable(unassigned))
             {
-                searchLocationDest = new float3(UnityEngine.Random.Range(AI.transform.position.x - AI.SearchRadius, AI.transform.position.x + AI.SearchRadius),
+                unassigned = new float3(RandomGenerator.RandomRange(AI.transform.position.x - AI.SearchRadius, AI.transform.position.x + AI.SearchRadius),
                    AI.transform.position.y,
-                   UnityEngine.Random.Range(AI.transform.position.z - AI.SearchRadius, AI.transform.position.z + AI.SearchRadius));
+                   RandomGenerator.RandomRange(AI.transform.position.z - AI.SearchRadius, AI.transform.position.z + AI.SearchRadius));
             }
 
             //find path here
-            FindPath(searchLocationDest);
+            FindPath(unassigned);
         }
         else
         {
             // we have a dest so lets find a path and move to it
-            FindAndMoveOnPath(searchLocationDest);
+            FindAndMoveOnPath(unassigned);
         }
 
         // look to see if we can see the player and the player is in range of LOS
         if (AI.FOV.PerformFOVCheck() && AI.FOV.CanDetect)
         {
             AI.Enemy.SetTarget(AI.FOV.Target);
+        }
+        else if (AI.FOV.CanHear)
+        {
+            hearingTarget = AI.FOV.HearingTarget.GetComponent<BaseCharacter>();
+            Listen();
+        }
+        else
+        {
+            StopListening();
         }
     }
 
@@ -115,7 +129,45 @@ public class EnemyWanderState : EnemyPathFindingState
         if (searchLookCount == 2)
         {
             searchLookCount = 0;
-            searchLocationDest = unassignedDest;
+            unassigned = unassignedDest;
+        }
+    }
+    #endregion
+
+    #region Listen
+    /// <summary>
+    /// Listen for target in hearing range
+    /// </summary>
+    protected virtual void Listen()
+    {
+        if (hearingTarget == null) return;
+
+        StopListening();
+
+        hearingTarget.ActiveWeapon.ShootingModifier.IsFiringEvent += HearingTarget_IsFiringEvent;
+    }
+
+    /// <summary>
+    /// Stop listening for target
+    /// </summary>
+    protected virtual void StopListening()
+    {
+        if (hearingTarget == null) return;
+        hearingTarget.ActiveWeapon.ShootingModifier.IsFiringEvent -= HearingTarget_IsFiringEvent;
+    }
+
+    /// <summary>
+    /// Handle if target it firing 
+    /// </summary>
+    private void HearingTarget_IsFiringEvent()
+    {
+        if (AI.FOV.CanHear)
+        {
+            // set new search location to last fire postistion 
+            unassigned = AI.FOV.HearingTarget.position;
+
+            //find path here
+            FindPath(unassigned);
         }
     }
     #endregion

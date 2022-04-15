@@ -51,6 +51,7 @@ public class BaseWeapon : ModifiableItem
     protected bool isActiveWeapon = false;
 
     protected FireModifierBase shootingModifier;
+    public FireModifierBase ShootingModifier { get { return shootingModifier; } }
     #endregion
 
     #region Item Init

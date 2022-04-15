@@ -1,10 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
 public class EnemyAttackState : EnemyBaseState
 {
+    protected float3 unassigned = new float3(-1, -1, -1);
+    protected float3 attackingPos = new float3(-1, -1, -1);
+
+    protected float waitingStartTime;
+    protected float timeToWait;
+    protected bool waitToMove = false;
+
     #region State Change
     /// <summary>
     /// Find the next state based on current status
@@ -41,7 +46,7 @@ public class EnemyAttackState : EnemyBaseState
     /// </summary>
     protected override void ChangingStates()
     {
-        AI.Controller.IsChase = false;
+        attackingPos = unassigned;
     }
     #endregion
 
@@ -51,12 +56,9 @@ public class EnemyAttackState : EnemyBaseState
     /// </summary>
     protected override void PerformStateLogic()
     {
-        // notify the movment controller we are chasing / attcking
-        AI.Controller.IsChase = true;
-
-        // TODO: change this to be more dynamic
         // find pos at attacking distance from target
-        float3 moveToPos = (AI.transform.position - AI.Enemy.GetTarget().position).normalized * AI.Enemy.AttackingDistance + AI.Enemy.GetTarget().position;
+        float3 moveToPos = FindPosition();
+
         //add checks to keep spacing between other enemies
         float3 pos = (moveToPos + (float3)KeepSpacing());
         pos.y = 0;
@@ -70,7 +72,17 @@ public class EnemyAttackState : EnemyBaseState
         // tell enemy to attack
         AI.Enemy.Attack();
     }
+    /// <summary>
+    /// Find attacking pos
+    /// </summary>
+    /// <returns></returns>
+    protected virtual float3 FindPosition()
+    { 
+        return attackingPos;
+    }
+    #endregion
 
+    #region Helpers
     /// <summary>
     /// Check to see if we need to keep spacing between us and another enemy
     /// </summary>
@@ -107,17 +119,27 @@ public class EnemyAttackState : EnemyBaseState
 
         return sum;
     }
-    #endregion
-    
-    #region Helpers
-        /// <summary>
-        /// If target is insite and we can see it
-        /// </summary>
-        /// <returns></returns>
+
+    /// <summary>
+    /// If target is insite and we can see it
+    /// </summary>
+    /// <returns></returns>
     protected virtual bool IsInSite()
     {
         AI.FOV.PerformFOVCheck();
         return AI.FOV.CanSee;
+    }
+
+    /// <summary>
+    /// Check if we are ~at a location
+    /// </summary>
+    /// <param name="nextLoc"></param>
+    /// <returns></returns>
+    protected virtual bool ArrivedAtLoc(Vector3 nextLoc)
+    {
+        // check if we are close enough to the location to count as arrived
+        var mag = (AI.transform.transform.position - nextLoc).magnitude;
+        return mag < 0.1f;
     }
     #endregion
 }

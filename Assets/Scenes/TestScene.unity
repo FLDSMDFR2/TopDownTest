@@ -809,9 +809,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnPrefabsEasy:
-  - {fileID: 3513223027031323829, guid: 5954a50ff378ea6449197b532f292977, type: 3}
-  - {fileID: 3513223027031323829, guid: 5954a50ff378ea6449197b532f292977, type: 3}
-  - {fileID: 3513223027031323829, guid: 5954a50ff378ea6449197b532f292977, type: 3}
+  - {fileID: 3513223027031323829, guid: c82dab8393771cb449b0675b9999636c, type: 3}
+  - {fileID: 3513223027031323829, guid: c82dab8393771cb449b0675b9999636c, type: 3}
+  - {fileID: 3513223027031323829, guid: f3193edd5e4566843b3c0adf603d2605, type: 3}
   SpawnPrefabsMedium: []
   SpawnPrefabsHard: []
   SpawnPrefabsInsane: []

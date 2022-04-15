@@ -19,7 +19,8 @@ public class BaseCharacter : MonoBehaviour
     /// <summary>
     /// Pos to place weapon
     /// </summary>
-    public Transform WeaponHoldPos;
+    [SerializeField]
+    protected Transform WeaponHoldPos;
 
     //********PROBABLY SHOULD REMOVE THIS FOR BETTER SOLUTION******
     /// <summary>
@@ -42,7 +43,8 @@ public class BaseCharacter : MonoBehaviour
     /// <summary>
     /// Active character weapon to use
     /// </summary>
-    protected BaseWeapon ActiveWeapon;
+    protected BaseWeapon activeWeapon;
+    public BaseWeapon ActiveWeapon { get { return activeWeapon; } }
     /// <summary>
     /// Active character shield to use
     /// </summary>
@@ -86,7 +88,7 @@ public class BaseCharacter : MonoBehaviour
     protected virtual void LoadInventoy()
     {
         //TODO: THIS SHOULD BE BETTER
-        ActiveWeapon = WeaponSlot.GetComponentInChildren<BaseWeapon>(true);
+        activeWeapon = WeaponSlot.GetComponentInChildren<BaseWeapon>(true);
         Shield = ShieldSlot.GetComponentInChildren<BaseShield>(true);
         if (BatterySlot != null) battery = BatterySlot.GetComponent<BaseBattery>();
 

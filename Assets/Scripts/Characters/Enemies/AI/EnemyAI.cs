@@ -65,6 +65,10 @@ public class EnemyAI : MonoBehaviour
     }
     protected virtual void InitStates()
     {
+        EnemyWander = new EnemyWanderState();
+        EnemyChase = new EnemyChaseState();
+        EnemyAttack = new EnemyAttackState();
+
         EnemyWander.PathCheckRate = WanderPathCheckRate;
         EnemyChase.PathCheckRate = ChasePathCheckRate;
     }

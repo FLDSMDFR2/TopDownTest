@@ -15,7 +15,6 @@ MonoBehaviour:
   ItemName: SingleShot
   upKeepCost: 0
   useCost: 1
-  FireRate: 1
   ProjectileAmount: 1
   StartAngle: 0
   EndAngle: 0

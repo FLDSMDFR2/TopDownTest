@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\UI\Utils\FPSCounterDisplay.cs" />
     <Compile Include="Assets\Scripts\Utils\RandomGenerator.cs" />
     <Compile Include="Assets\Scripts\MapGen\Rooms\RoomItems\ItemGameObjects\RoomObjects\EnemySpawnItemObject.cs" />
+    <Compile Include="Assets\Scripts\CharacterItems\Modifiers\BatteryModifiers\PowerAdjuster\BatteryPowerAdjusterModifier.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\Job PathFinding\PathFinding_V2.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\Item.cs" />
     <Compile Include="Assets\Scripts\CharacterItems\ItemData\ModifiableItemsData\ModifiableItemData.cs" />
@@ -128,7 +129,10 @@
     <Compile Include="Assets\Scripts\CharacterItems\ModifiableItems\Weapons\BaseWeapon.cs" />
     <Compile Include="Assets\Scripts\Utils\Helpers\Layers.cs" />
     <Compile Include="Assets\Scripts\Utils\PathFinding\GridPath.cs" />
-    <Compile Include="Assets\Scripts\CharacterItems\Modifiers\BatteryModifiers\PowerAdjuster\BatteryPowerAdjusterModifier.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\Attack\EnemyAttackStateRanged.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\States\Attack\EnemyAttackStateClose.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAIRanged.cs" />
+    <Compile Include="Assets\Scripts\Characters\Enemies\AI\EnemyAIClose.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

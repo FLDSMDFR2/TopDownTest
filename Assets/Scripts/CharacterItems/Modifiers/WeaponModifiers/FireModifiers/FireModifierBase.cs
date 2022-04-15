@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class FireModifierBase : WeaponModifier
 {
+    #region Events
+    public delegate void IsFiringDelegate();
+    public event IsFiringDelegate IsFiringEvent;
+    #endregion
+
     #region Variables
     [Header("Fire Modifier")]
     /// <summary>
@@ -15,6 +20,7 @@ public class FireModifierBase : WeaponModifier
     /// If we are currently firing
     /// </summary>
     protected bool isFiring = false;
+    public bool IsFiring { get { return isFiring; } }
     /// <summary>
     /// Last time we fired
     /// </summary>
@@ -85,6 +91,7 @@ public class FireModifierBase : WeaponModifier
         {
             if (weapon.Character.BatterUseCheck(weapon.UseCost()))
             {
+                IsFiringEvent?.Invoke();
                 isFiring = true;
                 StartCoroutine(FireProjectial());
             }

@@ -10,6 +10,10 @@ public class FieldOfView : MonoBehaviour
 
     [Header("Config")]
     /// <summary>
+    /// Radius for area we can hear
+    /// </summary>
+    public float HearingRadius;
+    /// <summary>
     /// Radius for area we will still detect a target
     /// </summary>
     public float DetectRadius;
@@ -38,6 +42,10 @@ public class FieldOfView : MonoBehaviour
     /// </summary>
     public Transform Target;
     /// <summary>
+    /// Target we have found.. if there is one
+    /// </summary>
+    public Transform HearingTarget;
+    /// <summary>
     /// If we can see the target and its in range to detect
     /// </summary>
     public bool CanDetect;
@@ -45,6 +53,10 @@ public class FieldOfView : MonoBehaviour
     /// If line of site is not blocked to the target
     /// </summary>
     public bool CanSee;
+    /// <summary>
+    /// If target was found and is in hearing range
+    /// </summary>
+    public bool CanHear;
     /// <summary>
     /// If we have seen a target and it is now out of line of site but still in the DetectRadius
     /// </summary>
@@ -67,6 +79,9 @@ public class FieldOfView : MonoBehaviour
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(transform.position, transform.position + viewAngle01 * LOSRadius);
             Gizmos.DrawLine(transform.position, transform.position + viewAngle02 * LOSRadius);
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, HearingRadius);
         }
     }
     private Vector3 DirectionFromAngle(float eulerY, float angleInDegrees)
@@ -96,11 +111,12 @@ public class FieldOfView : MonoBehaviour
         {
             return true;
         }
-        else
-        {
-            // we have lost the target
-            trackingTarget = false;
-        }
+
+        //we cant see a target and we are not tracking one so check for hearing
+        PerformHearingCheck();
+
+        // we have lost the target
+        trackingTarget = false;
 
         return false;
     }
@@ -177,6 +193,30 @@ public class FieldOfView : MonoBehaviour
         }
 
         return CanDetect;
+    }
+
+    /// <summary>
+    /// Check if there is a target within hearing range
+    /// </summary>
+    /// <returns></returns>
+    protected virtual bool PerformHearingCheck()
+    {
+        // get object in range
+        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, HearingRadius, TargetMask);
+
+        // if we have found something
+        if (rangeChecks.Length != 0)
+        {
+            HearingTarget = rangeChecks[0].transform;
+            CanHear = true;
+        }
+        else
+        {
+            HearingTarget = null;
+            CanHear = false;
+        }
+
+        return CanHear;
     }
 
 }

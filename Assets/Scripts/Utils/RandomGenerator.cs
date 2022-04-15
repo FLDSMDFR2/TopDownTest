@@ -19,6 +19,11 @@ public class RandomGenerator : MonoBehaviour
         return SeedRandom.Next(Min, Max);
     }
 
+    public static float RandomRange(float Min, float Max)
+    {
+        return UnityEngine.Random.Range(Min, Max);
+    }
+
     #region GenerationSeed
     protected virtual int GetSeed()
     {

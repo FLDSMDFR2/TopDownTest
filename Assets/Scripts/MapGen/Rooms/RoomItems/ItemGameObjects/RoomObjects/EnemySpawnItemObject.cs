@@ -17,7 +17,7 @@ public class EnemySpawnItemObject : RoomItemObject
 
     protected override void GenerateConfigValues()
     {
-        maxEnemysToSpawn = 1;
+        maxEnemysToSpawn = 20;
     }
 
     #region Logic
@@ -25,7 +25,7 @@ public class EnemySpawnItemObject : RoomItemObject
     {
         while (enemysSpawned < maxEnemysToSpawn)
         {
-            yield return new WaitForSeconds(UnityEngine.Random.Range(minTime, maxTime));
+            yield return new WaitForSeconds(RandomGenerator.RandomRange(minTime, maxTime));
 
             SpawnEnemy();
 
