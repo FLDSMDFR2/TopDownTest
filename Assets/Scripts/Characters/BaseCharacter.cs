@@ -123,7 +123,7 @@ public class BaseCharacter : MonoBehaviour
         if (Shield != null)
         {
             //check if we can deflect the damage
-            if (BatterUseCheck(damageTaken))
+            if (BatterUseCheck(damageTaken) != BatteryPowerLevels.Critical)
                 return;
         }
 
@@ -134,17 +134,19 @@ public class BaseCharacter : MonoBehaviour
     }
 
     /// <summary>
-    ///  Check if we can use item based on battery
+    ///  Check the battery power level
     /// </summary>
-    /// <param name="cost"></param>
-    /// <returns></returns>
-    public virtual bool BatterUseCheck(float cost)
+    /// <param name="cost">how much to use from battery</param>
+    /// <returns>level of batter</returns>
+    public virtual BatteryPowerLevels BatterUseCheck(float cost)
     {
         if (battery != null)
         {
             return battery.ConsumePower(cost);
         }
-        return true;
+
+        // anything requesting should have a battery if not return low
+        return BatteryPowerLevels.Low;
     }
 
     /// <summary>

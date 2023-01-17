@@ -809,7 +809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnPrefabsEasy:
-  - {fileID: 3513223027031323829, guid: c82dab8393771cb449b0675b9999636c, type: 3}
+  - {fileID: 3513223027031323829, guid: f3193edd5e4566843b3c0adf603d2605, type: 3}
   - {fileID: 3513223027031323829, guid: c82dab8393771cb449b0675b9999636c, type: 3}
   - {fileID: 3513223027031323829, guid: f3193edd5e4566843b3c0adf603d2605, type: 3}
   SpawnPrefabsMedium: []
@@ -1095,9 +1095,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PowerBar: {fileID: 2139104734}
-  Green: {r: 0, g: 0.98039216, b: 0.11372549, a: 0.84705883}
-  Orange: {r: 1, g: 0.57254905, b: 0, a: 0.84705883}
-  Red: {r: 1, g: 0.09411765, b: 0, a: 0.84705883}
 --- !u!1 &2139104732
 GameObject:
   m_ObjectHideFlags: 0

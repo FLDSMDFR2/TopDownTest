@@ -87,14 +87,14 @@ public class FireModifierBase : WeaponModifier
     {
         // if last fire is 0 then fire this is the first shot
         // or fire when rate allows && we are currently not firing
-        if (!isFiring && (lastFire <= 0f || Time.time >= lastFire + weapon.ClassData.FireRate))
+        if (!isFiring && (lastFire <= 0f || Time.time >= lastFire + weapon.RateOfFire))
         {
-            if (weapon.Character.BatterUseCheck(weapon.UseCost()))
-            {
-                IsFiringEvent?.Invoke();
-                isFiring = true;
-                StartCoroutine(FireProjectial());
-            }
+            //check battery for power updates
+            weapon.BatteryLevelChecks(weapon.Character.BatterUseCheck(weapon.UseCost()));
+
+            IsFiringEvent?.Invoke();
+            isFiring = true;
+            StartCoroutine(FireProjectial());
         }
     }
 

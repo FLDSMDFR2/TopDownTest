@@ -41,6 +41,15 @@ public class BaseWeapon : ModifiableItem
         set { damage = value; }
     }
     /// <summary>
+    /// Rate Of Fire of weapon
+    /// </summary>
+    protected float rateOfFire;
+    public float RateOfFire
+    {
+        get { return rateOfFire; }
+        set { rateOfFire = value; }
+    }
+    /// <summary>
     /// Character assigned to this weapon
     /// </summary>
     protected BaseCharacter character;
@@ -52,6 +61,8 @@ public class BaseWeapon : ModifiableItem
 
     protected FireModifierBase shootingModifier;
     public FireModifierBase ShootingModifier { get { return shootingModifier; } }
+
+    protected BatteryPowerLevels lastKnowBatteryLevel = BatteryPowerLevels.High;
     #endregion
 
     #region Item Init
@@ -59,9 +70,10 @@ public class BaseWeapon : ModifiableItem
     {
         base.PerformAwake();
 
-        CalculateDamage();
-        CalculateRange();
-        CalculateSpeed();
+        SetRateOfFire();
+        SetDamage();
+        SetRange();
+        SetSpeed();
     }
     /// <summary>
     /// convert base data to our class specifc data
@@ -138,26 +150,86 @@ public class BaseWeapon : ModifiableItem
     /// Damage of weapon Base damage + modifiers
     /// </summary>
     /// <returns></returns>
-    protected virtual void CalculateDamage()
+    protected virtual float CalculateDamage()
     {
-        Damage += ClassData.BaseDamage;
+       return ClassData.BaseDamage;
+    }
+    protected virtual void SetDamage()
+    {
+        Damage = CalculateDamage();
     }
 
     /// <summary>
     /// Speed of weapon projectiles Base speeed + modifiers
     /// </summary>
     /// <returns></returns>
-    protected virtual void CalculateSpeed()
+    protected virtual float CalculateSpeed()
     {
-        Speed += ClassData.BaseSpeed;
+        return ClassData.BaseSpeed;
+    }
+    protected virtual void SetSpeed()
+    {
+        Speed = CalculateSpeed();
     }
     /// <summary>
     /// Range of weapon Base range + modifiers
     /// </summary>
     /// <returns></returns>
-    protected virtual void CalculateRange()
+    protected virtual float CalculateRange()
     {
-        Range += ClassData.BaseRange;
+        return ClassData.BaseRange;
+    }
+    protected virtual void SetRange()
+    {
+        Range = CalculateRange();
+    }
+
+    /// <summary>
+    /// Rate Of Fire of weapon Base FireRate + modifiers
+    /// </summary>
+    /// <returns></returns>
+    protected virtual float CalculateRateOfFire()
+    {
+        return ClassData.FireRate;
+    }
+    protected virtual void SetRateOfFire()
+    {
+        RateOfFire = CalculateRateOfFire();
+    }
+    #endregion
+
+    #region Battery Checks
+    /// <summary>
+    /// Based on the battery update performance
+    /// </summary>
+    /// <param name="batteryLevel"></param>
+    public virtual void BatteryLevelChecks(BatteryPowerLevels batteryLevel)
+    {
+        if (lastKnowBatteryLevel == batteryLevel) return;
+        var isLower = true;
+        if (lastKnowBatteryLevel < batteryLevel) isLower = false;
+        lastKnowBatteryLevel = batteryLevel;
+
+        if (batteryLevel == BatteryPowerLevels.High)
+        {
+            // if High use default values
+            SetRateOfFire();
+            SetDamage();
+            SetRange();
+            SetSpeed();     
+        }
+        else
+        {
+            // update base on level change
+            if (isLower)
+            {
+                RateOfFire = RateOfFire + (.2f * CalculateRateOfFire());
+            }
+            else
+            {
+                RateOfFire = RateOfFire - (.2f * CalculateRateOfFire());
+            }
+        }
     }
     #endregion
 }

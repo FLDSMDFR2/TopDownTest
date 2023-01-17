@@ -15,5 +15,13 @@ MonoBehaviour:
   ItemName: StartingBattery
   upKeepCost: 0
   useCost: 0
-  BaseMaxPower: 50
-  Rate: 1
+  Data:
+    BaseMaxPower: 50
+    Rate: 1
+    PowerLevels:
+    - Level: 3
+      PowerPercent: 1
+      DisplayColor: {r: 0, g: 0, b: 0, a: 0}
+    - Level: 0
+      PowerPercent: 0
+      DisplayColor: {r: 0, g: 0, b: 0, a: 0}

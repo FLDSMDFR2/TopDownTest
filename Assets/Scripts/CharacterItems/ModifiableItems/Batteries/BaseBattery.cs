@@ -9,8 +9,8 @@ public class BaseBattery : ModifiableItem
     /// <summary>
     /// Data for this class
     /// </summary>
-    [HideInInspector]
-    public BaseBatteryData ClassData;
+    [SerializeField]
+    protected SaveDataBaseBattery ClassData;
     /// <summary>
     /// Max power of batter with all modifiers applied
     /// </summary>
@@ -24,8 +24,9 @@ public class BaseBattery : ModifiableItem
         set
         {
             power = value;
+            CheckPowerLevel();
             if (character != null)
-                UIEvents.RaisePowerUpdateEvent(character.ID, power, maxPower);
+                UIEvents.RaisePowerUpdateEvent(character.ID, PowerLevel, power, maxPower);
         }
         get { return power; }
     }
@@ -43,6 +44,10 @@ public class BaseBattery : ModifiableItem
     /// </summary>
     protected BaseCharacter character;
     public BaseCharacter Character { set { character = value; } }
+    /// <summary>
+    /// power level of battery
+    /// </summary>
+    protected BatteryLevel PowerLevel;
     #endregion
 
     #region Item Init
@@ -51,7 +56,18 @@ public class BaseBattery : ModifiableItem
     /// </summary>
     protected override void CreateClassData()
     {
-        ClassData = (BaseBatteryData)base.Data;
+        //load save data
+        if (false)
+        {
+            //TODO: load in data
+        }
+        else
+        {
+            // get default data
+            var configData = (BaseBatteryData)base.Data;
+            ClassData = configData.Data;
+        }
+
         if (ClassData == null)
         {
             TraceManager.WriteTrace(TraceChannel.Main, TraceType.error, "BaseBatteryData Data set failed.");
@@ -105,14 +121,12 @@ public class BaseBattery : ModifiableItem
     /// Consume requested amount of battery
     /// </summary>
     /// <param name="amount">amount to consume</param>
-    /// <returns>True if can consume</returns>
-    public virtual bool ConsumePower(float amount)
+    /// <returns>Return power level to requester</returns> 
+    public virtual BatteryPowerLevels ConsumePower(float amount)
     {
-        if (currentPower < amount) return false;
-        if (!IsRunning) return false;
-
+        // constume the power and return the level of the battery
         currentPower = Mathf.Clamp(currentPower - amount, 0, maxPower);
-        return true;
+        return PowerLevel.Level;
     }
 
     /// <summary>
@@ -139,6 +153,24 @@ public class BaseBattery : ModifiableItem
 
             currentPower = Mathf.Clamp(currentPower - consumeAmountPerRate, 0, maxPower);
         }
+    }
+
+    /// <summary>
+    /// Check and set power level as needed
+    /// </summary>
+    protected virtual void CheckPowerLevel()
+    {
+        var percent = power / maxPower;
+        BatteryLevel tempLevel = null;
+
+        //list is assumed to be orderd
+        foreach(var level in ClassData.PowerLevels)
+        {
+            if (percent > level.PowerPercent) break;
+            tempLevel = level;
+        }
+
+        PowerLevel = tempLevel;
     }
     #endregion
 }

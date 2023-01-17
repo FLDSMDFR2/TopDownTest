@@ -10,10 +10,10 @@ public class UIEvents : MonoBehaviour
         PlayerId = id;
     }
 
-    public delegate void PowerUpdateEvent(float power, float maxPower);
+    public delegate void PowerUpdateEvent(BatteryLevel power, float currentPower, float maxPower);
     public static event PowerUpdateEvent PowerUpdate;
-    public static void RaisePowerUpdateEvent(int playerId, float power, float maxPower)
+    public static void RaisePowerUpdateEvent(int playerId, BatteryLevel power, float currentPower, float maxPower)
     {
-        if (PlayerId == playerId) PowerUpdate?.Invoke(power, maxPower);
+        if (PlayerId == playerId) PowerUpdate?.Invoke(power, currentPower, maxPower);
     }
 }
